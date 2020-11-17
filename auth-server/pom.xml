@@ -60,6 +60,12 @@
             <version>${diboot-version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.diboot.cloud</groupId>
+            <artifactId>diboot-cloud-common</artifactId>
+            <version>${diboot-cloud.version}</version>
+        </dependency>
+
         <!-- JDBC Driver -->
         <dependency>
             <groupId>mysql</groupId>

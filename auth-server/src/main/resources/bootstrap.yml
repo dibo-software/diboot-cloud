@@ -1,0 +1,40 @@
+server:
+  port: 8001
+spring:
+  profiles:
+    active: dev
+  application:
+    name: auth-server
+  cloud:
+    nacos:
+      config:
+        file-extension: yaml
+      discovery:
+        server-addr: localhost:8848
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  redis:
+    database: 0
+    port: 6379
+    host: localhost
+    password:
+  datasource:
+    url:  jdbc:mysql://localhost:3306/diboot_cloud_example?characterEncoding=utf8&serverTimezone=GMT%2B8
+    username: diboot
+    password: 123456
+    maximum-pool-size:  5
+    driver-class-name:  com.mysql.cj.jdbc.Driver
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+# logging config
+logging:
+  level:
+    root: debug
+    org:
+      apache: info
+      #springframework: info
