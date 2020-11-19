@@ -31,7 +31,7 @@ import javax.validation.Valid;
 * @author JerryMa
 * @version 1.0
 * @date 2020-11-17
-* Copyright © MyCompany
+* Copyright © www.dibo.ltd
 */
 @Slf4j
 @RestController

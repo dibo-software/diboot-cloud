@@ -26,8 +26,10 @@ import com.diboot.iam.config.Cons;
 import com.diboot.iam.entity.IamAccount;
 import com.diboot.iam.entity.IamLoginTrace;
 import com.diboot.iam.entity.IamRole;
+import com.diboot.iam.entity.IamUser;
 import com.diboot.iam.service.IamAccountService;
 import com.diboot.iam.service.IamUserRoleService;
+import com.diboot.iam.service.IamUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
@@ -54,6 +56,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private IamAccountService iamAccountService;
     @Autowired
     private IamUserRoleService iamUserRoleService;
+    @Autowired
+    private IamUserService iamUserService;
     @Autowired
     private AsyncWorker asyncWorker;
 
@@ -96,9 +100,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             }
         }
         boolean accountNonLocked = !Cons.DICTCODE_USER_STATUS.L.name().equals(account.getStatus());
+        // 获取当前用户显示名
+        IamUser iamUser = iamUserService.getEntity(account.getUserId());
+        String displayName = iamUser != null? iamUser.getDisplayName() : null;
         // 构建登录用户
-        return new LoginUser(account.getUserType(), account.getUserId(), account.getAuthAccount(), account.getAuthSecret(),
-                enabled, accountNonLocked, true, true, authorities);
+        return new LoginUser(account.getAuthAccount(), account.getAuthSecret(),
+                enabled, accountNonLocked, true, true, authorities, account.getUserType(), account.getUserId(), displayName);
     }
 
     /**

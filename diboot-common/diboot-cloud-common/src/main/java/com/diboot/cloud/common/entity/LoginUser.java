@@ -35,6 +35,10 @@ public class LoginUser implements UserDetails {
     private static final long serialVersionUID = 100001L;
 
     private String username;
+    /**
+     * 显示名称
+     */
+    private String displayName;
 
     @JsonIgnore
     private String password;
@@ -55,8 +59,9 @@ public class LoginUser implements UserDetails {
     public LoginUser(){
     }
 
-    public LoginUser(String userType, Long userId, String username, String password, boolean enabled, boolean accountNonLocked,
-                     boolean accountNonExpired, boolean credentialsNonExpired, List<? extends GrantedAuthority> authorities) {
+    public LoginUser(String username, String password, boolean enabled, boolean accountNonLocked,
+                     boolean accountNonExpired, boolean credentialsNonExpired, List<? extends GrantedAuthority> authorities,
+                     String userType, Long userId, String displayName) {
         if (username != null && !"".equals(username) && password != null) {
             this.username = username;
             this.password = password;
@@ -67,6 +72,7 @@ public class LoginUser implements UserDetails {
             this.authorities = Collections.unmodifiableList(authorities);
             this.userType = userType;
             this.userId = userId;
+            this.displayName = displayName;
         }
         else {
             throw new IllegalArgumentException("Cannot pass null or empty values to constructor");

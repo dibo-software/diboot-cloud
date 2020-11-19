@@ -15,12 +15,15 @@
  */
 package com.diboot.cloud.iam.service.impl;
 
+import com.diboot.cloud.common.entity.LoginUser;
 import com.diboot.iam.auth.IamCustomize;
 import com.diboot.iam.config.Cons;
 import com.diboot.iam.entity.BaseLoginUser;
 import com.diboot.iam.entity.IamAccount;
 import com.diboot.iam.exception.PermissionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +43,9 @@ public class IamCustomizeImpl implements IamCustomize {
 
     @Override
     public BaseLoginUser getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        LoginUser user = (LoginUser)principal;
         return null;
     }
 

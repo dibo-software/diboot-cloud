@@ -16,8 +16,9 @@
 package com.diboot.cloud.common.annotation.process;
 
 import com.diboot.cloud.common.annotation.Log;
+import com.diboot.cloud.common.entity.LoginUser;
 import com.diboot.cloud.common.service.AsyncLogService;
-import com.diboot.cloud.common.util.HttpUtils;
+import com.diboot.cloud.common.util.IamSecurityUtils;
 import com.diboot.core.util.*;
 import com.diboot.core.vo.JsonResult;
 import com.diboot.core.vo.Status;
@@ -121,9 +122,9 @@ public class LogAspect {
         HttpServletRequest request = ((ServletRequestAttributes) ra).getRequest();
         operationLog.setRequestMethod(request.getMethod())
                 .setRequestUri(request.getRequestURI())
-                .setRequestIp(HttpUtils.getRequestIp(request));
+                .setRequestIp(HttpHelper.getRequestIp(request));
         // 请求参数
-        Map<String, Object> params = HttpUtils.buildParamsMap(request);
+        Map<String, Object> params = HttpHelper.buildParamsMap(request);
         String paramsJson = JSON.stringify(params);
         paramsJson = S.cut(paramsJson, maxLength);
         operationLog.setRequestParams(paramsJson);
@@ -145,7 +146,10 @@ public class LogAspect {
         }
         // 自动识别appModule
         operationLog.setAppModule(applicationName).setBusinessObj(businessObj).setOperation(logAnno.operation());
-
+        LoginUser loginUser = IamSecurityUtils.getCurrentUser();
+        if(loginUser != null){
+            operationLog.setUserType(loginUser.getUserType()).setUserId(loginUser.getUserId()).setUserRealname(loginUser.getDisplayName());
+        }
         return operationLog;
     }
 
