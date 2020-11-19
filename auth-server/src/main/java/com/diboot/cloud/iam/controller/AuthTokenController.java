@@ -16,12 +16,13 @@
 package com.diboot.cloud.iam.controller;
 
 import com.diboot.core.vo.JsonResult;
-import com.diboot.iam.service.IamUserService;
+import com.diboot.iam.annotation.process.AsyncWorker;
+import com.diboot.iam.config.Cons;
+import com.diboot.iam.entity.IamLoginTrace;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
 import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
@@ -52,21 +53,36 @@ public class AuthTokenController {
 
     @Autowired
     private ConsumerTokenServices consumerTokenServices;
+    @Autowired
+    private AsyncWorker asyncWorker;
 
     /**
      * Oauth2登录申请token
      */
     @PostMapping("/token")
-    public JsonResult applyAccessToken(Principal principal, @RequestParam Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
+    public JsonResult applyAccessToken(Principal principal, @RequestParam Map<String, String> parameters) throws Exception{
         // 构建token结果
-        OAuth2AccessToken accessToken = tokenEndpoint.postAccessToken(principal, parameters).getBody();
+        OAuth2AccessToken accessToken = null;
+        String userType = null, username = parameters.get("username");
+        Long userId = 0L;
+        try{
+            // 构建token结果
+            accessToken = tokenEndpoint.postAccessToken(principal, parameters).getBody();
+            // 获取用户信息
+            Map<String, Object> additionalInfo = accessToken.getAdditionalInformation();
+            userType = (String) additionalInfo.get("userType");
+            userId = (Long) additionalInfo.get("userId");
+        }
+        catch (HttpRequestMethodNotSupportedException nse){
+            throw nse;
+        }
+        catch (Exception e){
+            saveLoginTrace(username, userType, userId, false);
+            throw e;
+        }
         /*
-        // 获取用户信息并缓存
         String token = accessToken.getValue();
-        Map<String, Object> additionalInfo = accessToken.getAdditionalInformation();
-        String userType = (String) additionalInfo.get("userType");
-        Long userId = (Long) additionalInfo.get("userId");
-        BaseLoginUser loginUser = null;
+        LoginUser loginUser = null;
         if(IamUser.class.getSimpleName().equalsIgnoreCase(userType)){
             loginUser = iamUserService.getEntity(userId);
         }
@@ -75,6 +91,7 @@ public class AuthTokenController {
         }
         //redisTemplate.opsForValue().set(token, loginUser, accessToken.getExpiresIn(), TimeUnit.SECONDS);
         */
+        saveLoginTrace(username, userType, userId, true);
         return JsonResult.OK(accessToken);
     }
 
@@ -105,4 +122,16 @@ public class AuthTokenController {
         return PUBLIC_KEY;
     }
 
+
+    /**
+     * 保存登录日志
+     * @param userType
+     * @param isSuccess
+     */
+    private void saveLoginTrace(String username, String userType, Long userId, boolean isSuccess){
+        IamLoginTrace loginTrace = new IamLoginTrace();
+        loginTrace.setAuthType(Cons.DICTCODE_AUTH_TYPE.PWD.name()).setAuthAccount(username).setSuccess(isSuccess);
+        loginTrace.setUserType(userType).setUserId(userId);
+        asyncWorker.saveLoginTraceLog(loginTrace);
+    }
 }
