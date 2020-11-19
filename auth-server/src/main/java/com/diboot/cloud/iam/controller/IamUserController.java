@@ -15,6 +15,7 @@
  */
 package com.diboot.cloud.iam.controller;
 
+import com.diboot.cloud.common.annotation.BindPermission;
 import com.diboot.cloud.common.entity.LoginUser;
 import com.diboot.core.vo.JsonResult;
 import com.diboot.iam.entity.IamUser;
@@ -33,14 +34,16 @@ import org.springframework.web.bind.annotation.RestController;
  * @version v2.2
  * @date 2020/11/09
  */
+@BindPermission(name = "用户IamUser")
 @RestController
-@RequestMapping("iamUser")
+@RequestMapping("/iamUser")
 public class IamUserController {
 
     @Autowired
     private IamUserService iamUserService;
 
-    @GetMapping("get")
+    @BindPermission(name = "获取当前用户")
+    @GetMapping("/get")
     public JsonResult<IamUser> getUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
@@ -50,7 +53,8 @@ public class IamUserController {
         return JsonResult.OK(iamUser);
     }
 
-    @GetMapping("{id}")
+    @BindPermission(name = "按ID获取用户")
+    @GetMapping("/{id}")
     public JsonResult<IamUser> getUserById(@PathVariable("id")Long id){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();

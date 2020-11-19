@@ -38,7 +38,7 @@ import java.util.List;
  * @date 2020/11/09
  */
 @Configuration
-@ComponentScan({"com.example"})
+@ComponentScan({"com.diboot.**", "com.example.**"})
 public class SpringWebConfig implements WebMvcConfigurer {
 
     /**

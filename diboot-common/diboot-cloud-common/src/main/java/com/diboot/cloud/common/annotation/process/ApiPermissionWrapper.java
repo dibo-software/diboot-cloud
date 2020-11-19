@@ -13,26 +13,37 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.diboot.cloud.gateway;
+package com.diboot.cloud.common.annotation.process;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.context.annotation.ComponentScan;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
- * 启动类
- * @author JerryMa
- * @version v2.2
- * @date 2020/11/09
+ * <Description>
+ *
+ * @author Mazhicheng
+ * @version v2.0
+ * @date 2020/02/28
  */
-@ComponentScan("com.diboot.**")
-@EnableDiscoveryClient
-@SpringBootApplication
-public class ApiGatewayApplication {
+@Getter @Setter
+public class ApiPermissionWrapper implements Serializable {
+    private static final long serialVersionUID = 544405101900928328L;
 
-	public static void main(String[] args) {
-		SpringApplication.run(ApiGatewayApplication.class, args);
-	}
+    public ApiPermissionWrapper(){}
+
+    public ApiPermissionWrapper(String classTitle){
+        this.classTitle = classTitle;
+    }
+
+    // 类别标题
+    private String classTitle;
+
+    /**
+     * 子节点
+     */
+    private List<ApiPermission> children;
 
 }

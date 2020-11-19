@@ -15,6 +15,7 @@
  */
 package com.example.controller;
 
+import com.diboot.cloud.common.annotation.BindPermission;
 import com.diboot.cloud.common.entity.LoginUser;
 import com.diboot.cloud.common.util.IamSecurityUtils;
 import com.diboot.core.vo.JsonResult;
@@ -31,12 +32,14 @@ import org.springframework.web.bind.annotation.RestController;
  * @version v2.2
  * @date 2020/11/09
  */
+@BindPermission(name = "测试")
 @RestController
 public class HelloController {
 
     @Autowired(required = false)
     private IamUserRemoteService iamUserRemoteService;
 
+    @BindPermission(name = "say hello", code = "hello")
     @GetMapping("/hello")
     public JsonResult hello() {
         LoginUser loginUser = IamSecurityUtils.getCurrentUser();

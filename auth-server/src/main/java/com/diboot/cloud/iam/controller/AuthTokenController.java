@@ -51,12 +51,6 @@ public class AuthTokenController {
     private TokenEndpoint tokenEndpoint;
 
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
-
-    @Autowired
-    private IamUserService iamUserService;
-
-    @Autowired
     private ConsumerTokenServices consumerTokenServices;
 
     /**

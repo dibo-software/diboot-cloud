@@ -16,6 +16,7 @@
     <modules>
         <module>diboot-cloud-common</module>
         <module>diboot-cloud-file</module>
+        <module>diboot-cloud-redis</module>
     </modules>
 
 

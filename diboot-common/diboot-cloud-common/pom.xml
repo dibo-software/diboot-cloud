@@ -24,17 +24,19 @@
             <version>2.5.0.RELEASE</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-        </dependency>
-
         <!-- diboot-core -->
         <dependency>
             <groupId>com.diboot</groupId>
             <artifactId>diboot-core</artifactId>
             <version>${diboot-version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.diboot.cloud</groupId>
+            <artifactId>diboot-cloud-redis</artifactId>
+            <version>${diboot-cloud.version}</version>
+        </dependency>
+
     </dependencies>
 
 </project>

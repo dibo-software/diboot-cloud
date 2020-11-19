@@ -15,7 +15,7 @@
  */
 package com.diboot.cloud.gateway.auth;
 
-import com.diboot.core.config.Cons;
+import com.diboot.cloud.redis.RedisCons;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -50,7 +50,7 @@ public class GatewayAuthorizationManager implements ReactiveAuthorizationManager
     public Mono<AuthorizationDecision> check(Mono<Authentication> mono, AuthorizationContext authorizationContext) {
         //从Redis中获取当前路径可访问角色列表
         ServerHttpRequest request = authorizationContext.getExchange().getRequest();
-        Map<Object, Object> resourceRolesMap = redisTemplate.opsForHash().entries(Cons.RESOURCE_ROLES_MAP);
+        Map<Object, Object> resourceRolesMap = redisTemplate.opsForHash().entries(RedisCons.KEY_RESOURCE_ROLES_MAP);
         // 请求URI
         String requestUri = request.getMethodValue().toUpperCase() + ":" + request.getURI().getPath();
         // 先匹配固定URI

@@ -15,9 +15,9 @@
  */
 package com.diboot.cloud.iam.init;
 
+import com.diboot.cloud.redis.RedisCons;
 import com.diboot.core.util.S;
 import com.diboot.core.util.V;
-import com.diboot.iam.config.Cons;
 import com.diboot.iam.service.IamRoleResourceService;
 import com.diboot.iam.vo.ResourceRoleVO;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * @version v2.2
  * @date 2020/11/09
  */
-@Order(999)
+@Order(998)
 @Component
 @Slf4j
 public class RoleSourcesCacheInitializer implements ApplicationRunner {
@@ -67,7 +67,7 @@ public class RoleSourcesCacheInitializer implements ApplicationRunner {
                     roleCodes = Collections.emptyList();
                 }
                 else{
-                    roleCodes = roleCodes.stream().map(i -> i = com.diboot.core.config.Cons.AUTHORITY_PREFIX + i).collect(Collectors.toList());
+                    roleCodes = roleCodes.stream().map(i -> i = RedisCons.PREFIX_ROLE + i).collect(Collectors.toList());
                 }
                 // 组装
                 String[] apiArray = S.split(vo.getApiSet());
@@ -80,6 +80,6 @@ public class RoleSourcesCacheInitializer implements ApplicationRunner {
         }
         log.info("初始化资源角色缓存完成, 共加载 {} 项", resourceRolesMap.size());
         log.debug("资源-角色匹配: {}", resourceRolesMap);
-        redisTemplate.opsForHash().putAll(Cons.RESOURCE_ROLES_MAP, resourceRolesMap);
+        redisTemplate.opsForHash().putAll(RedisCons.KEY_RESOURCE_ROLES_MAP, resourceRolesMap);
     }
 }

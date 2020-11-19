@@ -19,7 +19,7 @@ import com.diboot.cloud.gateway.auth.GatewayAuthorizationManager;
 import com.diboot.cloud.gateway.custom.CustomAccessDeniedHandler;
 import com.diboot.cloud.gateway.custom.CustomAuthenticationEntryPoint;
 import com.diboot.cloud.gateway.filter.GatewayJwtWebFilter;
-import com.diboot.core.config.Cons;
+import com.diboot.cloud.redis.RedisCons;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -82,8 +82,8 @@ public class SecurityFilterConfig {
     public ReactiveJwtAuthenticationConverterAdapter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthConverter = new JwtGrantedAuthoritiesConverter();
         // 配置鉴权角色的前缀
-        grantedAuthConverter.setAuthorityPrefix(Cons.AUTHORITY_PREFIX);
-        grantedAuthConverter.setAuthoritiesClaimName(Cons.AUTHORITY_CLAIM_NAME);
+        grantedAuthConverter.setAuthorityPrefix(RedisCons.PREFIX_ROLE);
+        grantedAuthConverter.setAuthoritiesClaimName(RedisCons.KEY_CLAIM_NAME);
 
         JwtAuthenticationConverter jwtAuthConverter = new JwtAuthenticationConverter();
         jwtAuthConverter.setJwtGrantedAuthoritiesConverter(grantedAuthConverter);
