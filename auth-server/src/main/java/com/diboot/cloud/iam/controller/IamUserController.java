@@ -16,8 +16,10 @@
 package com.diboot.cloud.iam.controller;
 
 import com.diboot.cloud.common.annotation.BindPermission;
+import com.diboot.cloud.common.annotation.Log;
 import com.diboot.cloud.common.entity.LoginUser;
 import com.diboot.core.vo.JsonResult;
+import com.diboot.iam.annotation.Operation;
 import com.diboot.iam.entity.IamUser;
 import com.diboot.iam.service.IamUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,7 @@ public class IamUserController {
     @Autowired
     private IamUserService iamUserService;
 
+    @Log(businessObj = "系统用户", operation = Operation.LABEL_DETAIL)
     @BindPermission(name = "获取当前用户")
     @GetMapping("/get")
     public JsonResult<IamUser> getUser(){

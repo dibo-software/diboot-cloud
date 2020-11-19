@@ -16,6 +16,7 @@
 package com.example.controller;
 
 import com.diboot.cloud.common.annotation.BindPermission;
+import com.diboot.cloud.common.annotation.Log;
 import com.diboot.cloud.common.entity.LoginUser;
 import com.diboot.cloud.common.util.IamSecurityUtils;
 import com.diboot.core.vo.JsonResult;
@@ -39,6 +40,7 @@ public class HelloController {
     @Autowired(required = false)
     private IamUserRemoteService iamUserRemoteService;
 
+    @Log(businessObj = "Hello", operation = "say hello .")
     @BindPermission(name = "say hello", code = "hello")
     @GetMapping("/hello")
     public JsonResult hello() {
