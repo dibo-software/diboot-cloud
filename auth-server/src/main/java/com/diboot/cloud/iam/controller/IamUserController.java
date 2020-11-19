@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version v2.2
  * @date 2020/11/09
  */
-@BindPermission(name = "用户IamUser")
+@BindPermission(name = "用户IamUser", code = "IamUser")
 @RestController
 @RequestMapping("/iamUser")
 public class IamUserController {

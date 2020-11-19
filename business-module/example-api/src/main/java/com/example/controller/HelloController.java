@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version v2.2
  * @date 2020/11/09
  */
-@BindPermission(name = "测试")
+@BindPermission(name = "测试", code = "Hello")
 @RestController
 public class HelloController {
 
