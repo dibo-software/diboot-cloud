@@ -10,23 +10,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.diboot.cloud</groupId>
-    <artifactId>diboot-cloud-redis</artifactId>
+    <artifactId>diboot-common-file</artifactId>
     <version>2.2.0-SNAPSHOT</version>
 
     <dependencies>
-        <!-- redis -->
+        <!-- diboot-file -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
+            <groupId>com.diboot</groupId>
+            <artifactId>diboot-file</artifactId>
+            <version>${diboot-version}</version>
         </dependency>
 
     </dependencies>

@@ -57,7 +57,7 @@
 
         <dependency>
             <groupId>com.diboot.cloud</groupId>
-            <artifactId>diboot-cloud-redis</artifactId>
+            <artifactId>diboot-common-redis</artifactId>
             <version>${diboot-cloud.version}</version>
         </dependency>
 
