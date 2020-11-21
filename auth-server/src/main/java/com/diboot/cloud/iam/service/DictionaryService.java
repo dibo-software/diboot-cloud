@@ -17,7 +17,6 @@ package com.diboot.cloud.iam.service;
 
 import com.diboot.core.entity.Dictionary;
 import com.diboot.core.service.BaseService;
-import com.diboot.cloud.vo.DictionaryVO;
 import com.diboot.core.vo.KeyValue;
 
 import java.util.List;

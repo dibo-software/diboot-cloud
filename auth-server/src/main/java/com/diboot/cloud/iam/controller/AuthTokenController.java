@@ -80,7 +80,7 @@ public class AuthTokenController {
         }
         /*
         String token = accessToken.getValue();
-        LoginUser loginUser = null;
+        LoginUserDetail loginUser = null;
         if(IamUser.class.getSimpleName().equalsIgnoreCase(userType)){
             loginUser = iamUserService.getEntity(userId);
         }

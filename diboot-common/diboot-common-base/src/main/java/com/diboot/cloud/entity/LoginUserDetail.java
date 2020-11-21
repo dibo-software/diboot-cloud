@@ -31,7 +31,7 @@ import java.util.List;
  * @date 2020/11/09
  */
 @Getter @Setter
-public class LoginUser implements UserDetails {
+public class LoginUserDetail implements UserDetails {
     private static final long serialVersionUID = 100001L;
 
     private String username;
@@ -56,12 +56,12 @@ public class LoginUser implements UserDetails {
      */
     private Long userId;
 
-    public LoginUser(){
+    public LoginUserDetail(){
     }
 
-    public LoginUser(String username, String password, boolean enabled, boolean accountNonLocked,
-                     boolean accountNonExpired, boolean credentialsNonExpired, List<? extends GrantedAuthority> authorities,
-                     String userType, Long userId, String displayName) {
+    public LoginUserDetail(String username, String password, boolean enabled, boolean accountNonLocked,
+                           boolean accountNonExpired, boolean credentialsNonExpired, List<? extends GrantedAuthority> authorities,
+                           String userType, Long userId, String displayName) {
         if (username != null && !"".equals(username) && password != null) {
             this.username = username;
             this.password = password;

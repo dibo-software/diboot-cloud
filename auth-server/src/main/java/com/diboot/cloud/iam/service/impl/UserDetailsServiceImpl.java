@@ -18,7 +18,7 @@ package com.diboot.cloud.iam.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.diboot.cloud.iam.cons.IAMConfig;
-import com.diboot.cloud.entity.LoginUser;
+import com.diboot.cloud.entity.LoginUserDetail;
 import com.diboot.core.util.BeanUtils;
 import com.diboot.core.util.V;
 import com.diboot.cloud.iam.handler.AsyncLogWorker;
@@ -103,7 +103,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         IamUser iamUser = iamUserService.getEntity(account.getUserId());
         String displayName = iamUser != null? iamUser.getDisplayName() : null;
         // 构建登录用户
-        return new LoginUser(account.getAuthAccount(), account.getAuthSecret(),
+        return new LoginUserDetail(account.getAuthAccount(), account.getAuthSecret(),
                 enabled, accountNonLocked, true, true, authorities, account.getUserType(), account.getUserId(), displayName);
     }
 

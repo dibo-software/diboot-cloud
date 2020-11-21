@@ -17,15 +17,12 @@ package com.diboot.cloud.iam.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.diboot.core.config.Cons;
 import com.diboot.core.entity.Dictionary;
 import com.diboot.core.exception.BusinessException;
 import com.diboot.cloud.iam.mapper.DictionaryMapper;
-import com.diboot.core.service.BindDictService;
 import com.diboot.cloud.iam.service.DictionaryService;
 import com.diboot.core.service.impl.BaseServiceImpl;
 import com.diboot.core.util.V;
-import com.diboot.cloud.vo.DictionaryVO;
 import com.diboot.core.vo.KeyValue;
 import com.diboot.core.vo.Status;
 import org.slf4j.Logger;

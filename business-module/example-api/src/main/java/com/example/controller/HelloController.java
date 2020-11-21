@@ -18,7 +18,7 @@ package com.example.controller;
 import com.diboot.cloud.annotation.BindPermission;
 import com.diboot.cloud.annotation.Log;
 import com.diboot.cloud.api.service.IamUserApiService;
-import com.diboot.cloud.entity.LoginUser;
+import com.diboot.cloud.entity.LoginUserDetail;
 import com.diboot.cloud.util.IamSecurityUtils;
 import com.diboot.core.vo.JsonResult;
 import com.diboot.cloud.entity.IamUser;
@@ -44,15 +44,15 @@ public class HelloController {
     @BindPermission(name = "say hello", code = "hello")
     @GetMapping("/hello")
     public JsonResult hello() {
-        LoginUser loginUser = IamSecurityUtils.getCurrentUser();
-        return JsonResult.OK(loginUser);
+        LoginUserDetail loginUserDetail = IamSecurityUtils.getCurrentUser();
+        return JsonResult.OK(loginUserDetail);
     }
 
     //@PreAuthorize("hasAnyRole('SYS_ADMIN', 'ROLE_SYS_ADMIN')")
     @GetMapping("/hellov/{id}/t")
     public JsonResult admin(@PathVariable("id")Long id) {
-        LoginUser loginUser = IamSecurityUtils.getCurrentUser();
-        return JsonResult.OK(loginUser);
+        LoginUserDetail loginUserDetail = IamSecurityUtils.getCurrentUser();
+        return JsonResult.OK(loginUserDetail);
     }
 
     @GetMapping("/test")

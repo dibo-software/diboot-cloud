@@ -15,7 +15,7 @@
  */
 package com.diboot.cloud.util;
 
-import com.diboot.cloud.entity.LoginUser;
+import com.diboot.cloud.entity.LoginUserDetail;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,12 +36,12 @@ public class IamSecurityUtils {
      * 获取当前登录用户
      * @return
      */
-    public static LoginUser getCurrentUser(){
+    public static LoginUserDetail getCurrentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         // 认证信息可能为空，因此需要进行判断。
         if (Objects.nonNull(authentication)) {
             Object principal = authentication.getPrincipal();
-            return (LoginUser)principal;
+            return (LoginUserDetail)principal;
         }
         log.warn("无法获取当前用户: authentication = null");
         return null;

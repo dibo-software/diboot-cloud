@@ -15,8 +15,8 @@
  */
 package com.diboot.cloud.iam.config;
 
+import com.diboot.cloud.entity.LoginUserDetail;
 import com.diboot.cloud.iam.cons.IAMConfig;
-import com.diboot.cloud.entity.LoginUser;
 import com.diboot.cloud.iam.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -160,11 +160,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Bean
     public TokenEnhancer tokenEnhancer(){
         return (accessToken, authentication) -> {
-            LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+            LoginUserDetail loginUserDetail = (LoginUserDetail) authentication.getPrincipal();
             // 扩展字段
             Map<String, Object> extInfo = new HashMap(){{
-                put("userType", loginUser.getUserType());
-                put("userId", loginUser.getUserId());
+                put("userType", loginUserDetail.getUserType());
+                put("userId", loginUserDetail.getUserId());
             }};
             ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(extInfo);
             return accessToken;

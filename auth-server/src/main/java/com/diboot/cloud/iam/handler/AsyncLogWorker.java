@@ -19,7 +19,7 @@ import com.diboot.cloud.config.Cons;
 import com.diboot.cloud.entity.IamAccount;
 import com.diboot.cloud.entity.IamLoginTrace;
 import com.diboot.cloud.entity.IamOperationLog;
-import com.diboot.cloud.entity.LoginUser;
+import com.diboot.cloud.entity.LoginUserDetail;
 import com.diboot.cloud.iam.service.IamLoginTraceService;
 import com.diboot.cloud.iam.service.IamOperationLogService;
 import com.diboot.cloud.util.IamSecurityUtils;
@@ -95,11 +95,11 @@ public class AsyncLogWorker {
     public void saveOperationLog(IamOperationLog operationLog) {
         try{
             // 操作用户信息
-            LoginUser loginUser = IamSecurityUtils.getCurrentUser();
-            if(loginUser != null){
-                operationLog.setUserType(loginUser.getClass().getSimpleName())
-                        .setUserId(loginUser.getUserId())
-                        .setUserRealname(loginUser.getDisplayName());
+            LoginUserDetail loginUserDetail = IamSecurityUtils.getCurrentUser();
+            if(loginUserDetail != null){
+                operationLog.setUserType(loginUserDetail.getClass().getSimpleName())
+                        .setUserId(loginUserDetail.getUserId())
+                        .setUserRealname(loginUserDetail.getDisplayName());
             }
             iamOperationLogService.createEntity(operationLog);
         }

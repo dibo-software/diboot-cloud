@@ -16,7 +16,7 @@
 package com.diboot.cloud.annotation.process;
 
 import com.diboot.cloud.annotation.Log;
-import com.diboot.cloud.entity.LoginUser;
+import com.diboot.cloud.entity.LoginUserDetail;
 import com.diboot.cloud.service.AsyncLogService;
 import com.diboot.cloud.util.IamSecurityUtils;
 import com.diboot.core.util.*;
@@ -146,9 +146,9 @@ public class LogAspect {
         }
         // 自动识别appModule
         operationLog.setAppModule(applicationName).setBusinessObj(businessObj).setOperation(logAnno.operation());
-        LoginUser loginUser = IamSecurityUtils.getCurrentUser();
-        if(loginUser != null){
-            operationLog.setUserType(loginUser.getUserType()).setUserId(loginUser.getUserId()).setUserRealname(loginUser.getDisplayName());
+        LoginUserDetail loginUserDetail = IamSecurityUtils.getCurrentUser();
+        if(loginUserDetail != null){
+            operationLog.setUserType(loginUserDetail.getUserType()).setUserId(loginUserDetail.getUserId()).setUserRealname(loginUserDetail.getDisplayName());
         }
         return operationLog;
     }

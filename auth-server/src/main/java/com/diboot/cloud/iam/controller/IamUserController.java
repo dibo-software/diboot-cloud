@@ -17,7 +17,7 @@ package com.diboot.cloud.iam.controller;
 
 import com.diboot.cloud.annotation.BindPermission;
 import com.diboot.cloud.annotation.Log;
-import com.diboot.cloud.entity.LoginUser;
+import com.diboot.cloud.entity.LoginUserDetail;
 import com.diboot.core.vo.JsonResult;
 import com.diboot.cloud.annotation.Operation;
 import com.diboot.cloud.entity.IamUser;
@@ -50,7 +50,7 @@ public class IamUserController {
     public JsonResult<IamUser> getUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
-        LoginUser user = (LoginUser)principal;
+        LoginUserDetail user = (LoginUserDetail)principal;
         System.out.println("username= " + user.getUsername());
         IamUser iamUser = iamUserService.getEntity(1271753465195720705L);
         return JsonResult.OK(iamUser);
@@ -61,7 +61,7 @@ public class IamUserController {
     public JsonResult<IamUser> getUserById(@PathVariable("id")Long id){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
-        LoginUser user = (LoginUser)principal;
+        LoginUserDetail user = (LoginUserDetail)principal;
         System.out.println("username= " + user.getUsername());
         IamUser iamUser = iamUserService.getEntity(id);
         return JsonResult.OK(iamUser);
