@@ -16,9 +16,7 @@
 package com.diboot.cloud.iam.controller;
 
 import com.diboot.core.vo.JsonResult;
-import com.diboot.iam.annotation.process.AsyncWorker;
-import com.diboot.iam.config.Cons;
-import com.diboot.iam.entity.IamLoginTrace;
+import com.diboot.cloud.iam.handler.AsyncLogWorker;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import net.minidev.json.JSONObject;
@@ -54,7 +52,7 @@ public class AuthTokenController {
     @Autowired
     private ConsumerTokenServices consumerTokenServices;
     @Autowired
-    private AsyncWorker asyncWorker;
+    private AsyncLogWorker asyncLogWorker;
 
     /**
      * Oauth2登录申请token
@@ -77,7 +75,7 @@ public class AuthTokenController {
             throw nse;
         }
         catch (Exception e){
-            saveLoginTrace(username, userType, userId, false);
+            asyncLogWorker.saveLoginTrace(username, userType, userId, false);
             throw e;
         }
         /*
@@ -91,7 +89,7 @@ public class AuthTokenController {
         }
         //redisTemplate.opsForValue().set(token, loginUser, accessToken.getExpiresIn(), TimeUnit.SECONDS);
         */
-        saveLoginTrace(username, userType, userId, true);
+        asyncLogWorker.saveLoginTrace(username, userType, userId, true);
         return JsonResult.OK(accessToken);
     }
 
@@ -122,16 +120,4 @@ public class AuthTokenController {
         return PUBLIC_KEY;
     }
 
-
-    /**
-     * 保存登录日志
-     * @param userType
-     * @param isSuccess
-     */
-    private void saveLoginTrace(String username, String userType, Long userId, boolean isSuccess){
-        IamLoginTrace loginTrace = new IamLoginTrace();
-        loginTrace.setAuthType(Cons.DICTCODE_AUTH_TYPE.PWD.name()).setAuthAccount(username).setSuccess(isSuccess);
-        loginTrace.setUserType(userType).setUserId(userId);
-        asyncWorker.saveLoginTraceLog(loginTrace);
-    }
 }

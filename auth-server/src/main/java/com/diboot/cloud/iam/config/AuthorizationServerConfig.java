@@ -16,7 +16,7 @@
 package com.diboot.cloud.iam.config;
 
 import com.diboot.cloud.iam.cons.IAMConfig;
-import com.diboot.cloud.common.entity.LoginUser;
+import com.diboot.cloud.entity.LoginUser;
 import com.diboot.cloud.iam.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

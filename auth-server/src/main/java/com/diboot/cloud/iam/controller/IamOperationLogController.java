@@ -15,11 +15,10 @@
  */
 package com.diboot.cloud.iam.controller;
 
+import com.diboot.cloud.iam.handler.AsyncLogWorker;
 import com.diboot.core.controller.BaseCrudRestController;
-import com.diboot.core.util.BeanUtils;
 import com.diboot.core.vo.JsonResult;
-import com.diboot.iam.annotation.process.AsyncWorker;
-import com.diboot.iam.entity.IamOperationLog;
+import com.diboot.cloud.entity.IamOperationLog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +38,7 @@ import javax.validation.Valid;
 public class IamOperationLogController extends BaseCrudRestController<IamOperationLog> {
 
     @Autowired
-    private AsyncWorker asyncWorker;
+    private AsyncLogWorker asyncLogWorker;
 
     /***
      * 新建操作日志
@@ -49,9 +48,7 @@ public class IamOperationLogController extends BaseCrudRestController<IamOperati
      */
     @PostMapping("/")
     public JsonResult createEntityMapping(@Valid @RequestBody IamOperationLog operationLog) throws Exception {
-        com.diboot.iam.entity.IamOperationLog iamOperationLog = new com.diboot.iam.entity.IamOperationLog();
-        BeanUtils.copyProperties(operationLog, iamOperationLog);
-        asyncWorker.saveOperationLog(iamOperationLog);
+        asyncLogWorker.saveOperationLog(operationLog);
         return JsonResult.OK();
     }
 

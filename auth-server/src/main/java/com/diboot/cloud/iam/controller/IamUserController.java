@@ -15,13 +15,13 @@
  */
 package com.diboot.cloud.iam.controller;
 
-import com.diboot.cloud.common.annotation.BindPermission;
-import com.diboot.cloud.common.annotation.Log;
-import com.diboot.cloud.common.entity.LoginUser;
+import com.diboot.cloud.annotation.BindPermission;
+import com.diboot.cloud.annotation.Log;
+import com.diboot.cloud.entity.LoginUser;
 import com.diboot.core.vo.JsonResult;
-import com.diboot.iam.annotation.Operation;
-import com.diboot.iam.entity.IamUser;
-import com.diboot.iam.service.IamUserService;
+import com.diboot.cloud.annotation.Operation;
+import com.diboot.cloud.entity.IamUser;
+import com.diboot.cloud.iam.service.IamUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

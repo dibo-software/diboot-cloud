@@ -14,8 +14,8 @@ package com.example.config;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-import com.example.handler.CustomAccessDeniedHandler;
-import com.example.handler.CustomAuthenticationEntryPoint;
+import com.diboot.cloud.api.handler.CustomAccessDeniedHandler;
+import com.diboot.cloud.api.handler.CustomAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

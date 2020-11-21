@@ -47,13 +47,7 @@
             <version>${mybatis-plus.version}</version>
         </dependency>
 
-        <!-- diboot-core -->
-        <dependency>
-            <groupId>com.diboot</groupId>
-            <artifactId>diboot-iam</artifactId>
-            <version>${diboot-version}</version>
-        </dependency>
-
+        <!-- diboot-cloud base -->
         <dependency>
             <groupId>com.diboot.cloud</groupId>
             <artifactId>diboot-common-base</artifactId>

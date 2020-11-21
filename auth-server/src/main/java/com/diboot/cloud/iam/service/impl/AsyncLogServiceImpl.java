@@ -15,10 +15,9 @@
  */
 package com.diboot.cloud.iam.service.impl;
 
-import com.diboot.cloud.common.entity.IamOperationLog;
-import com.diboot.cloud.common.service.AsyncLogService;
-import com.diboot.core.util.BeanUtils;
-import com.diboot.iam.annotation.process.AsyncWorker;
+import com.diboot.cloud.entity.IamOperationLog;
+import com.diboot.cloud.iam.handler.AsyncLogWorker;
+import com.diboot.cloud.service.AsyncLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,13 +31,11 @@ import org.springframework.stereotype.Service;
 public class AsyncLogServiceImpl implements AsyncLogService {
 
     @Autowired
-    private AsyncWorker asyncWorker;
+    private AsyncLogWorker asyncLogWorker;
 
     @Override
     public void saveOperationLog(IamOperationLog operationLog) {
-        com.diboot.iam.entity.IamOperationLog iamOperationLog = new com.diboot.iam.entity.IamOperationLog();
-        BeanUtils.copyProperties(operationLog, iamOperationLog);
-        asyncWorker.saveOperationLog(iamOperationLog);
+        asyncLogWorker.saveOperationLog(operationLog);
     }
 
 }

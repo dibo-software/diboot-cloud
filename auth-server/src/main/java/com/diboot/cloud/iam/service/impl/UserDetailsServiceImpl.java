@@ -18,18 +18,17 @@ package com.diboot.cloud.iam.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.diboot.cloud.iam.cons.IAMConfig;
-import com.diboot.cloud.common.entity.LoginUser;
+import com.diboot.cloud.entity.LoginUser;
 import com.diboot.core.util.BeanUtils;
 import com.diboot.core.util.V;
-import com.diboot.iam.annotation.process.AsyncWorker;
-import com.diboot.iam.config.Cons;
-import com.diboot.iam.entity.IamAccount;
-import com.diboot.iam.entity.IamLoginTrace;
-import com.diboot.iam.entity.IamRole;
-import com.diboot.iam.entity.IamUser;
-import com.diboot.iam.service.IamAccountService;
-import com.diboot.iam.service.IamUserRoleService;
-import com.diboot.iam.service.IamUserService;
+import com.diboot.cloud.iam.handler.AsyncLogWorker;
+import com.diboot.cloud.config.Cons;
+import com.diboot.cloud.entity.IamAccount;
+import com.diboot.cloud.entity.IamRole;
+import com.diboot.cloud.entity.IamUser;
+import com.diboot.cloud.iam.service.IamAccountService;
+import com.diboot.cloud.iam.service.IamUserRoleService;
+import com.diboot.cloud.iam.service.IamUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
@@ -59,7 +58,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private IamUserService iamUserService;
     @Autowired
-    private AsyncWorker asyncWorker;
+    private AsyncLogWorker asyncLogWorker;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -71,16 +70,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .eq(IamAccount::getAuthType, Cons.DICTCODE_AUTH_TYPE.PWD.name());
         IamAccount account = iamAccountService.getSingleEntity(queryWrapper);
         if (account == null) {
-            saveLoginTrace(username, account, false);
+            asyncLogWorker.saveLoginTrace(username, account, false);
             throw new UsernameNotFoundException(IAMConfig.LOGIN_MSG_ACCOUNT_ERROR);
         }
         if (Cons.DICTCODE_USER_STATUS.L.name().equals(account.getStatus())) {
-            saveLoginTrace(username, account, false);
+            asyncLogWorker.saveLoginTrace(username, account, false);
             throw new LockedException(IAMConfig.LOGIN_MSG_ACCOUNT_LOCKED);
         }
         boolean enabled = Cons.DICTCODE_USER_STATUS.A.name().equals(account.getStatus());
         if (!enabled) {
-            saveLoginTrace(username, account, false);
+            asyncLogWorker.saveLoginTrace(username, account, false);
             throw new DisabledException(IAMConfig.LOGIN_MSG_ACCOUNT_DISABLED);
         }
 //        else if (DictEnums.USER_STATUS.A.name().equals(account.getStatus())) {
@@ -108,17 +107,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 enabled, accountNonLocked, true, true, authorities, account.getUserType(), account.getUserId(), displayName);
     }
 
-    /**
-     * 保存登录日志
-     * @param account
-     * @param isSuccess
-     */
-    private void saveLoginTrace(String username, IamAccount account, boolean isSuccess){
-        IamLoginTrace loginTrace = new IamLoginTrace();
-        loginTrace.setAuthType(Cons.DICTCODE_AUTH_TYPE.PWD.name()).setAuthAccount(username).setSuccess(isSuccess);
-        if(account != null){
-            loginTrace.setUserType(account.getUserType()).setUserId(account.getUserId());
-        }
-        asyncWorker.saveLoginTraceLog(loginTrace);
-    }
 }

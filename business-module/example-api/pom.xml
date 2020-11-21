@@ -16,7 +16,7 @@
 
         <dependency>
             <groupId>com.diboot.cloud</groupId>
-            <artifactId>diboot-common-base</artifactId>
+            <artifactId>diboot-common-api</artifactId>
             <version>${diboot-cloud.version}</version>
         </dependency>
 

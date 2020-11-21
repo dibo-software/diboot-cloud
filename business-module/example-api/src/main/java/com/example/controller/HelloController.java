@@ -15,13 +15,13 @@
  */
 package com.example.controller;
 
-import com.diboot.cloud.common.annotation.BindPermission;
-import com.diboot.cloud.common.annotation.Log;
-import com.diboot.cloud.common.entity.LoginUser;
-import com.diboot.cloud.common.util.IamSecurityUtils;
+import com.diboot.cloud.annotation.BindPermission;
+import com.diboot.cloud.annotation.Log;
+import com.diboot.cloud.api.service.IamUserApiService;
+import com.diboot.cloud.entity.LoginUser;
+import com.diboot.cloud.util.IamSecurityUtils;
 import com.diboot.core.vo.JsonResult;
-import com.diboot.cloud.common.entity.IamUser;
-import com.example.service.remote.IamUserRemoteService;
+import com.diboot.cloud.entity.IamUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
 
     @Autowired(required = false)
-    private IamUserRemoteService iamUserRemoteService;
+    private IamUserApiService iamUserRemoteService;
 
     @Log(businessObj = "Hello", operation = "say hello .")
     @BindPermission(name = "say hello", code = "hello")
