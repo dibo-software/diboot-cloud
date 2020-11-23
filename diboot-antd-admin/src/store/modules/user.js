@@ -1,9 +1,9 @@
 import Vue from 'vue'
-import { login, getInfo, logout } from '@/api/login'
-import { ACCESS_TOKEN, REFRESH_TOKEN, TOKEN_EXPIRES_TIME, TOKEN_TYPE } from '@/store/mutation-types'
+import { login, getInfo, logout, setLoginResult, clearLoginResult } from '@/api/login'
 import { welcome } from '@/utils/util'
 import { permissionListToPermissions } from '@/utils/permissions'
 import defaultAvatar from '@/assets/logo.png'
+import { ACCESS_TOKEN } from '@/store/mutation-types'
 
 const user = {
   state: {
@@ -45,16 +45,7 @@ const user = {
         login(userInfo).then(response => {
           const data = response.data
           if (data !== undefined) {
-            // 从返回数据中提取各项登录数据
-            // eslint-disable-next-line camelcase
-            const { access_token, token_type, refresh_token, expires_in } = data
-            // 将系列数据长期记录到页面中
-            Vue.ls.set(ACCESS_TOKEN, access_token, 7 * 24 * 60 * 60 * 1000)
-            Vue.ls.set(TOKEN_TYPE, token_type, 7 * 24 * 60 * 60 * 1000)
-            // eslint-disable-next-line camelcase
-            Vue.ls.set(TOKEN_EXPIRES_TIME, (new Date()).getTime() + (expires_in * 1000))
-            Vue.ls.set(REFRESH_TOKEN, refresh_token, 90 * 24 * 60 * 60 * 1000)
-            commit('SET_TOKEN', ACCESS_TOKEN)
+            setLoginResult(data)
           }
           resolve(response)
         }).catch(error => {
@@ -97,10 +88,7 @@ const user = {
     // 登出
     Logout ({ commit, state }) {
       return new Promise((resolve) => {
-        commit('SET_TOKEN', '')
-        commit('SET_ROLES', [])
-        Vue.ls.remove(ACCESS_TOKEN)
-
+        clearLoginResult()
         logout(state.token).then(() => {
           resolve()
         }).catch(() => {
