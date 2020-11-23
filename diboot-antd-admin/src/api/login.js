@@ -1,5 +1,6 @@
 import api from './index'
 import { axios } from '@/utils/request'
+import qs from 'qs'
 
 /**
  * login func
@@ -14,23 +15,15 @@ import { axios } from '@/utils/request'
  */
 export function login (parameter) {
   return axios({
-    url: '/auth/login',
+    url: '/auth-server/oauth/token',
     method: 'post',
-    data: parameter
-  })
-}
-
-export function getSmsCaptcha (parameter) {
-  return axios({
-    url: api.SendSms,
-    method: 'post',
-    data: parameter
+    data: qs.stringify(parameter)
   })
 }
 
 export function getInfo () {
   return axios({
-    url: '/auth/userInfo',
+    url: '/auth-server/oauth/userInfo',
     method: 'get'
   })
 }

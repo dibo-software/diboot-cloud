@@ -6,7 +6,7 @@ import {
 } from './axios'
 import notification from 'ant-design-vue/es/notification'
 import {
-  ACCESS_TOKEN
+  ACCESS_TOKEN, TOKEN_TYPE
 } from '@/store/mutation-types'
 import router from '@/router/index'
 import qs from 'qs'
@@ -14,7 +14,7 @@ import qs from 'qs'
 // baseURL
 const BASE_URL = '/api'
 // token在Header中的key，需要与后端对diboot.iam.jwt-signkey配置相同
-const JWT_HEADER_KEY = 'authtoken'
+const JWT_HEADER_KEY = 'Authorization'
 // token自动刷新（发送心跳）的时间间隔（分钟），建议为后端配置的token过期时间的1/8
 const TOKEN_REFRESH_EXPIRE = 10
 // 心跳计时器
@@ -56,9 +56,10 @@ const err = (error) => {
 
 // request interceptor
 service.interceptors.request.use(config => {
-  const token = Vue.ls.get(ACCESS_TOKEN)
-  if (token) {
-    config.headers[JWT_HEADER_KEY] = token // 让每个请求携带自定义 token 请根据实际情况自行修改
+  const accessToken = Vue.ls.get(ACCESS_TOKEN)
+  const tokenType = Vue.ls.get(TOKEN_TYPE)
+  if (tokenType && accessToken) {
+    config.headers[JWT_HEADER_KEY] = `${tokenType} ${accessToken}` // 让每个请求携带自定义 token 请根据实际情况自行修改
   }
   // 只针对get方式进行序列化
   if (config.method === 'get') {
