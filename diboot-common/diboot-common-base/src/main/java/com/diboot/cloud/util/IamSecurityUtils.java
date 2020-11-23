@@ -16,18 +16,19 @@
 package com.diboot.cloud.util;
 
 import com.diboot.cloud.entity.LoginUserDetail;
+import com.diboot.cloud.redis.RedisCons;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Objects;
 
 /**
- * <Description>
- *
- * @author mazc
- * @version v1.0
- * @date 2020/09/17
+ * IAM 安全相关工具类
+ * @author JerryMa
+ * @version v2.2
+ * @date 2020/11/23
  */
 @Slf4j
 public class IamSecurityUtils {
@@ -53,8 +54,19 @@ public class IamSecurityUtils {
      * @return
      */
     public static boolean checkCurrentUserHasRole(String roleCode) {
-        //TODO 判断
-        return true;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // 认证信息可能为空，因此需要进行判断。
+        if (Objects.nonNull(authentication)) {
+            if(!roleCode.startsWith(RedisCons.PREFIX_ROLE)){
+                roleCode = RedisCons.PREFIX_ROLE + roleCode;
+            }
+            for(GrantedAuthority authority : authentication.getAuthorities()){
+                if(authority.getAuthority().equals(roleCode)){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

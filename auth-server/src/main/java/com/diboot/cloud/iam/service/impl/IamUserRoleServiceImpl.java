@@ -17,6 +17,7 @@ package com.diboot.cloud.iam.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.diboot.cloud.iam.service.RoleResourceCacheService;
 import com.diboot.cloud.iam.util.IamHelper;
 import com.diboot.cloud.util.IamSecurityUtils;
 import com.diboot.core.binding.Binder;
@@ -54,7 +55,8 @@ public class IamUserRoleServiceImpl extends BaseIamServiceImpl<IamUserRoleMapper
 
     @Autowired
     private IamRoleService iamRoleService;
-
+    @Autowired
+    private RoleResourceCacheService roleResourceCacheService;
     // 扩展接口
     @Autowired(required = false)
     private IamExtensible iamExtensible;
@@ -62,7 +64,7 @@ public class IamUserRoleServiceImpl extends BaseIamServiceImpl<IamUserRoleMapper
     /**
      * 系统管理员的角色ID
      */
-    private static Long ROLE_ID_SUPER_ADMIN = null;
+    private static Long ROLE_ID_SYSTEM_ADMIN = null;
 
     @Override
     public List<IamRole> getUserRoleList(String userType, Long userId) {
@@ -97,14 +99,14 @@ public class IamUserRoleServiceImpl extends BaseIamServiceImpl<IamUserRoleMapper
 
     @Override
     public boolean createEntity(IamUserRole entity){
-        Long superAdminRoleId = getSuperAdminRoleId();
+        Long superAdminRoleId = getSystemAdminRoleId();
         if(superAdminRoleId != null && superAdminRoleId.equals(entity.getRoleId())){
             checkSystemAdminIdentity();
         }
         boolean success = super.createEntity(entity);
         if(success){
-            // 清空缓存
-            clearUserAuthCache(entity.getUserType(), entity.getUserId());
+            // 清空用户缓存
+            roleResourceCacheService.addIntoPendingRefresh(entity.getUserType(), entity.getUserId());
         }
         return success;
     }
@@ -115,14 +117,13 @@ public class IamUserRoleServiceImpl extends BaseIamServiceImpl<IamUserRoleMapper
         if (V.isEmpty(entityList)) {
             return true;
         }
-
-        Long superAdminRoleId = getSuperAdminRoleId();
+        Long systemAdminRoleId = getSystemAdminRoleId();
         boolean hasSuperAdmin = false;
         String userType = null;
         Long userId = null;
         for(Object entity : entityList){
             IamUserRole iamUserRole = (IamUserRole)entity;
-            if(superAdminRoleId != null && superAdminRoleId.equals(iamUserRole.getRoleId())){
+            if(systemAdminRoleId != null && systemAdminRoleId.equals(iamUserRole.getRoleId())){
                 hasSuperAdmin = true;
             }
             if(userId == null){
@@ -136,7 +137,7 @@ public class IamUserRoleServiceImpl extends BaseIamServiceImpl<IamUserRoleMapper
         boolean success = super.createEntities(entityList);
         if(success){
             // 清空用户缓存
-            clearUserAuthCache(userType, userId);
+            roleResourceCacheService.addIntoPendingRefresh(userType, userId);
         }
         return success;
     }
@@ -147,9 +148,9 @@ public class IamUserRoleServiceImpl extends BaseIamServiceImpl<IamUserRoleMapper
         if(V.isEmpty(roleIds)){
             return true;
         }
-        Long superAdminRoleId = getSuperAdminRoleId();
+        Long systemAdminRoleId = getSystemAdminRoleId();
         // 给用户赋予了系统管理员，需确保当前用户为系统管理员权限
-        if(superAdminRoleId != null && roleIds.contains(superAdminRoleId)){
+        if(systemAdminRoleId != null && roleIds.contains(systemAdminRoleId)){
             checkSystemAdminIdentity();
         }
         List<IamUserRole> entityList = new ArrayList<>();
@@ -159,7 +160,7 @@ public class IamUserRoleServiceImpl extends BaseIamServiceImpl<IamUserRoleMapper
         boolean success = super.createEntities(entityList);
         if(success){
             // 清空用户缓存
-            clearUserAuthCache(userType, userId);
+            roleResourceCacheService.addIntoPendingRefresh(userType, userId);
         }
         return success;
     }
@@ -183,9 +184,9 @@ public class IamUserRoleServiceImpl extends BaseIamServiceImpl<IamUserRoleMapper
                     .collect(Collectors.toList());
         }
 
-        Long superAdminRoleId = getSuperAdminRoleId();
+        Long systemAdminRoleId = getSystemAdminRoleId();
         // 给用户赋予了系统管理员，需确保当前用户为系统管理员权限
-        if(superAdminRoleId != null && (roleIds.contains(superAdminRoleId) || oldRoleIds.contains(superAdminRoleId))){
+        if(systemAdminRoleId != null && (roleIds.contains(systemAdminRoleId) || oldRoleIds.contains(systemAdminRoleId))){
             checkSystemAdminIdentity();
         }
 
@@ -202,7 +203,7 @@ public class IamUserRoleServiceImpl extends BaseIamServiceImpl<IamUserRoleMapper
         boolean success = super.createEntities(entityList);
         if(success){
             // 清空用户缓存
-            clearUserAuthCache(userType, userId);
+            roleResourceCacheService.addIntoPendingRefresh(userType, userId);
         }
         return success;
     }
@@ -239,17 +240,17 @@ public class IamUserRoleServiceImpl extends BaseIamServiceImpl<IamUserRoleMapper
      * 获取系统管理员角色ID
      * @return
      */
-    private Long getSuperAdminRoleId(){
-        if(ROLE_ID_SUPER_ADMIN == null){
+    private Long getSystemAdminRoleId(){
+        if(ROLE_ID_SYSTEM_ADMIN == null){
             LambdaQueryWrapper<IamRole> queryWrapper = new LambdaQueryWrapper<IamRole>()
                     .select(IamRole::getId)
                     .eq(IamRole::getCode, Cons.ROLE_SYSTEM_ADMIN);
             IamRole admin = iamRoleService.getSingleEntity(queryWrapper);
             if(admin != null){
-                ROLE_ID_SUPER_ADMIN = admin.getId();
+                ROLE_ID_SYSTEM_ADMIN = admin.getId();
             }
         }
-        return ROLE_ID_SUPER_ADMIN;
+        return ROLE_ID_SYSTEM_ADMIN;
     }
 
     /**
@@ -259,19 +260,6 @@ public class IamUserRoleServiceImpl extends BaseIamServiceImpl<IamUserRoleMapper
         if(!IamSecurityUtils.checkCurrentUserHasRole(Cons.ROLE_SYSTEM_ADMIN)){
             throw new PermissionException("非系统管理员用户不可授予其他用户系统管理员权限！");
         }
-    }
-
-    /**
-     * 清空用户的认证缓存，以便权限变化及时生效
-     * @param userType
-     * @param userId
-     */
-    private void clearUserAuthCache(String userType, Long userId){
-        //String username = iamAccountService.getAuthAccount(userType, userId);
-        //if(V.notEmpty(username)){
-            //TODO 清空缓存
-            //clearAuthorizationCache(username);
-        //}
     }
 
 }

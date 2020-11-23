@@ -16,7 +16,6 @@
 package com.diboot.cloud.iam.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.diboot.cloud.iam.util.IamHelper;
 import com.diboot.core.exception.BusinessException;
 import com.diboot.core.util.V;
 import com.diboot.core.vo.Status;
@@ -29,14 +28,11 @@ import com.diboot.cloud.iam.mapper.IamUserMapper;
 import com.diboot.cloud.iam.service.IamAccountService;
 import com.diboot.cloud.iam.service.IamUserRoleService;
 import com.diboot.cloud.iam.service.IamUserService;
-import com.diboot.cloud.vo.IamRoleVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
 * 系统用户相关Service实现

@@ -114,7 +114,7 @@ export default {
   methods: {
     async afterOpen (id) {
       // 是否为系统管理员
-      if (this.model && this.model.code && this.model.code.toUpperCase() === 'SUPER_ADMIN') {
+      if (this.model && this.model.code && this.model.code.toUpperCase() === 'SYSTEM_ADMIN') {
         this.isAdmin = true
       }
 

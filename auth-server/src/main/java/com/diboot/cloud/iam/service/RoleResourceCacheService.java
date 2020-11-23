@@ -13,33 +13,33 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.diboot.cloud.redis;
+package com.diboot.cloud.iam.service;
 
 /**
- * Redis常量定义
+ * 角色资源缓存Service
  * @author JerryMa
- * @version v1.0
- * @date 2020/11/19
+ * @version v2.2
+ * @date 2020/11/23
  */
-public class RedisCons {
-
-    public static final String PREFIX_ROLE = "ROLE_";
-
-    public static final String KEY_CLAIM_NAME = "authorities";
+public interface RoleResourceCacheService {
 
     /**
-     * key：资源角色的映射Map
+     * 刷新资源角色的缓存Map
      */
-    public static final String KEY_RESOURCE_ROLES_MAP = "DIBOOT:AUTH:RESOURCE_ROLES_MAP";
+    boolean refreshResourceRolesCache();
 
     /**
-     * 应用模块权限key前缀
+     * 刷新用户角色缓存
+     * @param userType
+     * @param userId
+     * @return
      */
-    public static final String KEY_APP_MODULE_PERMISSIONS_MAP = "DIBOOT:APP_MODULE_PERMISSIONS_MAP";
+    boolean refreshUserRolesCache(String userType, Long userId);
 
     /**
-     * 用户权限刷新的map
+     * 刷新用户认证缓存等待区
+     * @param userType
+     * @param userId
      */
-    public static final String KEY_USER_AUTH_REFRESH_MAP = "DIBOOT:USER_AUTH_REFRESH_MAP";
-
+    void addIntoPendingRefresh(String userType, Long userId);
 }

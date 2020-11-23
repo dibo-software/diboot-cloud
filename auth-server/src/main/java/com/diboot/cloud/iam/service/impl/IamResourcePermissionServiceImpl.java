@@ -17,6 +17,7 @@ package com.diboot.cloud.iam.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.diboot.cloud.iam.service.RoleResourceCacheService;
 import com.diboot.core.exception.BusinessException;
 import com.diboot.core.util.BeanUtils;
 import com.diboot.core.util.S;
@@ -29,6 +30,7 @@ import com.diboot.cloud.iam.mapper.IamResourcePermissionMapper;
 import com.diboot.cloud.iam.service.IamResourcePermissionService;
 import com.diboot.cloud.vo.IamResourcePermissionListVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +50,8 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class IamResourcePermissionServiceImpl extends BaseIamServiceImpl<IamResourcePermissionMapper, IamResourcePermission> implements IamResourcePermissionService {
+    @Autowired
+    private RoleResourceCacheService roleResourceCacheService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -91,6 +95,8 @@ public class IamResourcePermissionServiceImpl extends BaseIamServiceImpl<IamReso
             p.setDisplayType(Cons.RESOURCE_PERMISSION_DISPLAY_TYPE.PERMISSION.name());
         });
         this.createEntities(permissionList);
+        // 更新资源角色映射缓存
+        roleResourceCacheService.refreshResourceRolesCache();
     }
 
     @Override
@@ -152,8 +158,8 @@ public class IamResourcePermissionServiceImpl extends BaseIamServiceImpl<IamReso
         if (hasDirtyData()) {
             throw new BusinessException(Status.FAIL_OPERATION, "父级节点不可设置在自己的子节点上");
         }
-        // 清理脏数据
-        //this.clearDirtyData();
+        // 更新资源角色映射缓存
+        roleResourceCacheService.refreshResourceRolesCache();
     }
 
     @Override
@@ -182,6 +188,8 @@ public class IamResourcePermissionServiceImpl extends BaseIamServiceImpl<IamReso
                 this.deleteMenuAndPermissions(menuId);
             });
         }
+        // 更新资源角色映射缓存
+        roleResourceCacheService.refreshResourceRolesCache();
     }
 
     @Override

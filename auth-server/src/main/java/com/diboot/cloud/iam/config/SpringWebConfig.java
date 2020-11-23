@@ -15,6 +15,7 @@
  */
 package com.diboot.cloud.iam.config;
 
+import com.diboot.cloud.iam.handler.AccessInteceptor;
 import com.diboot.core.util.D;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -22,10 +23,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.math.BigInteger;
@@ -42,6 +45,13 @@ import java.util.List;
 @ComponentScan({"com.diboot.**"})
 @MapperScan({"com.diboot.**.mapper"})
 public class SpringWebConfig implements WebMvcConfigurer {
+    @Autowired
+    private AccessInteceptor accessInteceptor;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(accessInteceptor).addPathPatterns("/**");
+    }
 
     /**
      * 覆盖Jackson转换
