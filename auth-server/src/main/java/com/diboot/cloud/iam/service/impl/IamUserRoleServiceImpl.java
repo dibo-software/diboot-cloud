@@ -17,9 +17,9 @@ package com.diboot.cloud.iam.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.diboot.cloud.iam.util.IamHelper;
 import com.diboot.cloud.util.IamSecurityUtils;
 import com.diboot.core.binding.Binder;
-import com.diboot.core.entity.BaseEntity;
 import com.diboot.core.util.BeanUtils;
 import com.diboot.core.util.V;
 import com.diboot.cloud.iam.service.IamExtensible;
@@ -28,7 +28,6 @@ import com.diboot.cloud.entity.IamRole;
 import com.diboot.cloud.entity.IamUserRole;
 import com.diboot.cloud.exception.PermissionException;
 import com.diboot.cloud.iam.mapper.IamUserRoleMapper;
-import com.diboot.cloud.iam.service.IamAccountService;
 import com.diboot.cloud.iam.service.IamRoleService;
 import com.diboot.cloud.iam.service.IamUserRoleService;
 import com.diboot.cloud.vo.IamRoleVO;
@@ -55,8 +54,6 @@ public class IamUserRoleServiceImpl extends BaseIamServiceImpl<IamUserRoleMapper
 
     @Autowired
     private IamRoleService iamRoleService;
-    @Autowired
-    private IamAccountService iamAccountService;
 
     // 扩展接口
     @Autowired(required = false)
@@ -211,8 +208,18 @@ public class IamUserRoleServiceImpl extends BaseIamServiceImpl<IamUserRoleMapper
     }
 
     @Override
-    public List<IamRoleVO> getAllRoleVOList(BaseEntity userObject) {
-        List<IamRole> roleList = getUserRoleList(userObject.getClass().getSimpleName(), userObject.getId());
+    public IamRoleVO buildRoleVo4FrontEnd(String userType, Long userId) {
+        List<IamRoleVO> roleVOList = getAllRoleVOList(userType, userId);
+        if (V.isEmpty(roleVOList)){
+            return null;
+        }
+        // 组合为前端格式
+        return IamHelper.buildRoleVo4FrontEnd(roleVOList);
+    }
+
+    @Override
+    public List<IamRoleVO> getAllRoleVOList(String userType, Long userId) {
+        List<IamRole> roleList = getUserRoleList(userType, userId);
         if (V.isEmpty(roleList)){
             return null;
         }

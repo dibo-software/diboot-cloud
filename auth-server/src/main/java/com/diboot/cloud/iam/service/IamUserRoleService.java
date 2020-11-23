@@ -15,7 +15,6 @@
  */
 package com.diboot.cloud.iam.service;
 
-import com.diboot.core.entity.BaseEntity;
 import com.diboot.cloud.entity.IamRole;
 import com.diboot.cloud.entity.IamUserRole;
 import com.diboot.cloud.vo.IamRoleVO;
@@ -65,12 +64,21 @@ public interface IamUserRoleService extends BaseIamService<IamUserRole> {
      */
     boolean updateUserRoleRelations(String userType, Long userId, List<Long> roleIds);
 
-    /***
-     * 获取用户的所有角色列表（包括扩展的关联角色）
-     * @param userObject
+    /**
+     * 构建role-permission角色权限数据格式(合并role等)，用于前端适配
+     * @param userType
+     * @param userId
      * @return
      */
-    List<IamRoleVO> getAllRoleVOList(BaseEntity userObject);
+    IamRoleVO buildRoleVo4FrontEnd(String userType, Long userId);
+
+    /***
+     * 获取用户的所有角色列表（包括扩展的关联角色）
+     * @param userType
+     * @param userId
+     * @return
+     */
+    List<IamRoleVO> getAllRoleVOList(String userType, Long userId);
 
     /**
      * 获取Iam扩展实现

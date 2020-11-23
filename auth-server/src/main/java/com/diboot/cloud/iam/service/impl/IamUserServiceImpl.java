@@ -57,21 +57,6 @@ public class IamUserServiceImpl extends BaseIamServiceImpl<IamUserMapper, IamUse
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public IamRoleVO buildRoleVo4FrontEnd(IamUser iamUser) {
-        List<IamRoleVO> roleVOList = getAllRoleVOList(iamUser);
-        if (V.isEmpty(roleVOList)){
-            return null;
-        }
-        // 组合为前端格式
-        return IamHelper.buildRoleVo4FrontEnd(roleVOList);
-    }
-
-    @Override
-    public List<IamRoleVO> getAllRoleVOList(IamUser iamUser) {
-        return iamUserRoleService.getAllRoleVOList(iamUser);
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean createUserAndAccount(IamUserAccountDTO userAccountDTO) throws Exception {
         // 创建用户信息

@@ -15,6 +15,10 @@
  */
 package com.diboot.cloud.iam.controller;
 
+import com.diboot.cloud.entity.LoginUserDetail;
+import com.diboot.cloud.iam.service.IamUserRoleService;
+import com.diboot.cloud.util.IamSecurityUtils;
+import com.diboot.cloud.vo.IamRoleVO;
 import com.diboot.core.vo.JsonResult;
 import com.diboot.cloud.iam.handler.AsyncLogWorker;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -30,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.KeyPair;
 import java.security.Principal;
 import java.security.interfaces.RSAPublicKey;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -48,9 +53,10 @@ public class AuthTokenController {
 
     @Autowired
     private TokenEndpoint tokenEndpoint;
-
     @Autowired
     private ConsumerTokenServices consumerTokenServices;
+    @Autowired
+    private IamUserRoleService iamUserRoleService;
     @Autowired
     private AsyncLogWorker asyncLogWorker;
 
@@ -102,6 +108,25 @@ public class AuthTokenController {
     public JsonResult revokeToken(String access_token) {
         boolean success = consumerTokenServices.revokeToken(access_token);
         return JsonResult.OK().msg(success? "注销成功" : "注销失败");
+    }
+
+    /**
+     * 获取用户角色权限信息
+     * @return
+     */
+    @GetMapping("/userInfo")
+    public JsonResult getUserInfo(){
+        Map<String, Object> data = new HashMap<>();
+        // 获取当前登录用户对象
+        LoginUserDetail currentUser = IamSecurityUtils.getCurrentUser();
+        if(currentUser == null){
+            return JsonResult.OK();
+        }
+        data.put("name", currentUser.getDisplayName());
+        // 角色权限数据
+        IamRoleVO roleVO = iamUserRoleService.buildRoleVo4FrontEnd(currentUser.getUserType(), currentUser.getUserId());
+        data.put("role", roleVO);
+        return JsonResult.OK(data);
     }
 
     /**
