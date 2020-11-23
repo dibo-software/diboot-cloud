@@ -1,9 +1,9 @@
 import Vue from 'vue'
-import { login, getInfo, logout } from '@/api/login'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
+import { login, getInfo, logout, setLoginResult, clearLoginResult } from '@/api/login'
 import { welcome } from '@/utils/util'
 import { permissionListToPermissions } from '@/utils/permissions'
 import defaultAvatar from '@/assets/logo.png'
+import { ACCESS_TOKEN } from '@/store/mutation-types'
 
 const user = {
   state: {
@@ -44,8 +44,9 @@ const user = {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
           const data = response.data
-          Vue.ls.set(ACCESS_TOKEN, data, 7 * 24 * 60 * 60 * 1000)
-          commit('SET_TOKEN', data)
+          if (data !== undefined) {
+            setLoginResult(data)
+          }
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -87,10 +88,7 @@ const user = {
     // 登出
     Logout ({ commit, state }) {
       return new Promise((resolve) => {
-        commit('SET_TOKEN', '')
-        commit('SET_ROLES', [])
-        Vue.ls.remove(ACCESS_TOKEN)
-
+        clearLoginResult()
         logout(state.token).then(() => {
           resolve()
         }).catch(() => {

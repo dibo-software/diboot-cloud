@@ -6,20 +6,24 @@ import {
 } from './axios'
 import notification from 'ant-design-vue/es/notification'
 import {
-  ACCESS_TOKEN
+  ACCESS_TOKEN, TOKEN_TYPE
 } from '@/store/mutation-types'
 import router from '@/router/index'
 import qs from 'qs'
+import { refreshToken, clearLoginResult } from '@/api/login'
 
 // baseURL
 const BASE_URL = '/api'
 // token在Header中的key，需要与后端对diboot.iam.jwt-signkey配置相同
-const JWT_HEADER_KEY = 'authtoken'
+const JWT_HEADER_KEY = 'Authorization'
+// 获取token的接口
+const TOKEN_API_SUFFIX = '/oauth/token'
 // token自动刷新（发送心跳）的时间间隔（分钟），建议为后端配置的token过期时间的1/8
 const TOKEN_REFRESH_EXPIRE = 10
-// 心跳计时器
-let pingTimer = {}
-setPingTimer()
+// 刷新token标记
+let isTokenRefreshing = false
+// 重试请求队列，将在刷新token过程中新进入的请求，挂起并记录到到该队列中
+let waitingQueue = []
 
 // 创建 axios 实例
 const service = axios.create({
@@ -56,10 +60,8 @@ const err = (error) => {
 
 // request interceptor
 service.interceptors.request.use(config => {
-  const token = Vue.ls.get(ACCESS_TOKEN)
-  if (token) {
-    config.headers[JWT_HEADER_KEY] = token // 让每个请求携带自定义 token 请根据实际情况自行修改
-  }
+  // 设置请求头的token
+  setAccessToken(config)
   // 只针对get方式进行序列化
   if (config.method === 'get') {
     config.paramsSerializer = function (params) {
@@ -71,25 +73,53 @@ service.interceptors.request.use(config => {
 
 // response interceptor
 service.interceptors.response.use((response) => {
-  // 检查是否携带有新的token
-  const newToken = response.headers[JWT_HEADER_KEY]
-  if (newToken) {
-    // 将该token设置到vuex以及本地存储中
-    Vue.ls.set(ACCESS_TOKEN, newToken, 7 * 24 * 60 * 60 * 1000)
-    store.commit('SET_TOKEN', newToken)
-  }
-  // 如果请求成功，则重置心跳定时器
-  if (response.status === 200) {
-    resetPingTimer()
+  // 如果返回的自定义状态码为 4001， 则token过期，需要通过refresh_token重新获取token
+  if (response.data && response.data.code === 4001) {
+    const config = response.config
+    console.log('current response url', config.url)
+    if (!isTokenRefreshing) {
+      isTokenRefreshing = true
+      return refreshToken()
+        .then(() => {
+          // 设置重发请求的请求头
+          setAccessToken(config)
+          // 重新获取token成功后，如果队列中有请求，则依此重发请求，并清空等待队列
+          waitingQueue.forEach(func => func())
+          waitingQueue = []
+          // 重发当前请求
+          return service(config)
+        })
+        .catch(() => {
+          // 清除登录信息
+          clearLoginResult()
+          // 跳转至登录页
+          router.push({
+            path: '/login',
+            query: { redirect: router.currentRoute.fullPath }
+          })
+          return Promise.reject(new Error('请重新登录'))
+        })
+        .finally(() => {
+          isTokenRefreshing = false
+        })
+    } else {
+      // 返回一个未resolve的promise
+      return new Promise(resolve => {
+        // 将执行函数放入等待队列
+        waitingQueue.push(() => {
+          setAccessToken(config)
+          resolve(service(config))
+        })
+      })
+    }
   }
 
-  // 如果返回的自定义状态码为 4001， 则token过期，需要清理掉token并跳转至登录页面重新登录
-  if (response.data && response.data.code === 4001) {
-    Vue.ls.remove(ACCESS_TOKEN)
-    store.commit('SET_TOKEN', '')
-    store.commit('SET_ROLES', [])
-    router.push('/login')
-    throw new Error('登录过期，请重新登录')
+  if (response.data && response.data.code === 5000) {
+    router.push({
+      path: '/login',
+      query: { redirect: router.currentRoute.fullPath }
+    })
+    return Promise.reject(new Error('请重新登录'))
   }
 
   // 如果当前请求是下载请求
@@ -204,29 +234,19 @@ const dibootApi = {
   }
 }
 
+function setAccessToken (config) {
+  const accessToken = Vue.ls.get(ACCESS_TOKEN)
+  const tokenType = Vue.ls.get(TOKEN_TYPE)
+  if (tokenType && accessToken) {
+    config.headers[JWT_HEADER_KEY] = `${tokenType} ${accessToken}` // 让每个请求携带自定义 token 请根据实际情况自行修改
+  }
+}
+
 const installer = {
   vm: {},
   install (Vue) {
     Vue.use(VueAxios, service)
   }
-}
-
-/***
- * 设置一个心跳定时器
- */
-function setPingTimer () {
-  pingTimer = setTimeout(() => {
-    dibootApi.post('/iam/ping')
-    resetPingTimer()
-  }, TOKEN_REFRESH_EXPIRE * 60 * 1000)
-}
-
-/***
- * 重置一个心跳定时器
- */
-function resetPingTimer () {
-  clearTimeout(pingTimer)
-  setPingTimer()
 }
 
 export {

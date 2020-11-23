@@ -1,4 +1,7 @@
 export const ACCESS_TOKEN = 'Access-Token'
+export const REFRESH_TOKEN = 'Refresh-Token'
+export const TOKEN_TYPE = 'Token-Type'
+export const TOKEN_EXPIRES_TIME = 'Token-Expires-Time'
 export const SIDEBAR_TYPE = 'SIDEBAR_TYPE'
 export const DEFAULT_THEME = 'DEFAULT_THEME'
 export const DEFAULT_LAYOUT_MODE = 'DEFAULT_LAYOUT_MODE'

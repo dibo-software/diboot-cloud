@@ -12,7 +12,7 @@
         <a-input
           size="large"
           type="text"
-          placeholder="请输入用户名：admin"
+          placeholder="请输入用户名"
           v-decorator="[
             'username',
             {rules: [{ required: true, message: '请输入用户名' }, { validator: handleUsernameOrEmail }], validateTrigger: 'change'}
@@ -27,7 +27,7 @@
           size="large"
           type="password"
           autocomplete="false"
-          placeholder="请输入密码：123456"
+          placeholder="请输入密码"
           v-decorator="[
             'password',
             {rules: [{ required: true, message: '请输入密码' }], validateTrigger: 'blur'}
@@ -37,30 +37,30 @@
         </a-input>
       </a-form-item>
 
-      <a-row :gutter="16">
-        <a-col class="gutter-row" :span="16">
-          <a-form-item>
-            <a-input
-              size="large"
-              type="text"
-              placeholder="验证码"
-              v-decorator="[
-                'captcha',
-                {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}
-              ]"
-            >
-              <a-icon slot="prefix" type="key" :style="{ color: 'rgba(0,0,0,.25)' }"/>
-            </a-input>
-          </a-form-item>
-        </a-col>
-        <a-col class="gutter-row" :span="8">
-          <img
-            :src="`${baseURL}/auth/captcha?p=${captchaParam}`"
-            @click="++captchaParam"
-            alt="验证码"
-            style="height: 40px; cursor: pointer;">
-        </a-col>
-      </a-row>
+      <!--      <a-row :gutter="16">-->
+      <!--        <a-col class="gutter-row" :span="16">-->
+      <!--          <a-form-item>-->
+      <!--            <a-input-->
+      <!--              size="large"-->
+      <!--              type="text"-->
+      <!--              placeholder="验证码"-->
+      <!--              v-decorator="[-->
+      <!--                'captcha',-->
+      <!--                {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}-->
+      <!--              ]"-->
+      <!--            >-->
+      <!--              <a-icon slot="prefix" type="key" :style="{ color: 'rgba(0,0,0,.25)' }"/>-->
+      <!--            </a-input>-->
+      <!--          </a-form-item>-->
+      <!--        </a-col>-->
+      <!--        <a-col class="gutter-row" :span="8">-->
+      <!--          <img-->
+      <!--            :src="`${baseURL}/auth/captcha?p=${captchaParam}`"-->
+      <!--            @click="++captchaParam"-->
+      <!--            alt="验证码"-->
+      <!--            style="height: 40px; cursor: pointer;">-->
+      <!--        </a-col>-->
+      <!--      </a-row>-->
 
       <a-form-item style="margin-top:24px">
         <a-button
@@ -96,10 +96,6 @@ export default {
   },
   data () {
     return {
-      customActiveKey: 'tab1',
-      loginBtn: false,
-      // login type: 0 email, 1 username, 2 telephone
-      loginType: 0,
       requiredTwoStepCaptcha: false,
       stepCaptchaVisible: false,
       form: this.$form.createForm(this),
@@ -114,16 +110,6 @@ export default {
       captchaParam: 0
     }
   },
-  created () {
-    get2step({ })
-      .then(res => {
-        this.requiredTwoStepCaptcha = res.result.stepCode
-      })
-      .catch(() => {
-        this.requiredTwoStepCaptcha = false
-      })
-    // this.requiredTwoStepCaptcha = true
-  },
   methods: {
     ...mapActions(['Login', 'Logout', 'GetInfo']),
     // handler
@@ -136,9 +122,6 @@ export default {
         state.loginType = 1
       }
       callback()
-    },
-    handleTabClick (key) {
-      this.customActiveKey = key
     },
     handleGetInfo () {
       const { GetInfo } = this
@@ -160,7 +143,12 @@ export default {
 
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
-          const loginParams = { ...values }
+          const loginParams = {
+            ...values,
+            grant_type: 'password',
+            client_id: 'pc',
+            client_secret: 'secret'
+          }
           Login(loginParams)
             .then((res) => {
               if (res.code === 0) {
@@ -183,49 +171,6 @@ export default {
             state.loginBtn = false
           }, 600)
         }
-      })
-    },
-    getCaptcha (e) {
-      e.preventDefault()
-      const { form: { validateFields }, state } = this
-
-      validateFields(['mobile'], { force: true }, (err, values) => {
-        if (!err) {
-          state.smsSendBtn = true
-
-          const interval = window.setInterval(() => {
-            if (state.time-- <= 0) {
-              state.time = 60
-              state.smsSendBtn = false
-              window.clearInterval(interval)
-            }
-          }, 1000)
-
-          const hide = this.$message.loading('验证码发送中..', 0)
-          getSmsCaptcha({ mobile: values.mobile }).then(res => {
-            setTimeout(hide, 2500)
-            this.$notification['success']({
-              message: '提示',
-              description: '验证码获取成功，您的验证码为：' + res.result.captcha,
-              duration: 8
-            })
-          }).catch(err => {
-            setTimeout(hide, 1)
-            clearInterval(interval)
-            state.time = 60
-            state.smsSendBtn = false
-            this.requestFailed(err)
-          })
-        }
-      })
-    },
-    stepCaptchaSuccess () {
-      this.loginSuccess()
-    },
-    stepCaptchaCancel () {
-      this.Logout().then(() => {
-        this.loginBtn = false
-        this.stepCaptchaVisible = false
       })
     },
     loginSuccess (res) {
