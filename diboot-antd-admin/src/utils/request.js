@@ -11,6 +11,7 @@ import {
 import router from '@/router/index'
 import qs from 'qs'
 import { refreshToken, clearLoginResult } from '@/api/login'
+import { message } from 'ant-design-vue'
 
 // baseURL
 const BASE_URL = '/api'
@@ -76,13 +77,17 @@ service.interceptors.response.use((response) => {
   // 如果返回的自定义状态码为 4001， 则token过期，需要通过refresh_token重新获取token
   if (response.data && response.data.code === 4001) {
     const config = response.config
-    console.log('current response url', config.url)
     if (!isTokenRefreshing) {
       isTokenRefreshing = true
+      // 提示自动登录，不提示可将此行注释
+      const hideMessage = message.loading('自动登录中...', 0)
       return refreshToken()
         .then(() => {
           // 设置重发请求的请求头
           setAccessToken(config)
+          // 关闭自动登录提示，不提示可将此行注释
+          hideMessage()
+          message.success('登录成功', 2.5)
           // 重新获取token成功后，如果队列中有请求，则依此重发请求，并清空等待队列
           waitingQueue.forEach(func => func())
           waitingQueue = []
@@ -92,6 +97,9 @@ service.interceptors.response.use((response) => {
         .catch(() => {
           // 清除登录信息
           clearLoginResult()
+          // 关闭自动登录提示，不提示可将此行注释
+          hideMessage()
+          message.warning('登录失败，请重新登录', 2.5)
           // 跳转至登录页
           router.push({
             path: '/login',
@@ -115,6 +123,7 @@ service.interceptors.response.use((response) => {
   }
 
   if (response.data && response.data.code === 5000) {
+    message.success('登录失败，请重新登录', 2.5)
     router.push({
       path: '/login',
       query: { redirect: router.currentRoute.fullPath }

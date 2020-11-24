@@ -76,7 +76,7 @@ public class RoleResourceCacheServiceImpl implements RoleResourceCacheService {
                     roleCodes = Collections.emptyList();
                 }
                 else{
-                    roleCodes = roleCodes.stream().map(i -> i = Cons.PREFIX_ROLE + i).collect(Collectors.toList());
+                    roleCodes = roleCodes.stream().map(i -> i = RedisCons.PREFIX_ROLE + i).collect(Collectors.toList());
                 }
                 // 组装
                 String[] apiArray = S.split(vo.getApiSet());
