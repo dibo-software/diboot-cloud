@@ -64,9 +64,9 @@ export const asyncRouterMap = [
             meta: { title: '资源权限管理', keepAlive: true, permission: ['IamResourcePermission'] }
           },
           {
-            path: '/system/iamOperationLog/list',
-            name: 'IamOperationLogList',
-            component: () => import('@/views/system/iamOperationLog/list'),
+            path: '/system/iamOperationLog/index',
+            name: 'IamOperationLogIndex',
+            component: () => import('@/views/system/iamOperationLog/Index'),
             meta: { title: '操作日志查看', keepAlive: true, permission: ['IamOperationLog'] }
           },
           {

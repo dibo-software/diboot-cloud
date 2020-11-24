@@ -61,7 +61,7 @@ export default {
   name: 'IamOperationLogDetail',
   data () {
     return {
-      baseApi: '/iam/operationLog',
+      baseApi: '/auth-server/iam/operationLog',
       permissionTreeList: []
     }
   },
