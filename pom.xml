@@ -23,7 +23,7 @@
         <spring-security.version>5.4.1</spring-security.version>
         <spring-cloud-alibaba.version>2.2.1.RELEASE</spring-cloud-alibaba.version>
         <lombok.version>1.18.12</lombok.version>
-        <mybatis-plus.version>3.4.0</mybatis-plus.version>
+        <mybatis-plus.version>3.4.1</mybatis-plus.version>
         <diboot-version>2.2.0</diboot-version>
         <diboot-cloud.version>2.2.0-SNAPSHOT</diboot-cloud.version>
     </properties>
