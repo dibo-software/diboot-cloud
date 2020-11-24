@@ -18,6 +18,7 @@ package com.diboot.cloud.gateway.auth;
 import com.diboot.cloud.redis.RedisCons;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authorization.AuthorizationDecision;
@@ -42,12 +43,20 @@ import java.util.Map;
 @Slf4j
 @Component
 public class GatewayAuthorizationManager implements ReactiveAuthorizationManager<AuthorizationContext> {
+    @Value("${spring.profiles.active}")
+    private String profile;
+
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
     private static final PathMatcher PATH_MATCHER = new AntPathMatcher();
 
     @Override
     public Mono<AuthorizationDecision> check(Mono<Authentication> mono, AuthorizationContext authorizationContext) {
+        // 开发模式下，忽略权限检查
+        if(isDevelopmentMode()){
+            log.info("开发模式已启用，权限检查将被忽略！");
+            return Mono.just(new AuthorizationDecision(true));
+        }
         //从Redis中获取当前路径可访问角色列表
         ServerHttpRequest request = authorizationContext.getExchange().getRequest();
         Map<Object, Object> resourceRolesMap = redisTemplate.opsForHash().entries(RedisCons.KEY_RESOURCE_ROLES_MAP);
@@ -58,8 +67,7 @@ public class GatewayAuthorizationManager implements ReactiveAuthorizationManager
         if(resourceRolesMap.containsKey(requestUri)){
             matchRoles = (List<String>)resourceRolesMap.get(requestUri);
         }
-        else{
-            // 前缀
+        else{// 前缀
             for(Map.Entry<Object, Object> entry : resourceRolesMap.entrySet()){
                 if(PATH_MATCHER.match((String)entry.getKey(), requestUri)){
                     matchRoles = (List<String>)entry.getValue();
@@ -83,4 +91,11 @@ public class GatewayAuthorizationManager implements ReactiveAuthorizationManager
                 .defaultIfEmpty(new AuthorizationDecision(false));
     }
 
+    /**
+     * 是否为开发者模式
+     * @return
+     */
+    private boolean isDevelopmentMode(){
+        return "dev".equals(profile);
+    }
 }
