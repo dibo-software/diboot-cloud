@@ -30,7 +30,7 @@ import java.util.List;
  * @version v2.2
  * @date 2020/11/09
  */
-@Service
+@Service("BindDictServiceImpl")
 public class BindDictServiceImpl implements BindDictService {
 
     @Autowired

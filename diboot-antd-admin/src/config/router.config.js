@@ -34,9 +34,9 @@ export const asyncRouterMap = [
         meta: { title: '系统管理', icon: 'dashboard', permission: ['Dictionary', 'IamUser', 'IamRole', 'IamResourcePermission', 'IamLoginTrace', 'IamOperationLog'] },
         children: [
           {
-            path: '/system/dictionary/list',
-            name: 'DictList',
-            component: () => import('@/views/system/dictionary/list'),
+            path: '/system/dictionary/index',
+            name: 'DictIndex',
+            component: () => import('@/views/system/dictionary/Index'),
             meta: { title: '数据字典管理', keepAlive: true, permission: ['Dictionary'] }
           },
           {

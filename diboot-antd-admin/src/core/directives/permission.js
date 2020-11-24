@@ -8,7 +8,7 @@ const permission = Vue.directive('permission', {
   inserted: function (el, binding, vnode) {
     const { value } = binding
     const roles = store.getters && store.getters.roles
-    if (roles.superAdmin === true) {
+    if (roles.code === 'SYS_ADMIN') {
       return
     }
 
