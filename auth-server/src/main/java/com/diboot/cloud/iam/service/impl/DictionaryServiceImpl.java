@@ -17,6 +17,7 @@ package com.diboot.cloud.iam.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.diboot.cloud.iam.service.AuthServerCacheService;
 import com.diboot.core.entity.Dictionary;
 import com.diboot.core.exception.BusinessException;
 import com.diboot.cloud.iam.mapper.DictionaryMapper;
@@ -28,7 +29,9 @@ import com.diboot.core.vo.KeyValue;
 import com.diboot.core.vo.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +48,8 @@ import java.util.stream.Collectors;
 @Service
 public class DictionaryServiceImpl extends BaseServiceImpl<DictionaryMapper, Dictionary> implements DictionaryService {
     private static final Logger log = LoggerFactory.getLogger(DictionaryServiceImpl.class);
+    @Autowired
+    private AuthServerCacheService authServerCacheService;
 
     @Override
     public List<KeyValue> getKeyValueList(String type) {
@@ -80,6 +85,8 @@ public class DictionaryServiceImpl extends BaseServiceImpl<DictionaryMapper, Dic
                 throw new BusinessException(Status.FAIL_OPERATION, errorMsg);
             }
         }
+        // 刷新缓存字典
+        authServerCacheService.refreshDictionaryCache(dictVO.getType());
         return true;
     }
 
@@ -126,17 +133,25 @@ public class DictionaryServiceImpl extends BaseServiceImpl<DictionaryMapper, Dic
                 }
             }
         }
+        // 刷新缓存字典
+        authServerCacheService.refreshDictionaryCache(dictVO.getType());
         return true;
     }
 
     @Override
     public boolean deleteDictAndChildren(Long id) {
+        Dictionary dictionary = getEntity(id);
+        if(dictionary == null){
+            throw new BusinessException(Status.FAIL_VALIDATION, "字典不存在！");
+        }
         QueryWrapper<Dictionary> queryWrapper = new QueryWrapper();
         queryWrapper.lambda()
                 .eq(Dictionary::getId, id)
                 .or()
                 .eq(Dictionary::getParentId, id);
         deleteEntities(queryWrapper);
+        // 刷新缓存字典
+        authServerCacheService.removeDictionaryCache(dictionary.getType());
         return true;
     }
 
@@ -167,6 +182,8 @@ public class DictionaryServiceImpl extends BaseServiceImpl<DictionaryMapper, Dic
         }
         if (updateList.size() > 0) {
             super.updateBatchById(updateList);
+            // 刷新缓存字典
+            authServerCacheService.refreshDictionaryCache(updateList.get(0).getType());
         }
     }
 

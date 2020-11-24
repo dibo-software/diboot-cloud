@@ -17,7 +17,7 @@ package com.diboot.cloud.iam.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.diboot.cloud.iam.service.RoleResourceCacheService;
+import com.diboot.cloud.iam.service.AuthServerCacheService;
 import com.diboot.cloud.iam.util.IamHelper;
 import com.diboot.cloud.util.IamSecurityUtils;
 import com.diboot.core.binding.Binder;
@@ -56,7 +56,7 @@ public class IamUserRoleServiceImpl extends BaseIamServiceImpl<IamUserRoleMapper
     @Autowired
     private IamRoleService iamRoleService;
     @Autowired
-    private RoleResourceCacheService roleResourceCacheService;
+    private AuthServerCacheService authServerCacheService;
     // 扩展接口
     @Autowired(required = false)
     private IamExtensible iamExtensible;
@@ -106,7 +106,7 @@ public class IamUserRoleServiceImpl extends BaseIamServiceImpl<IamUserRoleMapper
         boolean success = super.createEntity(entity);
         if(success){
             // 清空用户缓存
-            roleResourceCacheService.addIntoPendingRefresh(entity.getUserType(), entity.getUserId());
+            authServerCacheService.addIntoPendingRefresh(entity.getUserType(), entity.getUserId());
         }
         return success;
     }
@@ -137,7 +137,7 @@ public class IamUserRoleServiceImpl extends BaseIamServiceImpl<IamUserRoleMapper
         boolean success = super.createEntities(entityList);
         if(success){
             // 清空用户缓存
-            roleResourceCacheService.addIntoPendingRefresh(userType, userId);
+            authServerCacheService.addIntoPendingRefresh(userType, userId);
         }
         return success;
     }
@@ -160,7 +160,7 @@ public class IamUserRoleServiceImpl extends BaseIamServiceImpl<IamUserRoleMapper
         boolean success = super.createEntities(entityList);
         if(success){
             // 清空用户缓存
-            roleResourceCacheService.addIntoPendingRefresh(userType, userId);
+            authServerCacheService.addIntoPendingRefresh(userType, userId);
         }
         return success;
     }
@@ -203,7 +203,7 @@ public class IamUserRoleServiceImpl extends BaseIamServiceImpl<IamUserRoleMapper
         boolean success = super.createEntities(entityList);
         if(success){
             // 清空用户缓存
-            roleResourceCacheService.addIntoPendingRefresh(userType, userId);
+            authServerCacheService.addIntoPendingRefresh(userType, userId);
         }
         return success;
     }

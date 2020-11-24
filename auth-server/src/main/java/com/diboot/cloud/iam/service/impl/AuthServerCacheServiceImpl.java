@@ -15,17 +15,23 @@
  */
 package com.diboot.cloud.iam.service.impl;
 
-import com.diboot.cloud.config.Cons;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.diboot.cloud.entity.IamRole;
 import com.diboot.cloud.entity.LoginUserDetail;
 import com.diboot.cloud.iam.service.IamRoleResourceService;
 import com.diboot.cloud.iam.service.IamUserRoleService;
-import com.diboot.cloud.iam.service.RoleResourceCacheService;
+import com.diboot.cloud.iam.service.AuthServerCacheService;
 import com.diboot.cloud.redis.RedisCons;
 import com.diboot.cloud.vo.ResourceRoleVO;
+import com.diboot.core.binding.Binder;
+import com.diboot.core.entity.Dictionary;
+import com.diboot.core.service.DictionaryService;
 import com.diboot.core.util.BeanUtils;
 import com.diboot.core.util.S;
 import com.diboot.core.util.V;
+import com.diboot.core.vo.DictionaryVO;
+import com.diboot.core.vo.KeyValue;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -48,12 +54,14 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class RoleResourceCacheServiceImpl implements RoleResourceCacheService {
+public class AuthServerCacheServiceImpl implements AuthServerCacheService {
 
     @Autowired
     private IamRoleResourceService iamRoleResourceService;
     @Autowired
     private IamUserRoleService iamUserRoleService;
+    @Autowired
+    private DictionaryService dictionaryService;
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
     /**
@@ -121,6 +129,7 @@ public class RoleResourceCacheServiceImpl implements RoleResourceCacheService {
         // 清空缓存
         String key = userType + ":" + userId;
         redisTemplate.opsForHash().delete(RedisCons.KEY_USER_AUTH_REFRESH_MAP, key);
+        log.debug("刷新用户角色缓存完成: {}:{}", userType, userId);
         return true;
     }
 
@@ -128,6 +137,53 @@ public class RoleResourceCacheServiceImpl implements RoleResourceCacheService {
     public void addIntoPendingRefresh(String userType, Long userId) {
         String key = userType + ":" + userId;
         redisTemplate.opsForHash().putIfAbsent(RedisCons.KEY_USER_AUTH_REFRESH_MAP, key, true);
+    }
+
+    @Override
+    public void loadDictionariesCache() {
+        LambdaQueryWrapper<Dictionary> queryWrapper = new QueryWrapper<Dictionary>().lambda()
+                .eq(Dictionary::getParentId, 0L);
+        List<DictionaryVO> dictionaryVOList = dictionaryService.getViewObjectList(queryWrapper, null, DictionaryVO.class);
+        if(V.notEmpty(dictionaryVOList)){
+            Set<String> dictionaryTypeSet = new HashSet<>();
+            for(DictionaryVO vo : dictionaryVOList){
+                if(dictionaryTypeSet.contains(vo.getType())){
+                    log.warn("检测到重复的字典类型: {}，字典类型需唯一，请修正！", vo.getType());
+                    continue;
+                }
+                List<KeyValue> children = convertToKeyValueList(vo.getChildren());
+                redisTemplate.opsForHash().putIfAbsent(RedisCons.KEY_USER_AUTH_REFRESH_MAP, vo.getType(), children);
+            }
+        }
+    }
+
+    @Override
+    public boolean refreshDictionaryCache(String type) {
+        LambdaQueryWrapper<Dictionary> queryWrapper = new QueryWrapper<Dictionary>().lambda()
+                .eq(Dictionary::getParentId, 0L)
+                .eq(Dictionary::getType, type);
+        Dictionary dictionary = dictionaryService.getSingleEntity(queryWrapper);
+        DictionaryVO vo = Binder.convertAndBindRelations(dictionary, DictionaryVO.class);
+        List<KeyValue> children = convertToKeyValueList(vo.getChildren());
+        redisTemplate.opsForHash().putIfAbsent(RedisCons.KEY_DICTIONARY_MAP, vo.getType(), children);
+        return true;
+    }
+
+    @Override
+    public void removeDictionaryCache(String type) {
+        redisTemplate.opsForHash().delete(RedisCons.KEY_DICTIONARY_MAP, type);
+    }
+
+    private List<KeyValue> convertToKeyValueList(List<Dictionary> dictList){
+        if(V.isEmpty(dictList)){
+            return Collections.emptyList();
+        }
+        List<KeyValue> keyValues = new ArrayList<>(dictList.size());
+        for(Dictionary dict : dictList){
+            KeyValue keyValue = new KeyValue(dict.getItemValue(), dict.getItemName());
+            keyValues.add(keyValue);
+        }
+        return keyValues;
     }
 
 }

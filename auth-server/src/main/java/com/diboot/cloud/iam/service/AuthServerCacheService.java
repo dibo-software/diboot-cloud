@@ -21,7 +21,7 @@ package com.diboot.cloud.iam.service;
  * @version v2.2
  * @date 2020/11/23
  */
-public interface RoleResourceCacheService {
+public interface AuthServerCacheService {
 
     /**
      * 刷新资源角色的缓存Map
@@ -42,4 +42,22 @@ public interface RoleResourceCacheService {
      * @param userId
      */
     void addIntoPendingRefresh(String userType, Long userId);
+
+    /**
+     * 加载字典表缓存
+     */
+    void loadDictionariesCache();
+
+    /**
+     * 刷新字典缓存
+     * @param type
+     * @return
+     */
+    boolean refreshDictionaryCache(String type);
+
+    /**
+     * 删除字典缓存
+     * @param type
+     */
+    void removeDictionaryCache(String type);
 }

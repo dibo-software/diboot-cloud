@@ -42,4 +42,9 @@ public class RedisCons {
      */
     public static final String KEY_USER_AUTH_REFRESH_MAP = "DIBOOT:USER_AUTH_REFRESH_MAP";
 
+    /**
+     * 字典缓存map
+     */
+    public static final String KEY_DICTIONARY_MAP = "DIBOOT:DICTIONARY_MAP";
+
 }

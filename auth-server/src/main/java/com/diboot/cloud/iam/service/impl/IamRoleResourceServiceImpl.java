@@ -17,7 +17,7 @@ package com.diboot.cloud.iam.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.diboot.cloud.iam.service.RoleResourceCacheService;
+import com.diboot.cloud.iam.service.AuthServerCacheService;
 import com.diboot.core.binding.Binder;
 import com.diboot.core.util.BeanUtils;
 import com.diboot.core.util.V;
@@ -53,7 +53,7 @@ public class IamRoleResourceServiceImpl extends BaseIamServiceImpl<IamRoleResour
     @Autowired
     private IamResourcePermissionService iamResourcePermissionService;
     @Autowired
-    private RoleResourceCacheService roleResourceCacheService;
+    private AuthServerCacheService authServerCacheService;
 
     @Override
     public List<IamResourcePermissionVO> getPermissionVOList(String appModule, Long roleId) {
@@ -131,7 +131,7 @@ public class IamRoleResourceServiceImpl extends BaseIamServiceImpl<IamRoleResour
         }
         boolean success = createEntities(roleResourceList);
         // 更新缓存权限
-        roleResourceCacheService.refreshResourceRolesCache();
+        authServerCacheService.refreshResourceRolesCache();
         return success;
     }
 
@@ -153,7 +153,7 @@ public class IamRoleResourceServiceImpl extends BaseIamServiceImpl<IamRoleResour
         }
         boolean success = createEntities(roleResourceList);
         // 更新缓存权限
-        roleResourceCacheService.refreshResourceRolesCache();
+        authServerCacheService.refreshResourceRolesCache();
         return success;
     }
 

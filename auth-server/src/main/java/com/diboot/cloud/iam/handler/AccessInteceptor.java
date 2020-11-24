@@ -16,7 +16,7 @@
 package com.diboot.cloud.iam.handler;
 
 import com.diboot.cloud.entity.LoginUserDetail;
-import com.diboot.cloud.iam.service.RoleResourceCacheService;
+import com.diboot.cloud.iam.service.AuthServerCacheService;
 import com.diboot.cloud.redis.RedisCons;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -38,7 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 public class AccessInteceptor implements HandlerInterceptor {
 
     @Autowired
-    private RoleResourceCacheService roleResourceCacheService;
+    private AuthServerCacheService authServerCacheService;
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
 
@@ -53,7 +53,7 @@ public class AccessInteceptor implements HandlerInterceptor {
             if(!hasKey){
                 return true;
             }
-            roleResourceCacheService.refreshUserRolesCache(userDetail.getUserType(), userDetail.getUserId());
+            authServerCacheService.refreshUserRolesCache(userDetail.getUserType(), userDetail.getUserId());
         }
         return true;
     }

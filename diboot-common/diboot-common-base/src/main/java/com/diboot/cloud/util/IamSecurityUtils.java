@@ -57,9 +57,6 @@ public class IamSecurityUtils {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         // 认证信息可能为空，因此需要进行判断。
         if (Objects.nonNull(authentication)) {
-            if(!roleCode.startsWith(RedisCons.PREFIX_ROLE)){
-                roleCode = RedisCons.PREFIX_ROLE + roleCode;
-            }
             for(GrantedAuthority authority : authentication.getAuthorities()){
                 if(authority.getAuthority().equals(roleCode)){
                     return true;

@@ -15,7 +15,7 @@
  */
 package com.diboot.cloud.iam.initializer;
 
-import com.diboot.cloud.iam.service.RoleResourceCacheService;
+import com.diboot.cloud.iam.service.AuthServerCacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -32,14 +32,17 @@ import org.springframework.stereotype.Component;
 @Order(998)
 @Component
 @Slf4j
-public class RoleSourcesCacheInitializer implements ApplicationRunner {
+public class AuthServerCacheInitializer implements ApplicationRunner {
 
     @Autowired
-    private RoleResourceCacheService roleResourceCacheService;
+    private AuthServerCacheService authServerCacheService;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        roleResourceCacheService.refreshResourceRolesCache();
+        // 缓存资源角色映射
+        authServerCacheService.refreshResourceRolesCache();
+        // 缓存字典
+        authServerCacheService.loadDictionariesCache();
     }
 
 }

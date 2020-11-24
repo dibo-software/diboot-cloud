@@ -17,7 +17,7 @@ package com.diboot.cloud.iam.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.diboot.cloud.iam.service.RoleResourceCacheService;
+import com.diboot.cloud.iam.service.AuthServerCacheService;
 import com.diboot.core.exception.BusinessException;
 import com.diboot.core.util.BeanUtils;
 import com.diboot.core.util.S;
@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class IamResourcePermissionServiceImpl extends BaseIamServiceImpl<IamResourcePermissionMapper, IamResourcePermission> implements IamResourcePermissionService {
     @Autowired
-    private RoleResourceCacheService roleResourceCacheService;
+    private AuthServerCacheService authServerCacheService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -96,7 +96,7 @@ public class IamResourcePermissionServiceImpl extends BaseIamServiceImpl<IamReso
         });
         this.createEntities(permissionList);
         // 更新资源角色映射缓存
-        roleResourceCacheService.refreshResourceRolesCache();
+        authServerCacheService.refreshResourceRolesCache();
     }
 
     @Override
@@ -159,7 +159,7 @@ public class IamResourcePermissionServiceImpl extends BaseIamServiceImpl<IamReso
             throw new BusinessException(Status.FAIL_OPERATION, "父级节点不可设置在自己的子节点上");
         }
         // 更新资源角色映射缓存
-        roleResourceCacheService.refreshResourceRolesCache();
+        authServerCacheService.refreshResourceRolesCache();
     }
 
     @Override
@@ -189,7 +189,7 @@ public class IamResourcePermissionServiceImpl extends BaseIamServiceImpl<IamReso
             });
         }
         // 更新资源角色映射缓存
-        roleResourceCacheService.refreshResourceRolesCache();
+        authServerCacheService.refreshResourceRolesCache();
     }
 
     @Override
