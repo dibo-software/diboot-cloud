@@ -223,7 +223,7 @@ export default {
   name: 'IamUserForm',
   data () {
     return {
-      baseApi: '/iam/user',
+      baseApi: '/auth-server/iam/user',
       form: this.$form.createForm(this),
       orgList: [],
       setPassword: false,

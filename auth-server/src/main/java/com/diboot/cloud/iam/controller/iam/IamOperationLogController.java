@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.diboot.cloud.iam.controller;
+package com.diboot.cloud.iam.controller.iam;
 
 import com.diboot.cloud.iam.handler.AsyncLogWorker;
 import com.diboot.core.controller.BaseCrudRestController;

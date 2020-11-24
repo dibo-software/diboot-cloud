@@ -56,7 +56,7 @@ export default {
   name: 'IamResourcePermissionDetail',
   data () {
     return {
-      baseApi: '/iam/resourcePermission'
+      baseApi: '/auth-server/iam/resourcePermission'
     }
   },
   components: {

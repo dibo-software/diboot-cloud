@@ -92,7 +92,7 @@ export default {
   mixins: [list],
   data () {
     return {
-      baseApi: '/iam/role',
+      baseApi: '/auth-server/iam/role',
       // 表头
       columns: [
         {

@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 @BindPermission(name = "用户IamUser", code = "IamUser")
 @RestController
 @RequestMapping("/iamUser")
-public class IamUserController {
+public class IamUserDemoController {
 
     @Autowired
     private IamUserService iamUserService;

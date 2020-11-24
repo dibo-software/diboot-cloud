@@ -51,7 +51,7 @@ export default {
   name: 'IamRoleDetail',
   data () {
     return {
-      baseApi: '/iam/role',
+      baseApi: '/auth-server/iam/role',
       permissionTreeList: []
     }
   },
