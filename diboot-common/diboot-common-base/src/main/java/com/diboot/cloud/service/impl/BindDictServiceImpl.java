@@ -24,8 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +43,8 @@ public class BindDictServiceImpl implements BindDictService {
         if(V.isEmpty(voList)){
             return;
         }
-        Map<String, Object> kvMap = getItemsKVMap(dictType);
+        List<KeyValue> keyValues = getKeyValueList(dictType);
+        Map<String, Object> kvMap = BeanUtils.convertKeyValueList2Map(keyValues);
         for(Object obj : voList){
             String key = BeanUtils.getStringProperty(obj, getFieldName);
             Object val = kvMap.get(key);
@@ -62,18 +61,6 @@ public class BindDictServiceImpl implements BindDictService {
             return (List<KeyValue>)itemsObj;
         }
         return null;
-    }
-
-    private Map<String, Object> getItemsKVMap(String dictType){
-        List<KeyValue> keyValues = getKeyValueList(dictType);
-        if(V.isEmpty(keyValues)){
-            return Collections.emptyMap();
-        }
-        Map<String, Object> kvMap = new HashMap<>();
-        for(KeyValue keyValue : keyValues){
-            kvMap.put(keyValue.getK(), keyValue.getV());
-        }
-        return kvMap;
     }
 
 }
