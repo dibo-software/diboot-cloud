@@ -6,7 +6,6 @@
           <list :app-module="m"></list>
         </a-tab-pane>
       </template>
-      <a-button @click="$refs.form.open()" slot="tabBarExtraContent" type="default" icon="plus">添加</a-button>
     </a-tabs>
     <template v-else>
       <a-button @click="$refs.form.open()" slot="tabBarExtraContent" type="primary" icon="plus">添加数据字典</a-button>

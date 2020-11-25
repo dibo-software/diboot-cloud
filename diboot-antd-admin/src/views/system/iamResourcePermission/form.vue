@@ -79,6 +79,24 @@
           </a-form-item>
         </a-col>
       </a-row>
+      <a-form-item label="接口所在应用模块">
+        <a-select
+          :disabled="appModuleDisabled"
+          show-search
+          placeholder="请选择应用模块"
+          :filter-option="filterOption"
+          @change="onModuleChanged"
+        >
+          <template v-if="moduleList.length > 0">
+            <a-select-option
+              v-for="m in moduleList"
+              :key="m"
+              :value="m">
+              {{ m }}
+            </a-select-option>
+          </template>
+        </a-select>
+      </a-form-item>
       <a-form-item label="当前菜单页面接口列表">
         <a-tree-select
           v-if="apiTreeList.length > 0"
@@ -93,6 +111,9 @@
           v-model="apiSetList"
         >
         </a-tree-select>
+        <template v-else>
+          请先选择有接口列表的应用模块
+        </template>
       </a-form-item>
       <a-row :gutter="16">
         <a-col :span="24">
@@ -206,6 +227,7 @@ export default {
       currentMenu: '',
       apiSetList: [],
       permissionList: [],
+      apiTreeListMap: {},
       apiTreeList: []
     }
   },
@@ -225,14 +247,15 @@ export default {
         })
         this.permissionList = this.model.permissionList
       }
-
-      dibootApi.get(`${this.baseApi}/apiList`).then(res => {
-        if (res.code === 0) {
-          this.apiTreeList = apiListFormatter(res.data)
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
+      await this.initAllApiList()
+    },
+    async initAllApiList () {
+      const res = await dibootApi.get(`${this.baseApi}/apiList`)
+      if (res.code === 0) {
+        this.apiTreeListMap = res.data
+      } else {
+        this.$message.error(res.msg)
+      }
     },
     onMenuNameChange (value) {
       if (this.routerList || this.routerList.length > 0) {
@@ -260,6 +283,9 @@ export default {
         }
         this.apiSetList.push(currentApi.value)
       }
+    },
+    onModuleChanged (value) {
+      this.apiTreeList = apiListFormatter(this.apiTreeListMap[value])
     },
     /***
        * 提交前的验证流程
@@ -443,6 +469,26 @@ export default {
     },
     apiList: function () {
       return treeList2list(_.cloneDeep(this.apiTreeList))
+    },
+    moduleList: function () {
+      if (!this.apiTreeListMap) {
+        return []
+      }
+      return Object.keys(this.apiTreeListMap)
+    },
+    appModuleDisabled: function () {
+      if (this.apiSetList && this.apiSetList.length > 0) {
+        return true
+      }
+      if (this.permissionList && this.permissionList.length > 0) {
+        const hasApiSetListPermission = this.permissionList.find(item => {
+          return item.apiSetList && item.apiSetList.length > 0
+        })
+        if (hasApiSetListPermission !== undefined) {
+          return true
+        }
+      }
+      return false
     },
     menuTreeData: function () {
       let menuTreeData = []
