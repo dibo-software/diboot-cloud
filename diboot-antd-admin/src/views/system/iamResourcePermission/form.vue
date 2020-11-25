@@ -86,8 +86,15 @@
           placeholder="请选择应用模块"
           :filter-option="filterOption"
           @change="onModuleChanged"
+          v-decorator="[
+            'appModule',
+            {
+              initialValue: model.appModule,
+              rules: [{ required: true, message: '上级菜单不能为空', whitespace: true }]
+            }
+          ]"
         >
-          <template v-if="moduleList.length > 0">
+          <template v-if="moduleList && moduleList.length > 0">
             <a-select-option
               v-for="m in moduleList"
               :key="m"
@@ -99,7 +106,7 @@
       </a-form-item>
       <a-form-item label="当前菜单页面接口列表">
         <a-tree-select
-          v-if="apiTreeList.length > 0"
+          v-if="apiTreeList && apiTreeList.length > 0"
           placeholder="请选取当前菜单页面接口列表"
           :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
           :treeData="apiTreeList"
@@ -248,6 +255,7 @@ export default {
         this.permissionList = this.model.permissionList
       }
       await this.initAllApiList()
+      this.onModuleChanged(this.model.appModule)
     },
     async initAllApiList () {
       const res = await dibootApi.get(`${this.baseApi}/apiList`)

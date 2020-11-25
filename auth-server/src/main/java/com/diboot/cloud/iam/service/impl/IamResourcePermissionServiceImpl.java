@@ -91,8 +91,9 @@ public class IamResourcePermissionServiceImpl extends BaseIamServiceImpl<IamReso
         List<IamResourcePermission> permissionList = BeanUtils.convertList(permissionDTOList, IamResourcePermission.class);
         // 设置每一条按钮/权限的parentId与接口列表
         permissionList.forEach(p -> {
-            p.setParentId(iamResourcePermissionDTO.getId());
-            p.setDisplayType(Cons.RESOURCE_PERMISSION_DISPLAY_TYPE.PERMISSION.name());
+            p.setParentId(iamResourcePermissionDTO.getId())
+                    .setDisplayType(Cons.RESOURCE_PERMISSION_DISPLAY_TYPE.PERMISSION.name())
+                    .setAppModule(iamResourcePermissionDTO.getAppModule());
         });
         this.createEntities(permissionList);
         // 更新资源角色映射缓存
@@ -114,8 +115,9 @@ public class IamResourcePermissionServiceImpl extends BaseIamServiceImpl<IamReso
         this.updateEntity(iamResourcePermissionDTO);
         List<IamResourcePermissionDTO> permissionList = iamResourcePermissionDTO.getPermissionList();
         permissionList.forEach(p -> {
-            p.setParentId(iamResourcePermissionDTO.getId());
-            p.setDisplayType(Cons.RESOURCE_PERMISSION_DISPLAY_TYPE.PERMISSION.name());
+            p.setParentId(iamResourcePermissionDTO.getId())
+                    .setDisplayType(Cons.RESOURCE_PERMISSION_DISPLAY_TYPE.PERMISSION.name())
+                    .setAppModule(iamResourcePermissionDTO.getAppModule());
         });
         // 需要更新的列表
         List<IamResourcePermissionDTO> updatePermissionList = permissionList.stream()
