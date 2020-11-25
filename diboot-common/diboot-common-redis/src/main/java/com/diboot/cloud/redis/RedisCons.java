@@ -33,6 +33,11 @@ public class RedisCons {
     public static final String KEY_RESOURCE_ROLES_MAP = "DIBOOT:AUTH:RESOURCE_ROLES_MAP";
 
     /**
+     * 应用模块列表
+     */
+    public static final String KEY_APP_MODULES = "DIBOOT:APP_MODULES";
+
+    /**
      * 应用模块权限key前缀
      */
     public static final String KEY_APP_MODULE_PERMISSIONS_MAP = "DIBOOT:APP_MODULE_PERMISSIONS_MAP";

@@ -15,17 +15,12 @@
  */
 package com.diboot.cloud.iam.controller.iam;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.diboot.cloud.annotation.BindPermission;
 import com.diboot.cloud.annotation.Log;
 import com.diboot.cloud.annotation.Operation;
-import com.diboot.cloud.entity.IamLoginTrace;
 import com.diboot.cloud.iam.handler.AsyncLogWorker;
-import com.diboot.cloud.iam.service.IamOperationLogService;
-import com.diboot.cloud.vo.IamLoginTraceVO;
 import com.diboot.core.controller.BaseCrudRestController;
-import com.diboot.core.entity.Dictionary;
-import com.diboot.core.util.V;
 import com.diboot.core.vo.JsonResult;
 import com.diboot.cloud.entity.IamOperationLog;
 import com.diboot.core.vo.Pagination;
@@ -34,9 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
 * 操作日志相关Controller
@@ -53,8 +45,44 @@ public class IamOperationLogController extends BaseCrudRestController<IamOperati
     @Autowired
     private AsyncLogWorker asyncLogWorker;
 
-    @Autowired
-    private IamOperationLogService iamOperationLogService;
+    /***
+     * 查询ViewObject的分页数据
+     * <p>
+     * url请求参数示例: /list?field=abc&pageSize=20&pageIndex=1&orderBy=id
+     * </p>
+     * @return
+     * @throws Exception
+     */
+    @Log(operation = Operation.LABEL_LIST)
+    @BindPermission(name = Operation.LABEL_LIST, code = Operation.CODE_LIST)
+    @GetMapping("/list")
+    public JsonResult getViewObjectListMapping(IamOperationLog entity, Pagination pagination) throws Exception{
+        QueryWrapper<IamOperationLog> queryWrapper = super.buildQueryWrapper(entity);
+        Integer status = getInteger("status");
+        if(status != null){
+            if(status.intValue() == 0){
+                queryWrapper.eq("status_code", 0);
+            }
+            else{
+                queryWrapper.gt("status_code", 0);
+            }
+        }
+        return super.getEntityListWithPaging(queryWrapper, pagination);
+    }
+
+    /***
+     * 根据资源id查询ViewObject
+     * @param id ID
+     * @return
+     * @throws Exception
+     */
+    @Log(operation = Operation.LABEL_DETAIL)
+    @BindPermission(name = Operation.LABEL_DETAIL, code = Operation.CODE_DETAIL)
+    @GetMapping("/{id}")
+    public JsonResult getViewObjectMapping(@PathVariable("id") Long id) throws Exception{
+        IamOperationLog operationLog = super.getEntity(id);
+        return JsonResult.OK(operationLog);
+    }
 
     /***
      * 新建操作日志
@@ -66,39 +94,6 @@ public class IamOperationLogController extends BaseCrudRestController<IamOperati
     public JsonResult createEntityMapping(@Valid @RequestBody IamOperationLog operationLog) throws Exception {
         asyncLogWorker.saveOperationLog(operationLog);
         return JsonResult.OK();
-    }
-
-
-    /***
-     * 查询分页数据
-     * @return
-     * @throws Exception
-     */
-    @Log(operation = Operation.LABEL_LIST)
-    @BindPermission(name = Operation.LABEL_LIST, code = Operation.CODE_LIST)
-    @GetMapping("/list")
-    public JsonResult getViewObjectListMapping(IamOperationLog entity, Pagination pagination) throws Exception{
-        return super.getViewObjectList(entity, pagination, IamOperationLog.class);
-    }
-
-    /***
-     * 获取服务模块列表
-     * @return
-     * @throws Exception
-     */
-    @BindPermission(name = Operation.LABEL_LIST, code = Operation.CODE_LIST)
-    @GetMapping("/moduleList")
-    public JsonResult getDictModuleList() throws Exception {
-        List<IamOperationLog> operationLogList = iamOperationLogService.getEntityList(
-                Wrappers.<IamOperationLog>lambdaQuery()
-                .groupBy(IamOperationLog::getAppModule)
-                .select(IamOperationLog::getAppModule)
-        );
-        List<String> appModuleList = new ArrayList<>();
-        if (V.notEmpty(operationLogList)) {
-            appModuleList = operationLogList.stream().map(IamOperationLog::getAppModule).collect(Collectors.toList());
-        }
-        return JsonResult.OK(appModuleList);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.diboot.cloud.iam.controller;
+package com.diboot.cloud.iam.controller.iam;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -33,7 +33,6 @@ import java.util.List;
 @RequestMapping("/iam/org")
 @BindPermission(name = "部门")
 public class IamOrgController extends BaseCrudRestController<IamOrg> {
-
     private static final Logger log = LoggerFactory.getLogger(IamOrgController.class);
 
     @Autowired

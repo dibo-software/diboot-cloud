@@ -6,12 +6,14 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.diboot.cloud.annotation.BindPermission;
 import com.diboot.cloud.annotation.Operation;
 import com.diboot.cloud.iam.dto.AttachMoreDTO;
+import com.diboot.cloud.redis.RedisCons;
 import com.diboot.core.binding.parser.ParserCache;
 import com.diboot.core.controller.BaseCrudRestController;
 import com.diboot.core.entity.Dictionary;
 import com.diboot.core.entity.ValidList;
 import com.diboot.core.service.BaseService;
 import com.diboot.core.service.DictionaryService;
+import com.diboot.core.util.BeanUtils;
 import com.diboot.core.util.ContextHelper;
 import com.diboot.core.util.S;
 import com.diboot.core.util.V;
@@ -19,6 +21,7 @@ import com.diboot.core.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -40,6 +43,8 @@ public class DictionaryController extends BaseCrudRestController<Dictionary> {
 
     @Autowired
     private DictionaryService dictionaryService;
+    @Autowired
+    private RedisTemplate<String,Object> redisTemplate;
 
     /***
     * 查询ViewObject的分页数据
@@ -55,26 +60,6 @@ public class DictionaryController extends BaseCrudRestController<Dictionary> {
         QueryWrapper<Dictionary> queryWrapper = super.buildQueryWrapper(entity);
         List<DictionaryVO> voList = dictionaryService.getViewObjectList(queryWrapper, pagination, DictionaryVO.class);
         return JsonResult.OK(voList).bindPagination(pagination);
-    }
-
-    /***
-     * 查询数据字典模块列表
-     * @return
-     * @throws Exception
-     */
-    @BindPermission(name = Operation.LABEL_LIST, code = Operation.CODE_LIST)
-    @GetMapping("/dictionary/moduleList")
-    public JsonResult getDictModuleList() throws Exception {
-        List<Dictionary> dictList = dictionaryService.getEntityList(
-                Wrappers.<Dictionary>lambdaQuery()
-                .groupBy(Dictionary::getAppModule)
-                .select(Dictionary::getAppModule)
-        );
-        List<String> appModuleList = new ArrayList<>();
-        if (V.notEmpty(dictList)) {
-            appModuleList = dictList.stream().map(Dictionary::getAppModule).collect(Collectors.toList());
-        }
-        return JsonResult.OK(appModuleList);
     }
 
     /***
@@ -174,7 +159,19 @@ public class DictionaryController extends BaseCrudRestController<Dictionary> {
         }
         return JsonResult.OK();
     }
-		
+
+    /***
+     * 查询应用模块列表
+     * @return
+     * @throws Exception
+     */
+    @BindPermission(name = Operation.LABEL_LIST, code = Operation.CODE_LIST)
+    @GetMapping("/common/moduleList")
+    public JsonResult getDictModuleList() throws Exception {
+        List<String> appModuleList = (List<String>) redisTemplate.opsForValue().get(RedisCons.KEY_APP_MODULES);
+        return JsonResult.OK(appModuleList);
+    }
+
     /**
     * 获取附加属性的通用kvList接口，用于初始化前端下拉框选项。
     * 如数据量过大，请勿调用此通用接口

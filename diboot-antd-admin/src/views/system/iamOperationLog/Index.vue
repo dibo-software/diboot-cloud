@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     async initModuleList () {
-      const res = await dibootApi.get('/auth-server/iam/operationLog/moduleList')
+      const res = await dibootApi.get('/auth-server/common/moduleList')
       if (res.code === 0) {
         this.moduleList = res.data
       }
