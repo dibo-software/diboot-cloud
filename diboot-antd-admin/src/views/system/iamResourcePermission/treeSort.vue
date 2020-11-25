@@ -39,7 +39,7 @@ export default {
   name: 'IamResourcePermissionSort',
   data () {
     return {
-      baseApi: '/iam/resourcePermission'
+      baseApi: '/auth-server/iam/resourcePermission'
     }
   },
   methods: {
