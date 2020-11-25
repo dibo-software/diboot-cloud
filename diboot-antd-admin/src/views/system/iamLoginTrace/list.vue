@@ -82,7 +82,7 @@ export default {
   name: 'LoginTraceList',
   data () {
     return {
-      baseApi: '/iam/loginTrace',
+      baseApi: '/auth-server/iam/loginTrace',
       columns: [
         {
           title: '用户类型',

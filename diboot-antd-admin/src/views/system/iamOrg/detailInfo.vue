@@ -27,6 +27,7 @@ export default {
   name: 'OrgDetailInfo',
   data () {
     return {
+      baseApi: '/auth-server/iam/org',
       model: {}
     }
   },
@@ -35,7 +36,7 @@ export default {
       if (id === undefined || id === 0 || id === '0') {
         this.model = {}
       } else {
-        const res = await dibootApi.get(`/iam/org/${id}`)
+        const res = await dibootApi.get(`${this.baseApi}/${id}`)
         if (res.code === 0) {
           this.model = res.data
         }

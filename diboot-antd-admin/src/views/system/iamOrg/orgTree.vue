@@ -54,8 +54,8 @@ export default {
   data () {
     return {
       currentNode: { value: '0' },
-      baseApi: '/iam/org',
-      treeApi: '/iam/org/tree'
+      baseApi: '/auth-server/iam/org',
+      treeApi: '/auth-server/iam/org/tree'
     }
   },
   methods: {

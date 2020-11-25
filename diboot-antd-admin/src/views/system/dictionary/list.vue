@@ -93,7 +93,7 @@
       </span>
     </a-table>
 
-    <diboot-form ref="form" @complete="getList"></diboot-form>
+    <diboot-form :current-app-module="appModule" ref="form" @complete="getList"></diboot-form>
     <diboot-detail ref="detail"></diboot-detail>
     <tree-sort ref="sort" @complete="getList"></tree-sort>
   </a-card>
@@ -114,8 +114,9 @@ export default {
   mixins: [ list ],
   data () {
     return {
-      baseApi: '/dictionary',
+      baseApi: '/auth-server/dictionary',
       customQueryParam: { parentId: 0 },
+      getListFromMixin: false,
       columns: [
         {
           title: '类型名称',
@@ -143,6 +144,18 @@ export default {
         }
       ]
     }
+  },
+  props: {
+    appModule: {
+      type: String,
+      default: ''
+    }
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.customQueryParam.appModule = this.appModule
+      this.getList()
+    })
   }
 }
 </script>

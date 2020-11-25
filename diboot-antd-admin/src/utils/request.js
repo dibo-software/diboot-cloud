@@ -17,10 +17,6 @@ import { message } from 'ant-design-vue'
 const BASE_URL = '/api'
 // token在Header中的key，需要与后端对diboot.iam.jwt-signkey配置相同
 const JWT_HEADER_KEY = 'Authorization'
-// 获取token的接口
-const TOKEN_API_SUFFIX = '/oauth/token'
-// token自动刷新（发送心跳）的时间间隔（分钟），建议为后端配置的token过期时间的1/8
-const TOKEN_REFRESH_EXPIRE = 10
 // 刷新token标记
 let isTokenRefreshing = false
 // 重试请求队列，将在刷新token过程中新进入的请求，挂起并记录到到该队列中

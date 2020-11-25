@@ -67,6 +67,8 @@ public class DictionaryServiceImpl extends BaseServiceImpl<DictionaryMapper, Dic
     @Transactional(rollbackFor = Exception.class)
     public boolean createDictAndChildren(DictionaryVO dictVO) {
         Dictionary dictionary = dictVO;
+        dictionary.setDeletable(true)
+                .setEditable(true);
         if(!super.createEntity(dictionary)){
             log.warn("新建数据字典定义失败，type="+dictVO.getType());
             return false;
@@ -74,8 +76,11 @@ public class DictionaryServiceImpl extends BaseServiceImpl<DictionaryMapper, Dic
         List<Dictionary> children = dictVO.getChildren();
         if(V.notEmpty(children)){
             for(Dictionary dict : children){
-                dict.setParentId(dictionary.getId());
-                dict.setType(dictionary.getType());
+                dict.setParentId(dictionary.getId())
+                        .setType(dictionary.getType())
+                        .setAppModule(dictionary.getAppModule())
+                        .setDeletable(dictionary.isDeletable())
+                        .setEditable(dictionary.isEditable());
             }
             // 批量保存
             boolean success = super.createEntities(children);
@@ -93,8 +98,12 @@ public class DictionaryServiceImpl extends BaseServiceImpl<DictionaryMapper, Dic
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateDictAndChildren(DictionaryVO dictVO) {
+        Dictionary oldDictionary = super.getEntity(dictVO.getId());
         //将DictionaryVO转化为Dictionary
         Dictionary dictionary = dictVO;
+        dictionary
+                .setDeletable(oldDictionary.isDeletable())
+                .setEditable(oldDictionary.isEditable());
         if(!super.updateEntity(dictionary)){
             log.warn("更新数据字典定义失败，type="+dictVO.getType());
             return false;
@@ -107,7 +116,12 @@ public class DictionaryServiceImpl extends BaseServiceImpl<DictionaryMapper, Dic
         Set<Long> dictItemIds = new HashSet<>();
         if(V.notEmpty(newDictList)){
             for(Dictionary dict : newDictList){
-                dict.setType(dictVO.getType()).setParentId(dictVO.getId());
+                dict
+                        .setType(dictVO.getType())
+                        .setParentId(dictVO.getId())
+                        .setAppModule(dictionary.getAppModule())
+                        .setDeletable(dictionary.isDeletable())
+                        .setEditable(dictionary.isEditable());
                 if(V.notEmpty(dict.getId())){
                     dictItemIds.add(dict.getId());
                     if(!super.updateEntity(dict)){

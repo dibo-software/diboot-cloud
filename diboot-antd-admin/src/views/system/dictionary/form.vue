@@ -8,6 +8,23 @@
   >
     <a-form layout="vertical" :form="form">
       <a-row :gutter="16">
+        <a-col :span="24">
+          <a-form-item label="所属模块">
+            <a-input
+              :disabled="currentAppModule !== ''"
+              placeholder="请输入所属模块名"
+              v-decorator="[
+                'appModule',
+                {
+                  initialValue: currentAppModule,
+                  rules: [{ required: true, message: '所属模块名不能为空', whitespace: true }]
+                }
+              ]"
+            />
+          </a-form-item>
+        </a-col>
+      </a-row>
+      <a-row :gutter="16">
         <a-col :span="12">
           <a-form-item label="类型名称">
             <a-input
@@ -121,7 +138,7 @@ export default {
   name: 'DictionaryDrawer',
   data () {
     return {
-      baseApi: '/dictionary',
+      baseApi: '/auth-server/dictionary',
       form: this.$form.createForm(this),
       children: [],
       childItem: _.cloneDeep(CHILDREN_ITEM_DEFAULT),
@@ -217,6 +234,12 @@ export default {
     },
     enhance (values) {
       values.children = this.children
+    }
+  },
+  props: {
+    currentAppModule: {
+      type: String,
+      default: ''
     }
   }
 }

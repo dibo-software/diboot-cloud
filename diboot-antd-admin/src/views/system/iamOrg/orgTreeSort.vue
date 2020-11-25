@@ -33,8 +33,8 @@ export default {
   name: 'OrgTreeSort',
   data () {
     return {
-      baseApi: '/iam/org',
-      treeListApi: '/iam/org/tree',
+      baseApi: '/auth-server/iam/org',
+      treeListApi: '/auth-server/iam/org/tree',
       formatter: {
         value: 'id',
         title: 'shortName'

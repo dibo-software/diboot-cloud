@@ -110,7 +110,7 @@ export default {
   mixins: [ list ],
   data () {
     return {
-      baseApi: '/iam/resourcePermission',
+      baseApi: '/auth-server/iam/resourcePermission',
       customQueryParam: { displayType: 'MENU' },
       getMore: true,
       formParentId: '0',

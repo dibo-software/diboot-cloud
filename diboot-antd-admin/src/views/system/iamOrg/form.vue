@@ -94,7 +94,7 @@ export default {
   mixins: [form],
   data () {
     return {
-      baseApi: '/iam/org',
+      baseApi: '/auth-server/iam/org',
       form: this.$form.createForm(this),
       orgList: []
     }

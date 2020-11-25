@@ -37,7 +37,7 @@ export default {
   name: 'Dictionary',
   data () {
     return {
-      baseApi: '/dictionary'
+      baseApi: '/auth-server/dictionary'
     }
   },
   methods: {

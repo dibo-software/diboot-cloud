@@ -47,7 +47,7 @@ export default {
   name: 'IamUserDetail',
   data () {
     return {
-      baseApi: '/iam/user',
+      baseApi: '/auth-server/iam/user',
       username: ''
     }
   },

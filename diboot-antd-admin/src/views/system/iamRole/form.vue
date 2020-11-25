@@ -104,7 +104,7 @@ export default {
   mixins: [ form ],
   data () {
     return {
-      baseApi: '/iam/role',
+      baseApi: '/auth-server/iam/role',
       form: this.$form.createForm(this),
       isAdmin: false,
       permissionTreeList: [],

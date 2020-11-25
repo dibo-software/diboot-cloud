@@ -199,7 +199,7 @@ export default {
   name: 'IamResourcePermissionDrawer',
   data () {
     return {
-      baseApi: '/iam/resourcePermission',
+      baseApi: '/auth-server/iam/resourcePermission',
       form: this.$form.createForm(this),
       getMore: true,
       currentPermissionActiveKey: 0,

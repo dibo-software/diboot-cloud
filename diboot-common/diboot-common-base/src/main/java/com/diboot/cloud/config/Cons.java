@@ -25,6 +25,8 @@ import com.diboot.core.config.BaseConfig;
  */
 public class Cons extends com.diboot.core.config.Cons {
 
+    public static final String ROLE_SUPER_ADMIN = "SYS_ADMIN";
+
     /**
      * 数据字典类型定义
      */

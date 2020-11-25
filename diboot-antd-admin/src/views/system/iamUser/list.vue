@@ -105,7 +105,7 @@ export default {
   name: 'IamUserList',
   data () {
     return {
-      baseApi: '/iam/user',
+      baseApi: '/auth-server/iam/user',
       attachMoreList: [
         {
           type: 'D',

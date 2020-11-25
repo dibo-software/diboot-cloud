@@ -118,7 +118,8 @@ export default {
   mixins: [list],
   data () {
     return {
-      baseApi: '/iam/operationLog',
+      baseApi: '/auth-server/iam/operationLog',
+      getListFromMixin: false,
       // 表头
       columns: [
         {
@@ -167,6 +168,18 @@ export default {
         }
       ]
     }
+  },
+  props: {
+    appModule: {
+      type: String,
+      default: ''
+    }
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.customQueryParam.appModule = this.appModule
+      this.getList()
+    })
   }
 }
 </script>
