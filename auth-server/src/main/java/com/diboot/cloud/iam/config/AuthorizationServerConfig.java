@@ -66,7 +66,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     private String[] resourceIds = {"auth-server", "example-api"};
 
-    private int accessTokenExpiresIn = 120, refreshTokenExpiresIn = 7*24*3600;
+    private int accessTokenExpiresIn = 300, refreshTokenExpiresIn = 7*24*3600;
 
     /*
     @Autowired
