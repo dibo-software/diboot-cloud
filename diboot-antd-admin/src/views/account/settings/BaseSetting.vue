@@ -95,7 +95,7 @@ export default {
   },
   data () {
     return {
-      baseApi: '/iam/user',
+      baseApi: '/auth-server/iam/user',
       more: {},
       model: {},
       form: this.$form.createForm(this),
@@ -120,7 +120,7 @@ export default {
   },
   methods: {
     async getCurrentUserInfo () {
-      const res = await dibootApi.get('/iam/user/getCurrentUserInfo')
+      const res = await dibootApi.get('/auth-server/iam/user/getCurrentUserInfo')
       if (res.code === 0) {
         this.model = res.data
       } else {
@@ -152,7 +152,7 @@ export default {
       this.$store.commit('SET_NAME', { name: this.form.getFieldValue('realname'), welcome: '' })
     },
     async loadMore () {
-      const res = await dibootApi.get('/iam/user/attachMore')
+      const res = await dibootApi.get('/auth-server/iam/user/attachMore')
       if (res.code === 0) {
         this.more = res.data
       } else {

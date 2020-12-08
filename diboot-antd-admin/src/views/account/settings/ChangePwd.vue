@@ -56,7 +56,7 @@ export default {
   name: 'ChangePwdSettings',
   data () {
     return {
-      baseApi: '/iam/user',
+      baseApi: '/auth-server/iam/user',
       form: this.$form.createForm(this)
     }
   },

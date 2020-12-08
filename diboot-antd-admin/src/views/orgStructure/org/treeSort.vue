@@ -1,6 +1,6 @@
 <template>
   <a-drawer
-    title="部门拖拽排序"
+    title="组织机构拖拽排序"
     width="720"
     :visible="visible"
     @close="close"
@@ -21,6 +21,7 @@
         </a-col>
       </a-row>
     </a-spin>
+
     <div class="drawer-footer">
       <a-button :style="{marginRight: '8px'}" @click="close">关闭</a-button>
     </div>

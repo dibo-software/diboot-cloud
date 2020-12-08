@@ -26,6 +26,33 @@ export const asyncRouterMap = [
           meta: { title: '我的工作台', keepAlive: true }
         }]
       },
+      // 组织架构管理
+      {
+        path: '/orgStructure',
+        redirect: '/orgStructure/org-tree-list',
+        component: RouteView,
+        meta: { title: '组织管理', icon: 'team', keepAlive: false, permission: ['IamOrg', 'IamPosition', 'IamUser'] },
+        children: [
+          {
+            path: '/orgStructure/org',
+            name: 'OrgIndex',
+            component: () => import('@/views/orgStructure/org/Index'),
+            meta: { title: '组织机构管理', keepAlive: false, permission: ['IamOrg'] }
+          },
+          {
+            path: '/orgStructure/position',
+            name: 'PositionIndex',
+            component: () => import('@/views/orgStructure/position/list'),
+            meta: { title: '岗位管理', keepAlive: false, permission: ['IamPosition'] }
+          },
+          {
+            path: '/orgStructure/orgUser',
+            name: 'OrgUserIndex',
+            component: () => import('@/views/orgStructure/orgUser/Index'),
+            meta: { title: '组织人员管理', keepAlive: false, permission: ['IamUser'] }
+          }
+        ]
+      },
       // 系统管理
       {
         path: '/system',
@@ -38,12 +65,6 @@ export const asyncRouterMap = [
             name: 'DictIndex',
             component: () => import('@/views/system/dictionary/Index'),
             meta: { title: '数据字典管理', keepAlive: true, permission: ['Dictionary'] }
-          },
-          {
-            path: '/system/iamOrg/index',
-            name: 'IamOrgIndex',
-            component: () => import('@/views/system/iamOrg/Index'),
-            meta: { title: '部门信息管理', keepAlive: true, permission: ['IamOrg'] }
           },
           {
             path: '/system/iamUser/index',
