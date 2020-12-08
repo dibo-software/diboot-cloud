@@ -16,23 +16,32 @@
 package com.diboot.cloud.iam.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.diboot.core.config.BaseConfig;
 import com.diboot.core.exception.BusinessException;
 import com.diboot.core.util.V;
 import com.diboot.core.vo.Status;
 import com.diboot.cloud.config.Cons;
 import com.diboot.cloud.dto.IamUserAccountDTO;
 import com.diboot.cloud.entity.IamAccount;
+import com.diboot.cloud.entity.IamResourcePermission;
 import com.diboot.cloud.entity.IamUser;
 import com.diboot.cloud.entity.IamUserRole;
 import com.diboot.cloud.iam.mapper.IamUserMapper;
 import com.diboot.cloud.iam.service.IamAccountService;
+import com.diboot.cloud.iam.service.IamResourcePermissionService;
 import com.diboot.cloud.iam.service.IamUserRoleService;
 import com.diboot.cloud.iam.service.IamUserService;
+import com.diboot.cloud.iam.util.IamHelper;
+import com.diboot.cloud.vo.IamRoleVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
 * 系统用户相关Service实现
@@ -48,9 +57,43 @@ public class IamUserServiceImpl extends BaseIamServiceImpl<IamUserMapper, IamUse
     private IamUserRoleService iamUserRoleService;
 
     @Autowired
+    private IamResourcePermissionService iamResourcePermissionService;
+
+    @Autowired
     private IamAccountService iamAccountService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Override
+    public IamRoleVO buildRoleVo4FrontEnd(IamUser iamUser) {
+        List<IamRoleVO> roleVOList = getAllRoleVOList(iamUser);
+        if (V.isEmpty(roleVOList)){
+            return null;
+        }
+        // 附加额外的一些权限给与特性的角色
+        attachExtraPermissions(roleVOList);
+        // 组合为前端格式
+        return IamHelper.buildRoleVo4FrontEnd(roleVOList);
+    }
+
+    @Override
+    public List<IamRoleVO> getAllRoleVOList(IamUser iamUser) {
+        return iamUserRoleService.getAllRoleVOList(iamUser.getClass().getSimpleName(), iamUser.getId());
+    }
+
+    @Override
+    public void attachExtraPermissions(List<IamRoleVO> roleVOList) {
+        if (V.isEmpty(roleVOList)){
+            return;
+        }
+        for (IamRoleVO roleVO : roleVOList){
+            if (Cons.ROLE_SUPER_ADMIN.equalsIgnoreCase(roleVO.getCode())){
+                List<IamResourcePermission> iamPermissions = iamResourcePermissionService.getAllResourcePermissions(Cons.APPLICATION);
+                roleVO.setPermissionList(iamPermissions);
+                return;
+            }
+        }
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -113,8 +156,7 @@ public class IamUserServiceImpl extends BaseIamServiceImpl<IamUserMapper, IamUse
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean deleteUserAndAccount(Long id) throws Exception {
-        IamUser iamUser = this.getEntity(id);
-        if (iamUser == null){
+        if (exists(IamUser::getId, id) == false){
             throw new BusinessException(Status.FAIL_OPERATION, "删除的记录不存在");
         }
         // 删除用户信息
@@ -123,6 +165,46 @@ public class IamUserServiceImpl extends BaseIamServiceImpl<IamUserMapper, IamUse
         this.deleteAccount(id);
 
         return true;
+    }
+
+    @Override
+    public List<String> filterDuplicateUserNums(List<String> userNumList) {
+        List<String> batchUserNumList = new ArrayList<>();
+        List<String> allDuplicateUserNumList = new ArrayList<>();
+            for (int i = 0; i < userNumList.size(); i++) {
+            if (i > 0 && i % BaseConfig.getBatchSize() == 0) {
+                List<String> duplicateUserNumList = this.checkUserNumDuplicate(batchUserNumList);
+                if (V.notEmpty(duplicateUserNumList)) {
+                    allDuplicateUserNumList.addAll(duplicateUserNumList);
+                }
+                batchUserNumList.clear();
+            }
+            batchUserNumList.add(userNumList.get(i));
+        }
+        if (V.notEmpty(batchUserNumList)) {
+            List<String> duplicateUserNumList = this.checkUserNumDuplicate(batchUserNumList);
+            if (V.notEmpty(duplicateUserNumList)) {
+                allDuplicateUserNumList.addAll(duplicateUserNumList);
+            }
+            batchUserNumList.clear();
+        }
+        return allDuplicateUserNumList;
+    }
+
+    /***
+     * 检查重复用户编号
+     * @param userNumList
+     * @return
+     */
+    private List<String> checkUserNumDuplicate(List<String> userNumList) {
+        if (V.isEmpty(userNumList)) {
+            return Collections.emptyList();
+        }
+        List<String> iamUserNums = getValuesOfField(
+                Wrappers.<IamUser>lambdaQuery().in(IamUser::getUserNum, userNumList),
+                IamUser::getUserNum
+        );
+        return iamUserNums;
     }
 
     private void createAccount(IamUserAccountDTO userAccountDTO) throws Exception{

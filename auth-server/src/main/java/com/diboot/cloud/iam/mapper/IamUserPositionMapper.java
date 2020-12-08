@@ -13,39 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.diboot.cloud.iam.service;
+package com.diboot.cloud.iam.mapper;
 
-import com.diboot.cloud.entity.IamOrg;
-import com.diboot.cloud.vo.IamOrgVO;
-
-import java.util.List;
+import com.diboot.core.mapper.BaseCrudMapper;
+import com.diboot.cloud.entity.IamUserPosition;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
-* 组织机构相关Service
+* 用户岗位关联Mapper
 * @author mazc@dibo.ltd
 * @version 2.2
-* @date 2019-12-03
+* @date 2019-12-17
 */
-public interface IamOrgService extends BaseIamService<IamOrg> {
-
-    /**
-     * 获取全部子节点ID
-     * @param rootOrgId
-     * @return
-     */
-    List<Long> getChildOrgIds(Long rootOrgId);
-
-    /**
-     * 获取指定根下的全部节点的组织树
-     * @param rootOrgId
-     * @return
-     */
-    List<IamOrgVO> getOrgTree(Long rootOrgId);
-
-    /***
-     * 对部门列表进行排序
-     * @param orgList
-     */
-    void sortList(List<IamOrg> orgList);
+@Mapper
+public interface IamUserPositionMapper extends BaseCrudMapper<IamUserPosition> {
 
 }
+

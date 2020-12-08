@@ -15,37 +15,42 @@
  */
 package com.diboot.cloud.iam.service;
 
-import com.diboot.cloud.entity.IamOrg;
-import com.diboot.cloud.vo.IamOrgVO;
+import com.diboot.cloud.entity.IamPosition;
+import com.diboot.cloud.entity.IamUserPosition;
 
 import java.util.List;
 
 /**
-* 组织机构相关Service
+* 岗位相关Service
 * @author mazc@dibo.ltd
 * @version 2.2
 * @date 2019-12-03
 */
-public interface IamOrgService extends BaseIamService<IamOrg> {
+public interface IamPositionService extends BaseIamService<IamPosition> {
 
     /**
-     * 获取全部子节点ID
-     * @param rootOrgId
+     * 获取当前用户的任职岗位列表
+     * @param userType
+     * @param userId
      * @return
      */
-    List<Long> getChildOrgIds(Long rootOrgId);
-
-    /**
-     * 获取指定根下的全部节点的组织树
-     * @param rootOrgId
-     * @return
-     */
-    List<IamOrgVO> getOrgTree(Long rootOrgId);
+    List<IamUserPosition> getUserPositionListByUser(String userType, Long userId);
 
     /***
-     * 对部门列表进行排序
-     * @param orgList
+     * 通过用户ID获取用户的所有任职岗位集合（包含了部门的岗位）
+     * @param userType
+     * @param userId
+     * @return
      */
-    void sortList(List<IamOrg> orgList);
+    List<IamPosition> getPositionListByUser(String userType, Long userId);
+
+    /***
+     * 批量更新用户-岗位的关联关系
+     * @param userType
+     * @param userId
+     * @param userPositionList
+     * @return
+     */
+    boolean updateUserPositionRelations(String userType, Long userId, List<IamUserPosition> userPositionList);
 
 }

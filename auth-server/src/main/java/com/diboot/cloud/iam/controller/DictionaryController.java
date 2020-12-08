@@ -5,15 +5,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.diboot.cloud.annotation.BindPermission;
 import com.diboot.cloud.annotation.Operation;
-import com.diboot.cloud.iam.dto.AttachMoreDTO;
 import com.diboot.cloud.redis.RedisCons;
 import com.diboot.core.binding.parser.ParserCache;
 import com.diboot.core.controller.BaseCrudRestController;
+import com.diboot.core.dto.AttachMoreDTO;
 import com.diboot.core.entity.Dictionary;
 import com.diboot.core.entity.ValidList;
 import com.diboot.core.service.BaseService;
 import com.diboot.core.service.DictionaryService;
-import com.diboot.core.util.BeanUtils;
 import com.diboot.core.util.ContextHelper;
 import com.diboot.core.util.S;
 import com.diboot.core.util.V;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
 * 数据字典相关Controller

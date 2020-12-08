@@ -1,6 +1,6 @@
 package com.diboot.cloud.iam.dto;
 
-import com.diboot.cloud.iam.entity.IamOrg;
+import com.diboot.cloud.entity.IamOrg;
 import com.diboot.core.binding.query.BindQuery;
 import com.diboot.core.binding.query.Comparison;
 
@@ -12,7 +12,6 @@ import com.diboot.core.binding.query.Comparison;
  * Copyright © dibo.ltd
  */
 public class IamOrgDTO extends IamOrg {
-
     private static final long serialVersionUID = 930458548906223479L;
 
     /**

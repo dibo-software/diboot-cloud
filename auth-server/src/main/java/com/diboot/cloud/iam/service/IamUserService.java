@@ -17,6 +17,9 @@ package com.diboot.cloud.iam.service;
 
 import com.diboot.cloud.dto.IamUserAccountDTO;
 import com.diboot.cloud.entity.IamUser;
+import com.diboot.cloud.vo.IamRoleVO;
+
+import java.util.List;
 
 /**
 * 系统用户相关Service
@@ -25,6 +28,26 @@ import com.diboot.cloud.entity.IamUser;
 * @date 2019-12-17
 */
 public interface IamUserService extends BaseIamService<IamUser> {
+
+    /**
+     * 构建role-permission角色权限数据格式(合并role等)，用于前端适配
+     * @param iamUser
+     * @return
+     */
+    IamRoleVO buildRoleVo4FrontEnd(IamUser iamUser);
+
+    /***
+     * 获取用户的所有角色列表（包括扩展的关联角色）
+     * @param iamUser
+     * @return
+     */
+    List<IamRoleVO> getAllRoleVOList(IamUser iamUser);
+
+    /***
+     * 附加额外的权限（主要用于给超级管理员权限赋予所有权限）
+     * @param roleVOList
+     */
+    void attachExtraPermissions(List<IamRoleVO> roleVOList);
 
     /***
      * 添加用户和账号
@@ -47,5 +70,12 @@ public interface IamUserService extends BaseIamService<IamUser> {
      * @throws Exception
      */
     boolean deleteUserAndAccount(Long id) throws Exception;
+
+    /**
+     * 过滤重复的员工号
+     * @param userNumList
+     * @return
+     */
+    List<String> filterDuplicateUserNums(List<String> userNumList);
 
 }
