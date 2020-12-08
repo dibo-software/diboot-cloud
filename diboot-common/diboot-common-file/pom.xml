@@ -14,12 +14,12 @@
     <version>2.2.0-SNAPSHOT</version>
 
     <dependencies>
-        <!-- diboot-file -->
+        <!-- diboot-file
         <dependency>
             <groupId>com.diboot</groupId>
             <artifactId>diboot-file</artifactId>
             <version>${diboot-version}</version>
-        </dependency>
+        </dependency>-->
 
     </dependencies>
 
