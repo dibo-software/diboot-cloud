@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import feign.Contract;
 import feign.Logger;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -48,6 +49,12 @@ import java.text.SimpleDateFormat;
  */
 @Configuration
 public class FeignConfig implements RequestInterceptor {
+
+    @Bean
+    public Contract feignContract() {
+        return new feign.Contract.Default();
+    }
+
     @Bean
     Logger.Level feignLoggerLevel() {
         return Logger.Level.FULL;

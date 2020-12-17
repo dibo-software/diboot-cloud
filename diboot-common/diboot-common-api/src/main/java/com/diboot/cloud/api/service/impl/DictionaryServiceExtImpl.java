@@ -13,12 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.diboot.cloud.service.impl;
+package com.diboot.cloud.api.service.impl;
 
+import com.diboot.cloud.api.service.DictionaryApiService;
 import com.diboot.cloud.redis.RedisCons;
-import com.diboot.core.service.BindDictService;
+import com.diboot.core.entity.Dictionary;
+import com.diboot.core.service.DictionaryServiceExtProvider;
 import com.diboot.core.util.BeanUtils;
 import com.diboot.core.util.V;
+import com.diboot.core.vo.DictionaryVO;
+import com.diboot.core.vo.JsonResult;
 import com.diboot.core.vo.KeyValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -34,9 +38,11 @@ import java.util.Map;
  * @date 2020/11/24
  */
 @Service
-public class BindDictServiceImpl implements BindDictService {
+public class DictionaryServiceExtImpl implements DictionaryServiceExtProvider {
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
+    @Autowired(required = false)
+    private DictionaryApiService dictionaryApiService;
 
     @Override
     public void bindItemLabel(List voList, String setFieldName, String getFieldName, String dictType) {
@@ -61,6 +67,29 @@ public class BindDictServiceImpl implements BindDictService {
             return (List<KeyValue>)itemsObj;
         }
         return null;
+    }
+
+    @Override
+    public boolean existsDictType(String dictType) {
+        return redisTemplate.opsForHash().hasKey(RedisCons.KEY_DICTIONARY_MAP, dictType);
+    }
+
+    @Override
+    public boolean createDictAndChildren(DictionaryVO dictionaryVO) {
+        JsonResult jsonResult = dictionaryApiService.createDictAndChildren(dictionaryVO);
+        return jsonResult.isOK();
+    }
+
+    @Override
+    public List<Dictionary> getDictDefinitionList() {
+        JsonResult jsonResult = dictionaryApiService.getDictDefinitionList();
+        return (List<Dictionary>)jsonResult.getData();
+    }
+
+    @Override
+    public List<DictionaryVO> getDictDefinitionVOList() {
+        JsonResult jsonResult = dictionaryApiService.getDictDefinitionVOList();
+        return (List<DictionaryVO>)jsonResult.getData();
     }
 
 }

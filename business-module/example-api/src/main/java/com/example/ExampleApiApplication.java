@@ -27,7 +27,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @version v2.2
  * @date 2020/11/09
  */
-@EnableFeignClients({"com.diboot.cloud.**"})
+@EnableFeignClients({"com.diboot.cloud.service.**"})
 @EnableDiscoveryClient
 @SpringBootApplication
 public class ExampleApiApplication {

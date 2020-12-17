@@ -55,7 +55,7 @@ public class DictionaryController extends BaseCrudRestController<Dictionary> {
     @BindPermission(name = Operation.LABEL_LIST, code = Operation.CODE_LIST)
     @GetMapping("/dictionary/list")
     public JsonResult getViewObjectListMapping(Dictionary entity, Pagination pagination) throws Exception{
-        QueryWrapper<Dictionary> queryWrapper = super.buildQueryWrapper(entity);
+        QueryWrapper<Dictionary> queryWrapper = super.buildQueryWrapperByQueryParams(entity);
         List<DictionaryVO> voList = dictionaryService.getViewObjectList(queryWrapper, pagination, DictionaryVO.class);
         return JsonResult.OK(voList).bindPagination(pagination);
     }
@@ -156,6 +156,30 @@ public class DictionaryController extends BaseCrudRestController<Dictionary> {
             }
         }
         return JsonResult.OK();
+    }
+
+    /**
+     * 查询全部字典定义
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/dictionary/listDefinition")
+    public JsonResult getDictDefinitionListApi() throws Exception{
+        LambdaQueryWrapper<Dictionary> queryWrapper = new LambdaQueryWrapper<Dictionary>().eq(Dictionary::getParentId, 0L);
+        List<Dictionary> voList = dictionaryService.getEntityList(queryWrapper);
+        return JsonResult.OK(voList);
+    }
+
+    /**
+     * 查询全部字典定义
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/dictionary/listDefinitionVO")
+    public JsonResult getDictDefinitionVOListApi() throws Exception{
+        LambdaQueryWrapper<Dictionary> queryWrapper = new LambdaQueryWrapper<Dictionary>().eq(Dictionary::getParentId, 0L);
+        List<DictionaryVO> voList = dictionaryService.getViewObjectList(queryWrapper, null, DictionaryVO.class);
+        return JsonResult.OK(voList);
     }
 
     /***

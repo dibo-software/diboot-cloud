@@ -19,6 +19,12 @@
             <artifactId>diboot-common-api</artifactId>
             <version>${diboot-cloud.version}</version>
         </dependency>
+        <!-- 加载ORM相关组件 -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis-plus.version}</version>
+        </dependency>
 
         <!-- -->
         <dependency>
