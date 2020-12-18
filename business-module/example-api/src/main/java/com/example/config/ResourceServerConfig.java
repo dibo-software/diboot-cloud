@@ -61,7 +61,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests().antMatchers("/anon/**").permitAll()
+                .authorizeRequests()
+                .antMatchers("/anon/**", "/diboot/**").permitAll()
                 .and()
                 .authorizeRequests().anyRequest().authenticated();
     }
