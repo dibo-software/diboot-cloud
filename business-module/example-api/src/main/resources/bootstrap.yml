@@ -1,0 +1,22 @@
+server:
+  port: 8101
+  servlet:
+    context-path: /
+spring:
+  profiles:
+    active: dev
+  application:
+    name: example-api
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      config:
+        file-extension: yaml
+      discovery:
+        server-addr: localhost:8848
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
