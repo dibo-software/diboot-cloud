@@ -10,7 +10,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.diboot.cloud</groupId>
-    <artifactId>auth-server</artifactId>
+    <artifactId>business-modules</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>example-api</module>
+    </modules>
 
     <dependencies>
         <dependency>
@@ -19,15 +23,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-oauth2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-jose</artifactId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
         <!-- Nacos config & discovery -->
@@ -40,34 +36,24 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
 
-        <!-- 加载ORM相关组件 -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>${mybatis-plus.version}</version>
-        </dependency>
-
-        <!-- diboot-cloud base -->
-        <dependency>
-            <groupId>com.diboot.cloud</groupId>
-            <artifactId>diboot-common-base</artifactId>
-            <version>${diboot-cloud.version}</version>
-        </dependency>
-
         <!-- JDBC Driver -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.22</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
-
     </dependencies>
 
 </project>

@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import orgTree from '@/views/system/iamOrg/orgTree'
+import orgTree from '@/views/orgStructure/org/orgTree'
 import userList from './list'
 
 export default {

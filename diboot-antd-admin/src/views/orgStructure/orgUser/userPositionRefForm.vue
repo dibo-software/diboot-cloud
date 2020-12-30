@@ -101,7 +101,7 @@ export default {
   name: 'UserPositionRefForm',
   data () {
     return {
-      baseApi: 'iam/userPosition',
+      baseApi: '/auth-server/iam/userPosition',
       user: {},
       positionKvList: [],
       orgList: [],
