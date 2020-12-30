@@ -1,0 +1,39 @@
+server:
+  port: 8101
+  servlet:
+    context-path: /
+spring:
+  profiles:
+    active: dev
+  application:
+    name: scheduler
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      config:
+        file-extension: yaml
+      discovery:
+        server-addr: localhost:8848
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: 'http://localhost:8001/oauth/token_key' # RSA公钥访问地址
+  redis:
+    database: 0
+    port: 6379
+    host: localhost
+    password:
+  datasource:
+    url:  jdbc:mysql://localhost:3306/graphql_demo?characterEncoding=utf8&serverTimezone=GMT%2B8
+    username: diboot
+    password: 123456
+    maximum-pool-size:  5
+    driver-class-name:  com.mysql.cj.jdbc.Driver
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

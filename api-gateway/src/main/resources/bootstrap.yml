@@ -22,6 +22,13 @@ spring:
             - Path=/auth-server/**
           filters:
             - StripPrefix=1
+        # 定时任务模块
+        - id: scheduler-route
+          uri: lb://scheduler
+          predicates:
+            - Path=/scheduler/**
+          filters:
+            - StripPrefix=1
         # 业务模块服务
         - id: business-api-route
           uri: lb://example-api
