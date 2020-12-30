@@ -31,7 +31,30 @@ spring:
     password: 123456
     maximum-pool-size:  5
     driver-class-name:  com.mysql.cj.jdbc.Driver
-
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema:  always
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceId: AUTO
+            instanceName: Job
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate #org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+            useProperties: false
+            tablePrefix: qrtz_
+            misfireThreshold: 60000
+            clusterCheckinInterval: 5000
+            isClustered: true
+            acquireTriggersWithinLock:  true
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
 management:
   endpoints:
     web:
