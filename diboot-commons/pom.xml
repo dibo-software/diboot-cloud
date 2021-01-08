@@ -15,7 +15,6 @@
     <version>2.2.0-SNAPSHOT</version>
     <modules>
         <module>diboot-common-base</module>
-        <module>diboot-common-file</module>
         <module>diboot-common-redis</module>
         <module>diboot-common-api</module>
     </modules>
