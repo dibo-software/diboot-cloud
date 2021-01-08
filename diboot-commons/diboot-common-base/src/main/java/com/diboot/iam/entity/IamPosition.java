@@ -16,7 +16,6 @@
 package com.diboot.iam.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.diboot.core.entity.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -33,7 +32,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class IamPosition extends BaseEntity {
+public class IamPosition extends BaseCustomEntity {
     private static final long serialVersionUID = 8716775927523689964L;
     /**
      * 全局通用的OrgId

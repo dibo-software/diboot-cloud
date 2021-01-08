@@ -17,7 +17,6 @@ package com.diboot.iam.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.diboot.core.entity.BaseEntity;
 import com.diboot.core.util.S;
 import com.diboot.core.util.V;
 import lombok.Getter;
@@ -37,7 +36,7 @@ import java.util.List;
 * Copyright © diboot.com
 */
 @Getter @Setter @Accessors(chain = true)
-public class IamResourcePermission extends BaseEntity {
+public class IamResourcePermission extends BaseCustomEntity {
     private static final long serialVersionUID = -6133621123987747250L;
 
     /**

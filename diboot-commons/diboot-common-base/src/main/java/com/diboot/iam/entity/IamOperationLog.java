@@ -16,7 +16,6 @@
 package com.diboot.iam.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.diboot.core.entity.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -31,7 +30,7 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class IamOperationLog extends BaseEntity {
+public class IamOperationLog extends BaseCustomEntity {
     private static final long serialVersionUID = 8928160564300882271L;
 
     /**

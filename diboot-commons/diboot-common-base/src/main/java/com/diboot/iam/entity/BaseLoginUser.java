@@ -16,7 +16,6 @@
 package com.diboot.iam.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.diboot.core.entity.BaseEntity;
 import com.diboot.core.vo.KeyValue;
 
 /**
@@ -25,7 +24,7 @@ import com.diboot.core.vo.KeyValue;
  * @version v2.1.0
  * @date 2020/06/28
  */
-public abstract class BaseLoginUser extends BaseEntity {
+public abstract class BaseLoginUser extends BaseCustomEntity {
 
     /**
      * 获取显示名称

@@ -24,10 +24,10 @@
         <!--
         <spring-boot.version>2.4.1</spring-boot.version>
         <spring-cloud.version>2020.0.0</spring-cloud.version>-->
-        <spring-security.version>5.4.2</spring-security.version>
-        <spring-cloud-alibaba.version>2.2.1.RELEASE</spring-cloud-alibaba.version>
-        <lombok.version>1.18.16</lombok.version>
+        <spring-security-oauth2.version>2.3.6.RELEASE</spring-security-oauth2.version>
+        <spring-cloud-alibaba.version>2.2.3.RELEASE</spring-cloud-alibaba.version>
         <mybatis-plus.version>3.4.1</mybatis-plus.version>
+        <lombok.version>1.18.16</lombok.version>
         <diboot-version>2.2.0</diboot-version>
         <diboot-cloud.version>2.2.0-SNAPSHOT</diboot-cloud.version>
     </properties>

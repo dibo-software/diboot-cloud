@@ -16,7 +16,6 @@
 package com.diboot.iam.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.diboot.core.entity.BaseEntity;
 import com.diboot.cloud.config.Cons;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
@@ -33,7 +32,7 @@ import javax.validation.constraints.NotNull;
  * @date 2019-12-03
  */
 @Getter @Setter @Accessors(chain = true)
-public class IamAccount extends BaseEntity {
+public class IamAccount extends BaseCustomEntity {
     private static final long serialVersionUID = -6825516429612507644L;
 
     /**

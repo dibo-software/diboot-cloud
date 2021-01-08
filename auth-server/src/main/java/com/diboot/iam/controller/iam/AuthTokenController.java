@@ -23,7 +23,6 @@ import com.diboot.core.vo.JsonResult;
 import com.diboot.iam.handler.AsyncLogWorker;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
-import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
@@ -49,7 +48,7 @@ public class AuthTokenController {
 
     @Autowired
     private KeyPair keyPair;
-    private static JSONObject PUBLIC_KEY = null;
+    private static Map<String, Object> PUBLIC_KEY = null;
 
     @Autowired
     private TokenEndpoint tokenEndpoint;

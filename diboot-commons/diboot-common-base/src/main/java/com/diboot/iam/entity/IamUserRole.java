@@ -16,7 +16,6 @@
 package com.diboot.iam.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.diboot.core.entity.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -30,7 +29,7 @@ import javax.validation.constraints.NotNull;
 * @date 2019-12-17
 */
 @Getter @Setter @Accessors(chain = true)
-public class IamUserRole extends BaseEntity {
+public class IamUserRole extends BaseCustomEntity {
     private static final long serialVersionUID = 7716603553049083815L;
 
     public IamUserRole(){}

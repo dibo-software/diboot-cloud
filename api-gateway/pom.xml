@@ -31,12 +31,12 @@
             <artifactId>spring-security-oauth2-jose</artifactId>
         </dependency>
 
-        <!--  -->
+        <!--
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
-        </dependency>
+        </dependency>-->
 
         <!-- Nacos config & discovery -->
         <dependency>

@@ -16,7 +16,6 @@
 package com.diboot.iam.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.diboot.core.entity.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -33,7 +32,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class IamOrg extends BaseEntity {
+public class IamOrg extends BaseCustomEntity {
 
     private static final long serialVersionUID = 8942911223090443934L;
 
@@ -74,7 +73,7 @@ public class IamOrg extends BaseEntity {
     @NotNull(message = "组织类别不能为空")
     @Length(max = 100, message = "组织类别长度应小于100")
     @TableField()
-    private String type = "DEPT";
+    private String type;
 
     // 编码
     @NotNull(message = "编码不能为空")
@@ -94,7 +93,15 @@ public class IamOrg extends BaseEntity {
     private Long sortId;
 
     /**
+     * 状态
+     */
+    @TableField()
+    private String status;
+
+    /**
      * 组织备注
      */
+    @TableField()
     private String orgComment;
+
 }

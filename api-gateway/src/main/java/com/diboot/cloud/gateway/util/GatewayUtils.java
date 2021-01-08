@@ -15,8 +15,8 @@
  */
 package com.diboot.cloud.gateway.util;
 
-import com.alibaba.fastjson.JSON;
 import com.diboot.core.config.Cons;
+import com.diboot.core.util.JSON;
 import com.diboot.core.vo.JsonResult;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
