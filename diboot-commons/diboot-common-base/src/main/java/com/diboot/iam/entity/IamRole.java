@@ -19,6 +19,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 
@@ -46,11 +47,13 @@ public class IamRole extends BaseCustomEntity {
 
     // 名称
     @NotNull(message = "名称不能为空")
+    @Length(max=50, message="名称长度应小于50")
     @TableField()
     private String name;
 
     // 编码
     @NotNull(message = "编码不能为空")
+    @Length(max=50, message="编码长度应小于50")
     @TableField()
     private String code;
 
