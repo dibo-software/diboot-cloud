@@ -175,24 +175,6 @@ public class IamResourcePermissionController extends BaseCrudRestController<IamR
     }
 
     /***
-     * 检查菜单编码是否重复
-     * @param iamResourcePermission
-     * @return
-     * @throws Exception
-     */
-    @PostMapping("/checkCodeDuplicate")
-    public JsonResult checkCodeDuplicate(@RequestBody IamResourcePermission iamResourcePermission) throws Exception{
-        LambdaQueryWrapper<IamResourcePermission> wrapper = Wrappers.<IamResourcePermission>lambdaQuery()
-                .eq(IamResourcePermission::getResourceCode, iamResourcePermission.getResourceCode())
-                .eq(IamResourcePermission::getDisplayType, "MENU");
-        if (V.notEmpty(iamResourcePermission.getAppModule())) {
-            wrapper.eq(IamResourcePermission::getAppModule, iamResourcePermission.getAppModule());
-        }
-        boolean duplicateResourceCode = iamResourcePermissionService.exists(wrapper);
-        return JsonResult.OK(duplicateResourceCode);
-    }
-
-    /***
      * Devtools将调用此处，勿删！
      * 获取单个菜单权限详情
      * @param parentId
