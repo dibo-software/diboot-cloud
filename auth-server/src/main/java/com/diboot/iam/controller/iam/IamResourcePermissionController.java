@@ -3,6 +3,8 @@ package com.diboot.iam.controller.iam;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.diboot.core.exception.BusinessException;
+import com.diboot.core.vo.Status;
 import com.diboot.iam.annotation.BindPermission;
 import com.diboot.iam.annotation.Log;
 import com.diboot.iam.annotation.Operation;
@@ -27,6 +29,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -95,7 +98,7 @@ public class IamResourcePermissionController extends BaseCrudRestController<IamR
     @PostMapping("/")
     public JsonResult createEntityMapping(@Valid @RequestBody IamResourcePermissionDTO iamResourcePermissionDTO) throws Exception {
         iamResourcePermissionService.createMenuAndPermissions(iamResourcePermissionDTO);
-        return JsonResult.OK();
+        return JsonResult.OK(iamResourcePermissionDTO);
     }
 
     /***
@@ -169,6 +172,62 @@ public class IamResourcePermissionController extends BaseCrudRestController<IamR
     public JsonResult apiList() throws Exception{
         Map<Object, Object> moduleToPermissionsMap = redisTemplate.opsForHash().entries(RedisCons.KEY_APP_MODULE_PERMISSIONS_MAP);
         return JsonResult.OK(moduleToPermissionsMap);
+    }
+
+    /***
+     * 检查菜单编码是否重复
+     * @param iamResourcePermission
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/checkCodeDuplicate")
+    public JsonResult checkCodeDuplicate(@RequestBody IamResourcePermission iamResourcePermission) throws Exception{
+        LambdaQueryWrapper<IamResourcePermission> wrapper = Wrappers.<IamResourcePermission>lambdaQuery()
+                .eq(IamResourcePermission::getResourceCode, iamResourcePermission.getResourceCode())
+                .eq(IamResourcePermission::getDisplayType, "MENU");
+        if (V.notEmpty(iamResourcePermission.getAppModule())) {
+            wrapper.eq(IamResourcePermission::getAppModule, iamResourcePermission.getAppModule());
+        }
+        boolean duplicateResourceCode = iamResourcePermissionService.exists(wrapper);
+        return JsonResult.OK(duplicateResourceCode);
+    }
+
+    /***
+     * Devtools将调用此处，勿删！
+     * 获取单个菜单权限详情
+     * @param parentId
+     * @param resourceCode
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/getSingleEntity")
+    public JsonResult getSingleEntity(@RequestParam Long parentId, @RequestParam String resourceCode ) throws Exception{
+        return JsonResult.OK(
+                iamResourcePermissionService.getSingleEntity(
+                        Wrappers.<IamResourcePermission>lambdaQuery()
+                                .eq(IamResourcePermission::getParentId, parentId)
+                                .eq(IamResourcePermission::getResourceCode, resourceCode)
+                )
+        );
+    }
+
+    /***
+     * Devtools将调用此处，勿删！
+     * 获取外层2级菜单
+     * @return
+     */
+    @GetMapping("/getTreeMenuList")
+    public JsonResult getTreeMenuList(@RequestParam(required = false) String appModule) {
+        LambdaQueryWrapper<IamResourcePermission> wrapper = Wrappers.<IamResourcePermission>lambdaQuery();
+        wrapper.eq(IamResourcePermission::getParentId, 0L)
+                .eq(IamResourcePermission::getDisplayType, Cons.RESOURCE_PERMISSION_DISPLAY_TYPE.MENU.name())
+                .ne(IamResourcePermission::getResourceCode, "system");
+
+        if (V.notEmpty(appModule)) {
+            wrapper.eq(IamResourcePermission::getAppModule, appModule);
+        }
+        List<IamResourcePermission> allFrontendPermissions = iamResourcePermissionService.getEntityList(wrapper);
+        return JsonResult.OK(allFrontendPermissions);
     }
 
     /***
