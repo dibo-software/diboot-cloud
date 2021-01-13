@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -39,6 +40,7 @@ import java.util.List;
  */
 @Configuration
 @ComponentScan({"com.diboot", "com.example"})
+@MapperScan(basePackages={"com.example.mapper"})
 public class SpringWebConfig implements WebMvcConfigurer {
 
     /**
