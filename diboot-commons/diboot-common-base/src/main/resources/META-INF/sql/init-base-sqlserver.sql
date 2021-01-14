@@ -40,20 +40,20 @@ create nonclustered index idx_directory_tenant on ${SCHEMA}.dictionary(tenant_id
 -- 用户表
 create table ${SCHEMA}.iam_user
 (
-   id bigint identity,
-   tenant_id            bigint        not null default 0,
-   org_id bigint not null default 0,
-   user_num varchar(20) not null,
-   realname varchar(50) not null,
-   gender varchar(10) not null,
-   birthdate date null,
-   mobile_phone varchar(20) null,
-   email varchar(50) null,
-   avatar_url varchar(200) null,
-   status varchar(10) not null default 'A',
-   is_deleted tinyint not null DEFAULT 0,
-   create_time datetime not null default CURRENT_TIMESTAMP,
-   constraint PK_iam_user primary key (id)
+  id bigint identity,
+  tenant_id            bigint        not null default 0,
+  org_id bigint not null default 0,
+  user_num varchar(20) not null,
+  realname varchar(50) not null,
+  gender varchar(10) not null,
+  birthdate date null,
+  mobile_phone varchar(20) null,
+  email varchar(50) null,
+  avatar_url varchar(200) null,
+  status varchar(10) not null default 'A',
+  is_deleted tinyint not null DEFAULT 0,
+  create_time datetime not null default CURRENT_TIMESTAMP,
+  constraint PK_iam_user primary key (id)
 );
 -- 添加备注
 execute sp_addextendedproperty 'MS_Description', N'ID', 'SCHEMA', '${SCHEMA}', 'table', iam_user, 'column', 'id';
@@ -79,18 +79,18 @@ create nonclustered index idx_iam_user_tenant on iam_user(tenant_id);
 -- 账号表
 create table ${SCHEMA}.iam_account
 (
-   id bigint identity,
-   tenant_id            bigint        not null default 0,
-   user_type varchar(100) default 'IamUser' not null,
-   user_id bigint not null,
-   auth_type varchar(20) default 'PWD' not null,
-   auth_account varchar(100) not null,
-   auth_secret varchar(32) null,
-   secret_salt varchar(32) null,
-   status varchar(10) default 'A' not null,
-   is_deleted tinyint default 0 not null,
-   create_time datetime default CURRENT_TIMESTAMP not null,
-   constraint PK_iam_account primary key (id)
+  id bigint identity,
+  tenant_id            bigint        not null default 0,
+  user_type varchar(100) default 'IamUser' not null,
+  user_id bigint not null,
+  auth_type varchar(20) default 'PWD' not null,
+  auth_account varchar(100) not null,
+  auth_secret varchar(32) null,
+  secret_salt varchar(32) null,
+  status varchar(10) default 'A' not null,
+  is_deleted tinyint default 0 not null,
+  create_time datetime default CURRENT_TIMESTAMP not null,
+  constraint PK_iam_account primary key (id)
 );
 execute sp_addextendedproperty 'MS_Description', N'ID', 'SCHEMA', '${SCHEMA}', 'table', iam_account, 'column', 'id';
 execute sp_addextendedproperty 'MS_Description', N'租户ID','SCHEMA', '${SCHEMA}', 'table', iam_account, 'column', 'tenant_id';
@@ -111,14 +111,14 @@ create nonclustered index idx_iam_account_tenant on iam_account(tenant_id);
 -- 角色表
 create table ${SCHEMA}.iam_role
 (
-   id bigint identity,
-   tenant_id            bigint        not null default 0,
-   name varchar(50) not null,
-   code varchar(50) not null,
-   description varchar(100) null,
-   is_deleted tinyint default 0 not null,
-   create_time datetime default CURRENT_TIMESTAMP null,
-   constraint PK_iam_role primary key (id)
+  id bigint identity,
+  tenant_id            bigint        not null default 0,
+  name varchar(50) not null,
+  code varchar(50) not null,
+  description varchar(100) null,
+  is_deleted tinyint default 0 not null,
+  create_time datetime default CURRENT_TIMESTAMP null,
+  constraint PK_iam_role primary key (id)
 );
 execute sp_addextendedproperty 'MS_Description', N'ID', 'SCHEMA', '${SCHEMA}', 'table', iam_role, 'column', 'id';
 execute sp_addextendedproperty 'MS_Description', N'租户ID','SCHEMA', '${SCHEMA}', 'table', iam_role, 'column', 'tenant_id';
@@ -134,14 +134,14 @@ create nonclustered index idx_iam_role_tenant on iam_role(tenant_id);
 -- 用户角色表
 create table ${SCHEMA}.iam_user_role
 (
-   id bigint identity,
-   tenant_id            bigint        not null default 0,
-   user_type varchar(100) default 'IamUser' not null,
-   user_id bigint not null,
-   role_id bigint not null,
-   is_deleted tinyint default 0 not null,
-   create_time datetime default CURRENT_TIMESTAMP not null,
-      constraint PK_iam_user_role primary key (id)
+  id bigint identity,
+  tenant_id            bigint        not null default 0,
+  user_type varchar(100) default 'IamUser' not null,
+  user_id bigint not null,
+  role_id bigint not null,
+  is_deleted tinyint default 0 not null,
+  create_time datetime default CURRENT_TIMESTAMP not null,
+  constraint PK_iam_user_role primary key (id)
 );
 execute sp_addextendedproperty 'MS_Description', N'ID', 'SCHEMA', '${SCHEMA}', 'table', iam_user_role, 'column', 'id';
 execute sp_addextendedproperty 'MS_Description', N'租户ID','SCHEMA', '${SCHEMA}', 'table', iam_user_role, 'column', 'tenant_id';
@@ -155,22 +155,22 @@ execute sp_addextendedproperty 'MS_Description', N'用户角色关联', 'SCHEMA'
 create nonclustered index idx_iam_user_role on iam_user_role (user_type, user_id);
 create nonclustered index idx_iam_user_role_tenant on iam_user_role(tenant_id);
 
--- 前端权限表
+-- 资源权限表
 create table ${SCHEMA}.iam_resource_permission
 (
-   id bigint identity,
-   tenant_id            bigint        not null default 0,
-   app_module          varchar(50),
-   parent_id bigint default 0   not null,
-   display_type varchar(20) not null,
-   display_name varchar(100) not null,
-   frontend_code varchar(100)   null,
-   api_set varchar(3000)   null,
-   sort_id bigint   null,
-   is_deleted tinyint default 0 not null,
-   create_time datetime default CURRENT_TIMESTAMP not null,
-   update_time datetime null,
-   constraint PK_iam_resource_permission primary key (id)
+  id bigint identity,
+  tenant_id            bigint        not null default 0,
+  app_module          varchar(50) not null,
+  parent_id bigint default 0   not null,
+  display_type varchar(20) not null,
+  display_name varchar(100) not null,
+  resource_code varchar(100)   null,
+  api_set varchar(3000)   null,
+  sort_id bigint   null,
+  is_deleted tinyint default 0 not null,
+  create_time datetime default CURRENT_TIMESTAMP not null,
+  update_time datetime null,
+  constraint PK_iam_resource_permission primary key (id)
 );
 execute sp_addextendedproperty 'MS_Description', N'ID', 'SCHEMA', '${SCHEMA}', 'table', iam_resource_permission, 'column', 'id';
 execute sp_addextendedproperty 'MS_Description', N'租户ID','SCHEMA', '${SCHEMA}', 'table', iam_resource_permission, 'column', 'tenant_id';
@@ -178,13 +178,13 @@ execute sp_addextendedproperty 'MS_Description', N'应用模块','SCHEMA', '${SC
 execute sp_addextendedproperty 'MS_Description', N'菜单ID', 'SCHEMA', '${SCHEMA}', 'table', iam_resource_permission, 'column', 'parent_id';
 execute sp_addextendedproperty 'MS_Description', N'展现类型', 'SCHEMA', '${SCHEMA}', 'table', iam_resource_permission, 'column', 'display_type';
 execute sp_addextendedproperty 'MS_Description', N'显示名称', 'SCHEMA', '${SCHEMA}', 'table', iam_resource_permission, 'column', 'display_name';
-execute sp_addextendedproperty 'MS_Description', N'前端编码', 'SCHEMA', '${SCHEMA}', 'table', iam_resource_permission, 'column', 'frontend_code';
+execute sp_addextendedproperty 'MS_Description', N'前端编码', 'SCHEMA', '${SCHEMA}', 'table', iam_resource_permission, 'column', 'resource_code';
 execute sp_addextendedproperty 'MS_Description', N'接口列表', 'SCHEMA', '${SCHEMA}', 'table', iam_resource_permission, 'column', 'api_set';
 execute sp_addextendedproperty 'MS_Description', N'排序号', 'SCHEMA', '${SCHEMA}', 'table', iam_resource_permission, 'column', 'sort_id';
 execute sp_addextendedproperty 'MS_Description', N'是否删除', 'SCHEMA', '${SCHEMA}', 'table', iam_resource_permission, 'column', 'is_deleted';
 execute sp_addextendedproperty 'MS_Description', N'创建时间', 'SCHEMA', '${SCHEMA}', 'table', iam_resource_permission, 'column', 'create_time';
 execute sp_addextendedproperty 'MS_Description', N'更新时间', 'SCHEMA', '${SCHEMA}', 'table', iam_resource_permission, 'column', 'update_time';
-execute sp_addextendedproperty 'MS_Description', N'前端权限表', 'SCHEMA', '${SCHEMA}', 'table', iam_resource_permission, null, null;
+execute sp_addextendedproperty 'MS_Description', N'资源权限表', 'SCHEMA', '${SCHEMA}', 'table', iam_resource_permission, null, null;
 
 -- 索引
 create nonclustered index idx_iam_resource_permission on iam_resource_permission (parent_id);
@@ -193,13 +193,13 @@ create nonclustered index idx_resource_permission_tenant on iam_resource_permiss
 -- 角色-权限
 create table ${SCHEMA}.iam_role_resource
 (
-   id bigint identity ,
-   tenant_id            bigint        not null default 0,
-   role_id bigint not null ,
-   permission_id bigint not null ,
-   is_deleted tinyint default 0 not null ,
-   create_time datetime default CURRENT_TIMESTAMP not null,
-   constraint PK_iam_role_resource primary key (id)
+  id bigint identity ,
+  tenant_id            bigint        not null default 0,
+  role_id bigint not null ,
+  permission_id bigint not null ,
+  is_deleted tinyint default 0 not null ,
+  create_time datetime default CURRENT_TIMESTAMP not null,
+  constraint PK_iam_role_resource primary key (id)
 );
 execute sp_addextendedproperty 'MS_Description', N'ID', 'SCHEMA', '${SCHEMA}', 'table', iam_role_resource, 'column', 'id';
 execute sp_addextendedproperty 'MS_Description', N'租户ID','SCHEMA', '${SCHEMA}', 'table', iam_role_resource, 'column', 'tenant_id';
@@ -207,7 +207,7 @@ execute sp_addextendedproperty 'MS_Description', N'角色ID', 'SCHEMA', '${SCHEM
 execute sp_addextendedproperty 'MS_Description', N'权限ID', 'SCHEMA', '${SCHEMA}', 'table', iam_role_resource, 'column', 'permission_id';
 execute sp_addextendedproperty 'MS_Description', N'是否删除', 'SCHEMA', '${SCHEMA}', 'table', iam_role_resource, 'column', 'is_deleted';
 execute sp_addextendedproperty 'MS_Description', N'创建时间', 'SCHEMA', '${SCHEMA}', 'table', iam_role_resource, 'column', 'create_time';
-execute sp_addextendedproperty 'MS_Description', N'角色权限', 'SCHEMA', '${SCHEMA}', 'table', iam_role_resource, null, null;
+execute sp_addextendedproperty 'MS_Description', N'角色资源', 'SCHEMA', '${SCHEMA}', 'table', iam_role_resource, null, null;
 -- 索引
 create nonclustered index idx_iam_role_resource on iam_role_resource (role_id, permission_id);
 create nonclustered index idx_iam_role_resource_tenant on iam_role_resource(tenant_id);
@@ -215,17 +215,17 @@ create nonclustered index idx_iam_role_resource_tenant on iam_role_resource(tena
 -- 登录日志表
 create table ${SCHEMA}.iam_login_trace
 (
-   id bigint identity ,
-   tenant_id            bigint        not null default 0,
-   user_type varchar(100) default 'IamUser' not null ,
-   user_id bigint not null ,
-   auth_type varchar(20) default 'PWD' not null ,
-   auth_account varchar(100) not null ,
-   ip_address varchar(50) null ,
-   user_agent varchar(200) null ,
-   is_success tinyint default 0 not null,
-   create_time datetime default CURRENT_TIMESTAMP not null,
-   constraint PK_iam_login_trace primary key (id)
+  id bigint identity ,
+  tenant_id            bigint        not null default 0,
+  user_type varchar(100) default 'IamUser' not null ,
+  user_id bigint not null ,
+  auth_type varchar(20) default 'PWD' not null ,
+  auth_account varchar(100) not null ,
+  ip_address varchar(50) null ,
+  user_agent varchar(200) null ,
+  is_success tinyint default 0 not null,
+  create_time datetime default CURRENT_TIMESTAMP not null,
+  constraint PK_iam_login_trace primary key (id)
 );
 execute sp_addextendedproperty 'MS_Description', N'ID', 'SCHEMA', '${SCHEMA}', 'table', iam_login_trace, 'column', 'id';
 execute sp_addextendedproperty 'MS_Description', N'租户ID','SCHEMA', '${SCHEMA}', 'table', iam_login_trace, 'column', 'tenant_id';
@@ -246,23 +246,23 @@ create nonclustered index idx_iam_login_trace_tenant on iam_login_trace(tenant_i
 -- 操作日志表
 create table ${SCHEMA}.iam_operation_log
 (
-   id bigint identity ,
-   tenant_id            bigint        not null default 0,
-   app_module          varchar(50),
-   business_obj varchar(100)  not null,
-   operation   varchar(100)  not null,
-   user_type varchar(100) default 'IamUser' not null ,
-   user_id bigint not null ,
-   user_realname    varchar(100)  null,
-   request_uri    varchar(500)                  not null,
-   request_method varchar(20)                   not null,
-   request_params    varchar(1000)              null,
-   request_ip   varchar(50)                     null,
-   status_code smallint default 0   not null,
-   error_msg     varchar(1000)           null,
-   is_deleted tinyint default 0 not null ,
-   create_time datetime default CURRENT_TIMESTAMP not null,
-   constraint PK_iam_operation_log primary key (id)
+  id bigint identity ,
+  tenant_id            bigint        not null default 0,
+  app_module          varchar(50) not null,
+  business_obj varchar(100)  not null,
+  operation   varchar(100)  not null,
+  user_type varchar(100) default 'IamUser' not null ,
+  user_id bigint not null ,
+  user_realname    varchar(100)  null,
+  request_uri    varchar(500)                  not null,
+  request_method varchar(20)                   not null,
+  request_params    varchar(1000)              null,
+  request_ip   varchar(50)                     null,
+  status_code smallint default 0   not null,
+  error_msg     varchar(1000)           null,
+  is_deleted tinyint default 0 not null ,
+  create_time datetime default CURRENT_TIMESTAMP not null,
+  constraint PK_iam_operation_log primary key (id)
 );
 execute sp_addextendedproperty 'MS_Description', N'ID', 'SCHEMA', '${SCHEMA}', 'table', iam_operation_log, 'column', 'id';
 execute sp_addextendedproperty 'MS_Description', N'租户ID','SCHEMA', '${SCHEMA}', 'table', iam_operation_log, 'column', 'tenant_id';
@@ -327,17 +327,17 @@ create nonclustered index idx_iam_org_tenant on iam_org (tenant_id);
 -- 岗位
 create table ${SCHEMA}.iam_position
 (
-   id bigint identity,
-   tenant_id          bigint           default 0  not null,
-   name                 varchar(100)                          not null,
-   code                 varchar(50)                           not null,
-   is_virtual           BOOLEAN  default 0                 not null,
-   grade_name           varchar(50)                           null,
-   grade_value          varchar(30) default '0'               null,
-   data_permission_type varchar(20) default 'SELF'            null,
-   is_deleted tinyint DEFAULT 0    not null,
-   create_time datetime default CURRENT_TIMESTAMP   not null,
-   constraint PK_iam_position primary key (id)
+  id bigint identity,
+  tenant_id          bigint           default 0  not null,
+  name                 varchar(100)                          not null,
+  code                 varchar(50)                           not null,
+  is_virtual           tinyint  default 0                 not null,
+  grade_name           varchar(50)                           null,
+  grade_value          varchar(30) default '0'               null,
+  data_permission_type varchar(20) default 'SELF'            null,
+  is_deleted tinyint DEFAULT 0    not null,
+  create_time datetime default CURRENT_TIMESTAMP   not null,
+  constraint PK_iam_position primary key (id)
 );
 execute sp_addextendedproperty 'MS_Description', N'ID', 'SCHEMA', '${SCHEMA}', 'table', iam_position, 'column', 'id';
 execute sp_addextendedproperty 'MS_Description', N'租户ID','SCHEMA', '${SCHEMA}', 'table', iam_position, 'column', 'tenant_id';
@@ -357,17 +357,17 @@ create nonclustered index idx_iam_position_tenant on iam_position (tenant_id);
 -- 用户岗位
 create table iam_user_position
 (
-   id bigint identity,
-   tenant_id          bigint           default 0  not null,
-   user_type           varchar(100) default 'IamUser'         not null,
-   user_id             bigint                                  not null,
-   org_id              bigint        default 0                 not null,
-   position_id         bigint                             not null,
-   is_primary_position tinyint   default 1                 not null,
-   is_deleted tinyint DEFAULT 0    not null,
-   create_time datetime default CURRENT_TIMESTAMP   not null,
-   update_time         datetime    default CURRENT_TIMESTAMP null,
-   constraint PK_iam_user_position primary key (id)
+  id bigint identity,
+  tenant_id          bigint           default 0  not null,
+  user_type           varchar(100) default 'IamUser'         not null,
+  user_id             bigint                                  not null,
+  org_id              bigint        default 0                 not null,
+  position_id         bigint                             not null,
+  is_primary_position tinyint   default 1                 not null,
+  is_deleted tinyint DEFAULT 0    not null,
+  create_time datetime default CURRENT_TIMESTAMP   not null,
+  update_time         datetime    default CURRENT_TIMESTAMP null,
+  constraint PK_iam_user_position primary key (id)
 );
 execute sp_addextendedproperty 'MS_Description', N'ID', 'SCHEMA', '${SCHEMA}', 'table', iam_user_position, 'column', 'id';
 execute sp_addextendedproperty 'MS_Description', N'租户ID','SCHEMA', '${SCHEMA}', 'table', iam_user_position, 'column', 'tenant_id';
