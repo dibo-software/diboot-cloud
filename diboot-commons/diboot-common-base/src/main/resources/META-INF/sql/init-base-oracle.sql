@@ -298,7 +298,7 @@ CREATE TABLE ${SCHEMA}.iam_org (
    type        VARCHAR2(100) DEFAULT 'DEPT' NOT NULL,
    code        VARCHAR2(50)  NOT NULL,
    manager_id  NUMBER(20)   DEFAULT 0 NOT NULL,
-   level NUMBER(6) DEFAULT 1 NOT NULL,
+   depth NUMBER(6) DEFAULT 1 NOT NULL,
    sort_id NUMBER(20) DEFAULT 1 NOT NULL,
    status      VARCHAR2(10)  DEFAULT 'A' NOT NULL,
    org_comment VARCHAR2(255)   null,
@@ -315,7 +315,7 @@ comment on column ${SCHEMA}.iam_org.short_name is '简称';
 comment on column ${SCHEMA}.iam_org.type is '类型';
 comment on column ${SCHEMA}.iam_org.code is '编码';
 comment on column ${SCHEMA}.iam_org.manager_id is '负责人';
-comment on column ${SCHEMA}.iam_org.level is '层级';
+comment on column ${SCHEMA}.iam_org.depth is '层级';
 comment on column ${SCHEMA}.iam_org.sort_id is '排序号';
 comment on column ${SCHEMA}.iam_org.status is '状态';
 comment on column ${SCHEMA}.iam_org.org_comment is '备注';

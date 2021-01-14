@@ -86,7 +86,7 @@ public class IamOrg extends BaseCustomEntity {
 
     // 层级
     @TableField()
-    private Integer level;
+    private Integer depth;
 
     // 排序号
     @TableField()
