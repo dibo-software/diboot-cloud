@@ -42,7 +42,7 @@ import java.util.List;
 @Slf4j
 @Component
 @Order(940)
-public class SchedulerPluginInitializer implements ApplicationRunner {
+public class SchedulerSqlInitializer implements ApplicationRunner {
 
     @Autowired
     private SchedulerProperties schedulerProperties;
