@@ -1,4 +1,3 @@
-package com.diboot.scheduler.config;
 /*
  * Copyright (c) 2015-2021, www.dibo.ltd (service@dibo.ltd).
  * <p>
@@ -14,6 +13,7 @@ package com.diboot.scheduler.config;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.diboot.scheduler.config;
 import com.diboot.cloud.handler.CustomAccessDeniedHandler;
 import com.diboot.cloud.handler.CustomAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;

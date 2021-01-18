@@ -12,6 +12,7 @@ CREATE TABLE schedule_job (
   is_deleted   tinyint not null DEFAULT 0,
   create_time  datetime default CURRENT_TIMESTAMP   not null,
   create_by bigint DEFAULT 0 NOT NULL,
+  create_by_name VARCHAR(50),
   update_time  datetime   null,
   constraint PK_schedule_job primary key (id)
 );
@@ -25,7 +26,8 @@ execute sp_addextendedproperty 'MS_Description', N'参数', 'SCHEMA', '${SCHEMA}
 execute sp_addextendedproperty 'MS_Description', N'初始化策略', 'SCHEMA', '${SCHEMA}', 'table', schedule_job, 'column', 'init_strategy';
 execute sp_addextendedproperty 'MS_Description', N'状态', 'SCHEMA', '${SCHEMA}', 'table', schedule_job, 'column', 'job_status';
 execute sp_addextendedproperty 'MS_Description', N'备注', 'SCHEMA', '${SCHEMA}', 'table', schedule_job, 'column', 'job_comment';
-execute sp_addextendedproperty 'MS_Description', N'创建人', 'SCHEMA', '${SCHEMA}', 'table', schedule_job, 'column', 'create_by';
+execute sp_addextendedproperty 'MS_Description', N'创建人ID', 'SCHEMA', '${SCHEMA}', 'table', schedule_job, 'column', 'create_by';
+execute sp_addextendedproperty 'MS_Description', N'创建人', 'SCHEMA', '${SCHEMA}', 'table', schedule_job, 'column', 'create_by_name';
 execute sp_addextendedproperty 'MS_Description', N'更新时间', 'SCHEMA', '${SCHEMA}', 'table', schedule_job, 'column', 'update_time';
 execute sp_addextendedproperty 'MS_Description', N'删除标记', 'SCHEMA', '${SCHEMA}', 'table', schedule_job, 'column', 'is_deleted';
 execute sp_addextendedproperty 'MS_Description', N'创建时间', 'SCHEMA', '${SCHEMA}', 'table', schedule_job, 'column', 'create_time';
@@ -51,6 +53,7 @@ CREATE TABLE schedule_job_log (
   is_deleted   tinyint not null DEFAULT 0,
   create_time  datetime default CURRENT_TIMESTAMP   not null,
   create_by bigint DEFAULT 0 NOT NULL,
+  create_by_name VARCHAR(50),
   update_time  datetime   null,
   constraint PK_schedule_job_log primary key (id)
 );
@@ -67,7 +70,8 @@ execute sp_addextendedproperty 'MS_Description', N'耗时(s)', 'SCHEMA', '${SCHE
 execute sp_addextendedproperty 'MS_Description', N'运行状态', 'SCHEMA', '${SCHEMA}', 'table', schedule_job_log, 'column', 'run_status';
 execute sp_addextendedproperty 'MS_Description', N'数据计数', 'SCHEMA', '${SCHEMA}', 'table', schedule_job_log, 'column', 'data_count';
 execute sp_addextendedproperty 'MS_Description', N'执行结果信息', 'SCHEMA', '${SCHEMA}', 'table', schedule_job_log, 'column', 'execute_msg';
-execute sp_addextendedproperty 'MS_Description', N'创建人', 'SCHEMA', '${SCHEMA}', 'table', schedule_job_log, 'column', 'create_by';
+execute sp_addextendedproperty 'MS_Description', N'创建人ID', 'SCHEMA', '${SCHEMA}', 'table', schedule_job_log, 'column', 'create_by';
+execute sp_addextendedproperty 'MS_Description', N'创建人', 'SCHEMA', '${SCHEMA}', 'table', schedule_job_log, 'column', 'create_by_name';
 execute sp_addextendedproperty 'MS_Description', N'更新时间', 'SCHEMA', '${SCHEMA}', 'table', schedule_job_log, 'column', 'update_time';
 execute sp_addextendedproperty 'MS_Description', N'删除标记', 'SCHEMA', '${SCHEMA}', 'table', schedule_job_log, 'column', 'is_deleted';
 execute sp_addextendedproperty 'MS_Description', N'创建时间', 'SCHEMA', '${SCHEMA}', 'table', schedule_job_log, 'column', 'create_time';

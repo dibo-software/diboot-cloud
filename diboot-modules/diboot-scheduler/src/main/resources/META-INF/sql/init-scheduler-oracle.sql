@@ -12,6 +12,7 @@ CREATE TABLE ${SCHEMA}.schedule_job (
   is_deleted   NUMBER(1) DEFAULT 0    not null,
   create_time  timestamp default CURRENT_TIMESTAMP   not null,
   create_by NUMBER(20) DEFAULT 0 NOT NULL,
+  create_by_name VARCHAR2(50),
   update_time  timestamp   null,
   constraint PK_schedule_job primary key (id)
 );
@@ -24,7 +25,8 @@ comment on column ${SCHEMA}.schedule_job.param_json is '参数';
 comment on column ${SCHEMA}.schedule_job.init_strategy is '初始化策略';
 comment on column ${SCHEMA}.schedule_job.job_status is '状态';
 comment on column ${SCHEMA}.schedule_job.job_comment is '备注';
-comment on column ${SCHEMA}.schedule_job.create_by is '创建人';
+comment on column ${SCHEMA}.schedule_job.create_by is '创建人ID';
+comment on column ${SCHEMA}.schedule_job.create_by_name is '创建人';
 comment on column ${SCHEMA}.schedule_job.update_time is '更新时间';
 comment on column ${SCHEMA}.schedule_job.is_deleted is '是否删除';
 comment on column ${SCHEMA}.schedule_job.create_time is '创建时间';
@@ -49,6 +51,7 @@ CREATE TABLE ${SCHEMA}.schedule_job_log (
  is_deleted   NUMBER(1) DEFAULT 0    not null,
  create_time  timestamp default CURRENT_TIMESTAMP   not null,
  create_by NUMBER(20) DEFAULT 0 NOT NULL,
+ create_by_name VARCHAR2(50),
  update_time  timestamp   null,
  constraint PK_schedule_job_log primary key (id)
 );
@@ -64,7 +67,8 @@ comment on column ${SCHEMA}.schedule_job_log.elapsed_seconds is '耗时(s)';
 comment on column ${SCHEMA}.schedule_job_log.run_status is '运行状态';
 comment on column ${SCHEMA}.schedule_job_log.data_count is '数据计数';
 comment on column ${SCHEMA}.schedule_job_log.execute_msg is '执行结果信息';
-comment on column ${SCHEMA}.schedule_job_log.create_by is '创建人';
+comment on column ${SCHEMA}.schedule_job_log.create_by is '创建人ID';
+comment on column ${SCHEMA}.schedule_job_log.create_by_name is '创建人';
 comment on column ${SCHEMA}.schedule_job_log.update_time is '更新时间';
 comment on column ${SCHEMA}.schedule_job_log.is_deleted is '是否删除';
 comment on column ${SCHEMA}.schedule_job_log.create_time is '创建时间';
