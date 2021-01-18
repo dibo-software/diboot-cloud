@@ -45,14 +45,14 @@ public class IamOrgServiceImpl extends BaseIamServiceImpl<IamOrgMapper, IamOrg> 
 
     @Override
     public boolean createEntity(IamOrg iamOrg){
-        // 设置层级及公司ID及level
+        // 设置层级及公司ID及depth
         enhanceIamOrg(iamOrg);
         return super.createEntity(iamOrg);
     }
 
     @Override
     public boolean updateEntity(IamOrg iamOrg){
-        // 设置层级及公司ID及level
+        // 设置层级及公司ID及depth
         enhanceIamOrg(iamOrg);
         return super.updateEntity(iamOrg);
     }
@@ -67,8 +67,8 @@ public class IamOrgServiceImpl extends BaseIamServiceImpl<IamOrgMapper, IamOrg> 
             IamOrg parentOrg = getEntity(iamOrg.getParentId());
             if (parentOrg != null) {
                 // 设置层级
-                int parentLevel = parentOrg.getLevel().intValue();
-                iamOrg.setLevel(parentLevel + 1);
+                int parentLevel = parentOrg.getDepth().intValue();
+                iamOrg.setDepth(parentLevel + 1);
                 // 设置公司ID
                 if (V.equals(parentOrg.getParentId(), 0) || V.isEmpty(parentOrg.getParentId())) {
                     iamOrg.setTopOrgId(parentOrg.getId());

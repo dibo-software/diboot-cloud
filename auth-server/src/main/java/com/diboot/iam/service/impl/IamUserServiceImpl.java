@@ -23,7 +23,6 @@ import com.diboot.core.vo.Status;
 import com.diboot.cloud.config.Cons;
 import com.diboot.iam.dto.IamUserAccountDTO;
 import com.diboot.iam.entity.IamAccount;
-import com.diboot.iam.entity.IamResourcePermission;
 import com.diboot.iam.entity.IamUser;
 import com.diboot.iam.entity.IamUserRole;
 import com.diboot.iam.mapper.IamUserMapper;
@@ -70,7 +69,7 @@ public class IamUserServiceImpl extends BaseIamServiceImpl<IamUserMapper, IamUse
         if (V.isEmpty(roleVOList)){
             return null;
         }
-        // 附加额外的一些权限给与特性的角色
+        // 附加额外的一些权限给与特定的角色
         attachExtraPermissions(roleVOList);
         // 组合为前端格式
         return IamHelper.buildRoleVo4FrontEnd(roleVOList);
@@ -85,13 +84,6 @@ public class IamUserServiceImpl extends BaseIamServiceImpl<IamUserMapper, IamUse
     public void attachExtraPermissions(List<IamRoleVO> roleVOList) {
         if (V.isEmpty(roleVOList)){
             return;
-        }
-        for (IamRoleVO roleVO : roleVOList){
-            if (Cons.ROLE_SUPER_ADMIN.equalsIgnoreCase(roleVO.getCode())){
-                List<IamResourcePermission> iamPermissions = iamResourcePermissionService.getAllResourcePermissions(Cons.APPLICATION);
-                roleVO.setPermissionList(iamPermissions);
-                return;
-            }
         }
     }
 

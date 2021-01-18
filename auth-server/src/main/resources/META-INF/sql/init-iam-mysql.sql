@@ -52,7 +52,7 @@ create table iam_account
   user_id      bigint                                 not null comment '用户ID',
   auth_type    varchar(20)  default 'PWD'             not null comment '认证方式',
   auth_account varchar(100)                           not null comment '用户名',
-  auth_secret  varchar(32)                            null comment '密码',
+  auth_secret  varchar(100)                            null comment '密码',
   secret_salt  varchar(32)                            null comment '加密盐',
   status       varchar(10)  default 'A'               not null comment '用户状态',
   is_deleted   tinyint(1)   default 0                 not null comment '是否删除',

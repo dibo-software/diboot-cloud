@@ -85,7 +85,7 @@ create table ${SCHEMA}.iam_account
   user_id bigint not null,
   auth_type varchar(20) default 'PWD' not null,
   auth_account varchar(100) not null,
-  auth_secret varchar(32) null,
+  auth_secret varchar(100) null,
   secret_salt varchar(32) null,
   status varchar(10) default 'A' not null,
   is_deleted tinyint default 0 not null,

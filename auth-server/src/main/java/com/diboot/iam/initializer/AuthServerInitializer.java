@@ -24,7 +24,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
- * 角色资源缓存初始化执行器
+ * Auth-server初始化器，包含初始SQL、角色资源缓存初始化执行器
  * @author JerryMa
  * @version v2.2
  * @date 2020/11/09
@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
 @Order(998)
 @Component
 @Slf4j
-public class AuthServerCacheInitializer implements ApplicationRunner {
+public class AuthServerInitializer implements ApplicationRunner {
 
     @Autowired
     private AuthServerCacheService authServerCacheService;

@@ -166,8 +166,8 @@ public class IamRoleController extends BaseCrudRestController<IamRole> {
     @Override
     protected String beforeUpdate(Object entity) throws Exception {
         IamRoleFormDTO roleFormDTO = (IamRoleFormDTO) entity;
-        if (Cons.ROLE_SUPER_ADMIN.equals(roleFormDTO.getCode())){
-            throw new BusinessException(Status.FAIL_OPERATION, "不能更新超级管理员角色");
+        if (Cons.ROLE_SYSTEM_ADMIN.equals(roleFormDTO.getCode())){
+            throw new BusinessException(Status.FAIL_OPERATION, "不能更新系统管理员角色");
         }
         return null;
     }
@@ -175,8 +175,8 @@ public class IamRoleController extends BaseCrudRestController<IamRole> {
     @Override
     protected String beforeDelete(Object entity) throws Exception {
         IamRole role = (IamRole)entity;
-        if (Cons.ROLE_SUPER_ADMIN.equals(role.getCode())){
-            throw new BusinessException(Status.FAIL_OPERATION, "不能删除超级管理员角色");
+        if (Cons.ROLE_SYSTEM_ADMIN.equals(role.getCode())){
+            throw new BusinessException(Status.FAIL_OPERATION, "不能删除系统管理员角色");
         }
         return null;
     }
