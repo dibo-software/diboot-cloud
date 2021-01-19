@@ -17,7 +17,7 @@ export const asyncRouterMap = [
         redirect: '/dashboard/index',
         component: PageView,
         hideChildrenInMenu: true,
-        meta: { title: '我的工作台', keepAlive: true, icon: 'appstore' },
+        meta: { title: '我的工作台', keepAlive: true, icon: 'dashboard' },
         children: [{
           path: '/dashboard/index',
           name: 'DashboardIndex',
@@ -58,7 +58,7 @@ export const asyncRouterMap = [
         path: '/system',
         redirect: '/system/dictionary/list',
         component: PageView,
-        meta: { title: '系统管理', icon: 'dashboard', permission: ['Dictionary', 'IamUser', 'IamRole', 'IamResourcePermission', 'IamLoginTrace', 'IamOperationLog'] },
+        meta: { title: '系统管理', icon: 'setting', permission: ['Dictionary', 'IamUser', 'IamRole', 'IamResourcePermission', 'IamLoginTrace', 'IamOperationLog'] },
         children: [
           {
             path: '/system/dictionary/index',
