@@ -28,8 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 字典绑定的实现类
@@ -62,11 +61,16 @@ public class DictionaryServiceExtImpl implements DictionaryServiceExtProvider {
 
     @Override
     public List<KeyValue> getKeyValueList(String dictType) {
-        Object itemsObj = redisTemplate.opsForHash().get(RedisCons.KEY_DICTIONARY_MAP, dictType);
-        if(itemsObj != null){
-            return (List<KeyValue>)itemsObj;
+        //TODO 优化此处实现为统一转换
+        List<HashMap> keyValList = (List<HashMap>) redisTemplate.opsForHash().get(RedisCons.KEY_DICTIONARY_MAP, dictType);
+        if(V.notEmpty(keyValList)){
+            List<KeyValue> keyValues = new ArrayList<>(keyValList.size());
+            for(HashMap map : keyValList){
+                keyValues.add(new KeyValue((String)map.get("k"), map.get("v")));
+            }
+            return keyValues;
         }
-        return null;
+        return Collections.emptyList();
     }
 
     @Override

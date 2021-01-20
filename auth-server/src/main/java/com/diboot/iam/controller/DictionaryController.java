@@ -12,11 +12,11 @@ import com.diboot.core.dto.AttachMoreDTO;
 import com.diboot.core.entity.Dictionary;
 import com.diboot.core.entity.ValidList;
 import com.diboot.core.service.BaseService;
-import com.diboot.core.service.DictionaryService;
 import com.diboot.core.util.ContextHelper;
 import com.diboot.core.util.S;
 import com.diboot.core.util.V;
 import com.diboot.core.vo.*;
+import com.diboot.iam.service.impl.DictionaryServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class DictionaryController extends BaseCrudRestController<Dictionary> {
     private static final Logger log = LoggerFactory.getLogger(DictionaryController.class);
 
     @Autowired
-    private DictionaryService dictionaryService;
+    private DictionaryServiceImpl dictionaryService;
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
 
@@ -165,8 +165,7 @@ public class DictionaryController extends BaseCrudRestController<Dictionary> {
      */
     @GetMapping("/dictionary/listDefinition")
     public JsonResult getDictDefinitionListApi() throws Exception{
-        LambdaQueryWrapper<Dictionary> queryWrapper = new LambdaQueryWrapper<Dictionary>().eq(Dictionary::getParentId, 0L);
-        List<Dictionary> voList = dictionaryService.getEntityList(queryWrapper);
+        List<Dictionary> voList = dictionaryService.getDictDefinitionList();
         return JsonResult.OK(voList);
     }
 
@@ -177,8 +176,7 @@ public class DictionaryController extends BaseCrudRestController<Dictionary> {
      */
     @GetMapping("/dictionary/listDefinitionVO")
     public JsonResult getDictDefinitionVOListApi() throws Exception{
-        LambdaQueryWrapper<Dictionary> queryWrapper = new LambdaQueryWrapper<Dictionary>().eq(Dictionary::getParentId, 0L);
-        List<DictionaryVO> voList = dictionaryService.getViewObjectList(queryWrapper, null, DictionaryVO.class);
+        List<DictionaryVO> voList = dictionaryService.getDictDefinitionVOList();
         return JsonResult.OK(voList);
     }
 

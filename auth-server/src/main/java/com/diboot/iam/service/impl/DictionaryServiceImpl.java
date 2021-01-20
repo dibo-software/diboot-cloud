@@ -16,6 +16,7 @@
 package com.diboot.iam.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.diboot.core.config.Cons;
 import com.diboot.core.service.DictionaryServiceExtProvider;
@@ -80,6 +81,7 @@ public class DictionaryServiceImpl extends BaseServiceImpl<DictionaryMapper, Dic
             return false;
         }
         List<Dictionary> children = dictVO.getChildren();
+        this.buildSortId(children);
         if(V.notEmpty(children)){
             for(Dictionary dict : children){
                 dict.setParentId(dictionary.getId())
@@ -103,12 +105,14 @@ public class DictionaryServiceImpl extends BaseServiceImpl<DictionaryMapper, Dic
 
     @Override
     public List<Dictionary> getDictDefinitionList() {
-        return null;
+        LambdaQueryWrapper<Dictionary> queryWrapper = new LambdaQueryWrapper<Dictionary>().eq(Dictionary::getParentId, 0L);
+        return getEntityList(queryWrapper);
     }
 
     @Override
     public List<DictionaryVO> getDictDefinitionVOList() {
-        return null;
+        LambdaQueryWrapper<Dictionary> queryWrapper = new LambdaQueryWrapper<Dictionary>().eq(Dictionary::getParentId, 0L);
+        return getViewObjectList(queryWrapper, null, DictionaryVO.class);
     }
 
     @Override
@@ -130,6 +134,7 @@ public class DictionaryServiceImpl extends BaseServiceImpl<DictionaryMapper, Dic
         List<Dictionary> oldDictList = super.getEntityList(queryWrapper);
         List<Dictionary> newDictList = dictVO.getChildren();
         Set<Long> dictItemIds = new HashSet<>();
+        this.buildSortId(newDictList);
         if(V.notEmpty(newDictList)){
             for(Dictionary dict : newDictList){
                 dict
@@ -185,38 +190,6 @@ public class DictionaryServiceImpl extends BaseServiceImpl<DictionaryMapper, Dic
         return true;
     }
 
-
-    @Override
-    public void sortList(List<Dictionary> dictionaryList) {
-        if (V.isEmpty(dictionaryList)) {
-            throw new BusinessException(Status.FAIL_OPERATION, "排序列表不能为空");
-        }
-        List<Long> sortIdList = new ArrayList();
-        // 先将所有序号重新设置为自身当前id
-        for (Dictionary item : dictionaryList) {
-            item.setSortId(item.getId());
-            sortIdList.add(item.getSortId());
-        }
-        // 将序号列表倒序排序
-        sortIdList = sortIdList.stream()
-                .sorted(Comparator.reverseOrder())
-                .collect(Collectors.toList());
-        // 整理需要更新的列表
-        List<Dictionary> updateList = new ArrayList<>();
-        for (int i=0; i<dictionaryList.size(); i++) {
-            Dictionary item = dictionaryList.get(i);
-            Dictionary updateItem = new Dictionary();
-            updateItem.setId(item.getId());
-            updateItem.setSortId(sortIdList.get(i));
-            updateList.add(updateItem);
-        }
-        if (updateList.size() > 0) {
-            super.updateBatchById(updateList);
-            // 刷新缓存字典
-            authServerCacheService.refreshDictionaryCache(updateList.get(0).getType());
-        }
-    }
-
     @Override
     public void bindItemLabel(List voList, String setFieldName, String getFieldName, String type){
         if(V.isEmpty(voList)){
@@ -229,4 +202,19 @@ public class DictionaryServiceImpl extends BaseServiceImpl<DictionaryMapper, Dic
                 .andGT(Cons.FieldName.parentId.name(), 0)
                 .bind();
     }
+
+    /***
+     * 构建排序编号
+     * @param dictList
+     */
+    private void buildSortId(List<Dictionary> dictList) {
+        if (V.isEmpty(dictList)) {
+            return;
+        }
+        for (int i = 0; i < dictList.size(); i++) {
+            Dictionary dict = dictList.get(i);
+            dict.setSortId(i);
+        }
+    }
+
 }

@@ -17,6 +17,7 @@ package com.diboot.iam.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.diboot.core.util.JSON;
 import com.diboot.iam.entity.IamRole;
 import com.diboot.iam.entity.LoginUserDetail;
 import com.diboot.iam.service.IamRoleResourceService;
@@ -136,7 +137,7 @@ public class AuthServerCacheServiceImpl implements AuthServerCacheService {
     @Override
     public void addIntoPendingRefresh(String userType, Long userId) {
         String key = userType + ":" + userId;
-        redisTemplate.opsForHash().putIfAbsent(RedisCons.KEY_USER_AUTH_REFRESH_MAP, key, true);
+        redisTemplate.opsForHash().put(RedisCons.KEY_USER_AUTH_REFRESH_MAP, key, true);
     }
 
     @Override
@@ -152,7 +153,7 @@ public class AuthServerCacheServiceImpl implements AuthServerCacheService {
                     continue;
                 }
                 List<KeyValue> children = convertToKeyValueList(vo.getChildren());
-                redisTemplate.opsForHash().putIfAbsent(RedisCons.KEY_USER_AUTH_REFRESH_MAP, vo.getType(), children);
+                redisTemplate.opsForHash().put(RedisCons.KEY_DICTIONARY_MAP, vo.getType(), JSON.stringify(children));
             }
         }
     }
@@ -165,7 +166,7 @@ public class AuthServerCacheServiceImpl implements AuthServerCacheService {
         Dictionary dictionary = dictionaryService.getSingleEntity(queryWrapper);
         DictionaryVO vo = Binder.convertAndBindRelations(dictionary, DictionaryVO.class);
         List<KeyValue> children = convertToKeyValueList(vo.getChildren());
-        redisTemplate.opsForHash().putIfAbsent(RedisCons.KEY_DICTIONARY_MAP, vo.getType(), children);
+        redisTemplate.opsForHash().put(RedisCons.KEY_DICTIONARY_MAP, vo.getType(), JSON.stringify(children));
         return true;
     }
 
