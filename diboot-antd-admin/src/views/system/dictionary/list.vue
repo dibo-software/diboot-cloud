@@ -27,12 +27,6 @@
           </a-col>
           <a-col :lg="5" :sm="24" style="text-align: right;">
             <a-button
-              v-action:sort
-              @click="$refs.sort.open()"
-              icon="drag"
-              style="margin-right: 8px;"
-              type="default">排序</a-button>
-            <a-button
               v-action:create
               type="primary"
               icon="plus"
@@ -77,11 +71,11 @@
             </a>
             <a-menu slot="overlay">
               <a-menu-item v-action:update>
-                <a v-if="record.editable" @click="$refs.form.open(record.id)">编辑</a>
+                <a v-if="record.isEditable" @click="$refs.form.open(record.id)">编辑</a>
                 <a v-else @click="$message.warning('当前数据字典不可编辑')">编辑</a>
               </a-menu-item>
               <a-menu-item v-action:delete>
-                <a v-if="record.deletable" href="javascript:;" @click="remove(record.id)">删除</a>
+                <a v-if="record.isDeletable" href="javascript:;" @click="remove(record.id)">删除</a>
                 <a v-else href="javascript:;" @click="$message.warning('当前数据字典不可删除')">删除</a>
               </a-menu-item>
             </a-menu>
@@ -95,7 +89,6 @@
 
     <diboot-form :current-app-module="appModule" ref="form" @complete="getList"></diboot-form>
     <diboot-detail ref="detail"></diboot-detail>
-    <tree-sort ref="sort" @complete="getList"></tree-sort>
   </a-card>
 </template>
 
@@ -103,20 +96,17 @@
 import list from '@/components/diboot/mixins/list'
 import dibootForm from './form'
 import dibootDetail from './detail'
-import treeSort from '@/views/system/dictionary/treeSort'
 export default {
   name: 'DictionaryList',
   components: {
     dibootForm,
-    dibootDetail,
-    treeSort
+    dibootDetail
   },
   mixins: [ list ],
   data () {
     return {
       baseApi: '/auth-server/dictionary',
       customQueryParam: { parentId: 0 },
-      getListFromMixin: false,
       columns: [
         {
           title: '类型名称',

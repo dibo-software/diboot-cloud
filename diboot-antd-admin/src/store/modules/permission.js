@@ -39,7 +39,7 @@ function hasRole(roles, route) {
 
 function filterAsyncRouter (routerMap, role) {
   const accessedRouters = routerMap.filter(route => {
-    if (role.code === 'SYS_ADMIN' || hasPermission(role.permissionList, route)) {
+    if (role.code === 'SYSTEM_ADMIN' || hasPermission(role.permissionList, route)) {
       if (route.children && route.children.length) {
         route.children = filterAsyncRouter(route.children, role)
       }

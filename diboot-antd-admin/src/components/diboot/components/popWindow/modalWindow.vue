@@ -25,7 +25,10 @@ export default {
       this.state.visible = true
     },
     confirm () {
-
+      this.$emit('confirm')
+    },
+    close () {
+      this.state.visible = false
     }
   },
   props: {

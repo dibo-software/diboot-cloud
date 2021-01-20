@@ -97,6 +97,21 @@
           </a-form-item>
         </a-col>
       </a-row>
+      <a-row :gutter="16" v-show="children && children.length > 0 && !childItem.itemName && !childItem.itemValue">
+        <a-col :span="24">
+          <a-form-item label="拖拽排序">
+            <draggable element="span" v-model="children">
+              <a-tag
+                class="draggable-element"
+                color="blue"
+                :key="i"
+                v-for="(item, i) in children">
+                {{ item.itemName }}({{ item.itemValue }})
+              </a-tag>
+            </draggable>
+          </a-form-item>
+        </a-col>
+      </a-row>
       <a-row :gutter="16">
         <a-col :span="24">
           <a-form-item label="备注">
@@ -125,6 +140,7 @@
 <script>
 import form from '@/components/diboot/mixins/form'
 import { dibootApi } from '@/utils/request'
+import draggable from 'vuedraggable'
 import _ from 'lodash'
 // 定义默认值
 const CHILDREN_BTN_CONFIG_DEFAULT = {
@@ -236,6 +252,9 @@ export default {
       values.children = this.children
     }
   },
+  components: {
+    draggable
+  },
   props: {
     currentAppModule: {
       type: String,
@@ -246,4 +265,7 @@ export default {
 </script>
 
 <style scoped>
+.draggable-element{
+  cursor: move;
+}
 </style>
