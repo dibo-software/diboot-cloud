@@ -156,13 +156,14 @@
         <a-col :span="12">
           <a-form-item label="生日">
             <a-date-picker
-              format="YYYY-MM-DD" valueFormat="YYYY-MM-DD"
+              format="YYYY-MM-DD"
+              valueFormat="YYYY-MM-DD"
               v-decorator="[
-                          'birthdate',
-                          {
-                            initialValue: model.birthdate ? moment(model.birthdate) : undefined
-                          }
-                        ]"
+                'birthdate',
+                {
+                  initialValue: model.birthdate ? moment(model.birthdate) : undefined
+                }
+              ]"
             />
           </a-form-item>
         </a-col>
@@ -266,7 +267,7 @@ export default {
       }
     },
     async loadOrgTree () {
-      const res = await dibootApi.get(`/iam/org/tree`)
+      const res = await dibootApi.get(`/auth-server/iam/org/tree`)
       if (res.code === 0) {
         this.orgList = res.data
       } else {

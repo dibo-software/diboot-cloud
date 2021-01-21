@@ -259,7 +259,7 @@ export default {
       this.loadUsername()
     },
     async loadOrgTree () {
-      const res = await dibootApi.get(`/iam/org/tree`)
+      const res = await dibootApi.get(`/auth-server/iam/org/tree`)
       if (res.code === 0) {
         this.orgList = res.data
       } else {
