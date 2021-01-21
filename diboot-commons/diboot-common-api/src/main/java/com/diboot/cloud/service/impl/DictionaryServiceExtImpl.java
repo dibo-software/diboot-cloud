@@ -20,6 +20,7 @@ import com.diboot.cloud.redis.RedisCons;
 import com.diboot.core.entity.Dictionary;
 import com.diboot.core.service.DictionaryServiceExtProvider;
 import com.diboot.core.util.BeanUtils;
+import com.diboot.core.util.JSON;
 import com.diboot.core.util.V;
 import com.diboot.core.vo.DictionaryVO;
 import com.diboot.core.vo.JsonResult;
@@ -62,11 +63,13 @@ public class DictionaryServiceExtImpl implements DictionaryServiceExtProvider {
     @Override
     public List<KeyValue> getKeyValueList(String dictType) {
         //TODO 优化此处实现为统一转换
-        List<HashMap> keyValList = (List<HashMap>) redisTemplate.opsForHash().get(RedisCons.KEY_DICTIONARY_MAP, dictType);
+        Object kvListObj = redisTemplate.opsForHash().get(RedisCons.KEY_DICTIONARY_MAP, dictType);
+        String kvListStr = String.valueOf(kvListObj);
+        List<HashMap> keyValList = JSON.parseArray(kvListStr, HashMap.class);
         if(V.notEmpty(keyValList)){
             List<KeyValue> keyValues = new ArrayList<>(keyValList.size());
             for(HashMap map : keyValList){
-                keyValues.add(new KeyValue((String)map.get("k"), map.get("v")));
+                keyValues.add(new KeyValue((String) map.get("v"), map.get("k")));
             }
             return keyValues;
         }

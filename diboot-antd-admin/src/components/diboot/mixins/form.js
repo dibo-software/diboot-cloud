@@ -229,7 +229,7 @@ export default {
       if (this.getMore === true) {
         res = await dibootApi.get(`${this.baseApi}/attachMore`)
       } else if (this.attachMoreList.length > 0) {
-        res = await dibootApi.post('/common/attachMore', this.attachMoreList)
+        res = await dibootApi.post('/auth-server/common/attachMore', this.attachMoreList)
       }
       if (res.code === 0) {
         this.more = res.data
