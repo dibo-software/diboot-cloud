@@ -3,6 +3,9 @@ package com.diboot.iam.dto;
 import com.diboot.core.binding.query.BindQuery;
 import com.diboot.core.binding.query.Comparison;
 import com.diboot.iam.entity.IamUser;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /**
 * INIT DTO定义
@@ -11,6 +14,9 @@ import com.diboot.iam.entity.IamUser;
 * @date 2021-01-20
  * Copyright © dibo.ltd
 */
+@Getter
+@Setter
+@Accessors(chain = true)
 public class IamUserSearchDTO extends IamUser {
     private static final long serialVersionUID = 3276697558948234945L;
 
@@ -25,4 +31,6 @@ public class IamUserSearchDTO extends IamUser {
 
     @BindQuery(comparison = Comparison.LIKE)
     private String mobilePhone;
+
+
 }
