@@ -1,0 +1,49 @@
+server:
+  port: 8000
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    gateway:
+      routes: #配置路由路径
+        # IAM 认证中心
+        - id: auth-center-route
+          uri: lb://auth-server
+          predicates:
+            - Path=/auth-server/**
+          filters:
+            - StripPrefix=1
+        # 定时任务模块
+        - id: scheduler-route
+          uri: lb://scheduler
+          predicates:
+            - Path=/scheduler/**
+          filters:
+            - StripPrefix=1
+        # 业务模块服务
+        - id: business-api-route
+          uri: lb://example-api
+          predicates:
+            - Path=/example-api/**
+          filters:
+            - StripPrefix=1
+      discovery:
+        locator:
+          enabled: true #开启从注册中心动态创建路由功能
+          lower-case-service-id: true #小写服务名
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: 'http://localhost:8001/oauth/token_key' # RSA公钥访问地址
+  redis:
+    database: 0
+    port: 6379
+    host: localhost
+    password:
+diboot:
+  gateway:
+    anon-urls:
+      - "/actuator/**"
+      - "/auth-server/oauth/token"
+      - "/*/anon/**"

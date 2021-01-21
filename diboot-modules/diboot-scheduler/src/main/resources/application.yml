@@ -1,0 +1,7 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: scheduler
+  main:
+    allow-bean-definition-overriding: true

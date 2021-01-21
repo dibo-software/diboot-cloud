@@ -1,62 +1,8 @@
-server:
-  port: 8101
-  servlet:
-    context-path: /
 spring:
-  profiles:
-    active: dev
-  application:
-    name: scheduler
-  main:
-    allow-bean-definition-overriding: true
   cloud:
     nacos:
       config:
+        server-addr: localhost:8848
         file-extension: yaml
       discovery:
         server-addr: localhost:8848
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: 'http://localhost:8001/oauth/token_key' # RSA公钥访问地址
-  redis:
-    database: 0
-    port: 6379
-    host: localhost
-    password:
-  datasource:
-    url:  jdbc:mysql://localhost:3306/diboot_cloud_example?characterEncoding=utf8&serverTimezone=GMT%2B8
-    username: diboot
-    password: 123456
-    maximum-pool-size:  5
-    driver-class-name:  com.mysql.cj.jdbc.Driver
-  quartz:
-    job-store-type: jdbc
-    jdbc:
-      initialize-schema:  always
-    properties:
-      org:
-        quartz:
-          scheduler:
-            instanceId: AUTO
-            instanceName: Job
-          jobStore:
-            class: org.quartz.impl.jdbcjobstore.JobStoreTX
-            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate #org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
-            useProperties: false
-            tablePrefix: qrtz_
-            misfireThreshold: 60000
-            clusterCheckinInterval: 5000
-            isClustered: true
-            acquireTriggersWithinLock:  true
-          threadPool:
-            class: org.quartz.simpl.SimpleThreadPool
-            threadCount: 10
-            threadPriority: 5
-            threadsInheritContextClassLoaderOfInitializingThread: true
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"

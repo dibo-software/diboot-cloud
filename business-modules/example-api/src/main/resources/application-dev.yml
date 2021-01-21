@@ -1,3 +1,7 @@
+server:
+  port: 8201
+  servlet:
+    context-path: /api
 spring:
   cloud:
     nacos:
@@ -27,6 +31,7 @@ spring:
 mybatis-plus:
   global-config:
     mapper-locations: classpath*:mapper/*Mapper.xml
+
 logging:
   level:
     root: debug
@@ -51,3 +56,9 @@ diboot:
     enable-lombok:  true
     enable-swagger: false
     generate-mapper-xml:  true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
