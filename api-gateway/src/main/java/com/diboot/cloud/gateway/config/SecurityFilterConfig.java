@@ -19,7 +19,7 @@ import com.diboot.cloud.gateway.auth.GatewayAuthorizationManager;
 import com.diboot.cloud.gateway.custom.CustomAccessDeniedHandler;
 import com.diboot.cloud.gateway.custom.CustomAuthenticationEntryPoint;
 import com.diboot.cloud.gateway.filter.GatewayJwtWebFilter;
-import com.diboot.cloud.redis.RedisCons;
+import com.diboot.cloud.redis.config.RedisCons;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

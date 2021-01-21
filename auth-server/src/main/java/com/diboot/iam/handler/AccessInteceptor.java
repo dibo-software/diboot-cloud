@@ -17,7 +17,7 @@ package com.diboot.iam.handler;
 
 import com.diboot.iam.entity.LoginUserDetail;
 import com.diboot.iam.service.AuthServerCacheService;
-import com.diboot.cloud.redis.RedisCons;
+import com.diboot.cloud.redis.config.RedisCons;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;

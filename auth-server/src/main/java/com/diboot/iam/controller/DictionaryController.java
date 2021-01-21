@@ -3,9 +3,9 @@ package com.diboot.iam.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.diboot.cloud.redis.service.RedisService;
 import com.diboot.iam.annotation.BindPermission;
 import com.diboot.iam.annotation.Operation;
-import com.diboot.cloud.redis.RedisCons;
 import com.diboot.core.binding.parser.ParserCache;
 import com.diboot.core.controller.BaseCrudRestController;
 import com.diboot.core.dto.AttachMoreDTO;
@@ -20,7 +20,6 @@ import com.diboot.iam.service.impl.DictionaryServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -42,7 +41,7 @@ public class DictionaryController extends BaseCrudRestController<Dictionary> {
     @Autowired
     private DictionaryServiceImpl dictionaryService;
     @Autowired
-    private RedisTemplate<String,Object> redisTemplate;
+    private RedisService redisService;
 
     /***
     * 查询ViewObject的分页数据
@@ -188,7 +187,7 @@ public class DictionaryController extends BaseCrudRestController<Dictionary> {
     @BindPermission(name = Operation.LABEL_LIST, code = Operation.CODE_LIST)
     @GetMapping("/common/moduleList")
     public JsonResult getDictModuleList() throws Exception {
-        List<String> appModuleList = (List<String>) redisTemplate.opsForValue().get(RedisCons.KEY_APP_MODULES);
+        List<String> appModuleList = redisService.getAppModules();
         return JsonResult.OK(appModuleList);
     }
 
