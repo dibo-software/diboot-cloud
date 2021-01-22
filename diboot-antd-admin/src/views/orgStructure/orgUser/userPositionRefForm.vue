@@ -9,7 +9,7 @@
   >
     <div class="table-operator">
       <a-button type="primary" icon="plus" @click="addUserPosition">添加人员岗位设置</a-button>
-      <a-button type="default" icon="plus" @click="$refs.positionForm.open()">添加岗位</a-button>
+      <a-button v-action:addPosition type="default" icon="plus" @click="$refs.positionForm.open()">添加岗位</a-button>
     </div>
     <a-form-model ref="form" layout="inline" :model="form" :rules="formRules">
       <template v-for="(item, i) in form.userPositionList">
@@ -152,7 +152,7 @@ export default {
         return false
       }
       // 当部门改变后，需要获取当前部门已配置的岗位列表，并回显到当前表单中
-      dibootApi.get(`/iam/position/listUserPositions/IamUser/${value}`).then(res => {
+      dibootApi.get(`/auth-server/iam/position/listUserPositions/IamUser/${value}`).then(res => {
         const data = res.data
         if (data && data.length > 0) {
           data.forEach(item => {

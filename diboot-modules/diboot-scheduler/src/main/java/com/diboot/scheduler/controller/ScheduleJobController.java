@@ -118,7 +118,7 @@ public class ScheduleJobController extends BaseCrudRestController<ScheduleJob> {
     }
 
     @Log(operation = "执行一次定时任务")
-    @BindPermission(name = Operation.LABEL_UPDATE, code = Operation.CODE_UPDATE)
+    @BindPermission(name = "执行一次定时任务", code = "executeOnce")
     @PutMapping("/executeOnce/{id}")
     public JsonResult executeOnce(@PathVariable("id") Long id) throws Exception {
         scheduleJobService.executeOnceJob(id);

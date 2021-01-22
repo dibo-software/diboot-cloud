@@ -2,6 +2,7 @@ package com.diboot.iam.controller.iam;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.diboot.iam.annotation.BindPermission;
 import com.diboot.iam.entity.LoginUserDetail;
 import com.diboot.core.controller.BaseCrudRestController;
 import com.diboot.core.util.V;
@@ -47,6 +48,8 @@ public class IamPositionController extends BaseCrudRestController<IamPosition> {
      * @return
      * @throws Exception
      */
+    @Log(operation = Operation.LABEL_LIST)
+    @BindPermission(name = Operation.LABEL_LIST, code = Operation.CODE_LIST)
     @GetMapping("/list")
     public JsonResult getViewObjectListMapping(IamPosition entity, Pagination pagination) throws Exception{
         return super.getViewObjectList(entity, pagination, IamPositionVO.class);
@@ -58,6 +61,8 @@ public class IamPositionController extends BaseCrudRestController<IamPosition> {
      * @param userId
      * @return
      */
+    @Log(operation = "根据用户信息获取岗位列表")
+    @BindPermission(name = "根据用户信息获取岗位列表", code = "listByUserInfo")
     @GetMapping("/listUserPositions/{userType}/{userId}")
     public JsonResult listUserPositionsByUser(@PathVariable("userType") String userType, @PathVariable("userId") Long userId) {
         List<IamUserPosition> userPositionList = iamPositionService.getUserPositionListByUser(userType, userId);
@@ -70,6 +75,8 @@ public class IamPositionController extends BaseCrudRestController<IamPosition> {
      * @return
      * @throws Exception
      */
+    @Log(operation = Operation.LABEL_DETAIL)
+    @BindPermission(name = Operation.LABEL_DETAIL, code = Operation.CODE_DETAIL)
     @GetMapping("/{id}")
     public JsonResult getViewObjectWithMapping(@PathVariable("id") Long id) throws Exception{
         return super.getViewObject(id, IamPositionVO.class);
@@ -82,6 +89,7 @@ public class IamPositionController extends BaseCrudRestController<IamPosition> {
      * @throws Exception
      */
     @Log(operation = Operation.LABEL_CREATE)
+    @BindPermission(name = Operation.LABEL_CREATE, code = Operation.CODE_CREATE)
     @PostMapping("/")
     public JsonResult createEntityWithMapping(@RequestBody @Valid IamPositionFormDTO entity) throws Exception {
         return super.createEntity(entity);
@@ -94,6 +102,7 @@ public class IamPositionController extends BaseCrudRestController<IamPosition> {
      * @throws Exception
      */
     @Log(operation = Operation.LABEL_UPDATE)
+    @BindPermission(name = Operation.LABEL_UPDATE, code = Operation.CODE_UPDATE)
     @PutMapping("/{id}")
     public JsonResult updateEntityWithMapping(@PathVariable("id")Long id, @Valid @RequestBody IamPositionFormDTO entity) throws Exception {
         return super.updateEntity(id, entity);
@@ -107,6 +116,7 @@ public class IamPositionController extends BaseCrudRestController<IamPosition> {
      * @throws Exception
      */
     @Log(operation = Operation.LABEL_DELETE)
+    @BindPermission(name = Operation.LABEL_DELETE, code = Operation.CODE_DELETE)
     @DeleteMapping("/{id}")
     public JsonResult deleteEntity(@PathVariable("id")Long id) throws Exception {
         return super.deleteEntity(id);
@@ -117,6 +127,7 @@ public class IamPositionController extends BaseCrudRestController<IamPosition> {
      * @return
      * @throws Exception
      */
+    @BindPermission(name = "岗位键值列表", code = "kvList")
     @GetMapping("kvList")
     public JsonResult getKvList() throws Exception{
         List<KeyValue> kvList = iamPositionService.getKeyValueList(Wrappers.<IamPosition>lambdaQuery().select(IamPosition::getId, IamPosition::getName));
@@ -152,6 +163,7 @@ public class IamPositionController extends BaseCrudRestController<IamPosition> {
      * @throws Exception
      */
     @Log(operation = "设置用户岗位关系")
+    @BindPermission(name = "设置用户岗位关系", code = "updateUserPositionRelations")
     @PostMapping("/batchUpdateUserPositionRelations")
     public JsonResult batchUpdate(@RequestBody IamUserPositionBatchDTO userPositionBatchDTO) throws Exception {
         iamPositionService.updateUserPositionRelations(userPositionBatchDTO.getUserType(), userPositionBatchDTO.getUserId(), userPositionBatchDTO.getUserPositionList());

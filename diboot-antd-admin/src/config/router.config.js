@@ -31,7 +31,7 @@ export const asyncRouterMap = [
         path: '/orgStructure',
         redirect: '/orgStructure/org-tree-list',
         component: RouteView,
-        meta: { title: '组织管理', icon: 'team', keepAlive: false, permission: ['IamOrg', 'IamPosition', 'IamUser'] },
+        meta: { title: '组织管理', icon: 'team', keepAlive: false, permission: ['orgStructure'] },
         children: [
           {
             path: '/orgStructure/org',
@@ -49,7 +49,7 @@ export const asyncRouterMap = [
             path: '/orgStructure/orgUser',
             name: 'OrgUserIndex',
             component: () => import('@/views/orgStructure/orgUser/Index'),
-            meta: { title: '组织人员管理', keepAlive: false, permission: ['IamUser'] }
+            meta: { title: '组织人员管理', keepAlive: false, permission: ['IamOrgUser'] }
           }
         ]
       },
@@ -58,7 +58,7 @@ export const asyncRouterMap = [
         path: '/system',
         redirect: '/system/dictionary/list',
         component: PageView,
-        meta: { title: '系统管理', icon: 'setting', permission: ['Dictionary', 'IamUser', 'IamRole', 'IamResourcePermission', 'IamLoginTrace', 'IamOperationLog'] },
+        meta: { title: '系统管理', icon: 'setting', permission: ['system'] },
         children: [
           {
             path: '/system/dictionary/index',
