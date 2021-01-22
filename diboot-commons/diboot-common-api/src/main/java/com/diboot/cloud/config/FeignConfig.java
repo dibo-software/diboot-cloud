@@ -16,18 +16,13 @@
 package com.diboot.cloud.config;
 
 import com.diboot.core.config.Cons;
-import com.diboot.core.util.D;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import feign.Contract;
 import feign.Logger;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import feign.codec.Decoder;
 import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
 import org.springframework.cloud.openfeign.support.SpringDecoder;
@@ -39,8 +34,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigInteger;
-import java.text.SimpleDateFormat;
 
 /**
  * Feign配置
@@ -50,6 +43,8 @@ import java.text.SimpleDateFormat;
  */
 @Configuration
 public class FeignConfig implements RequestInterceptor {
+    @Autowired
+    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Bean
     public Contract feignContract() {
@@ -67,26 +62,8 @@ public class FeignConfig implements RequestInterceptor {
     }
 
     public ObjectFactory<HttpMessageConverters> feignHttpMessageConverter() {
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        ObjectMapper objectMapper = converter.getObjectMapper();
-        // Long转换成String避免JS超长问题
-        SimpleModule simpleModule = new SimpleModule();
-
-        // 不显示为null的字段
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
-        simpleModule.addSerializer(Long.TYPE, ToStringSerializer.instance);
-        simpleModule.addSerializer(BigInteger.class, ToStringSerializer.instance);
-
-        objectMapper.registerModule(simpleModule);
-        // 时间格式化
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.setDateFormat(new SimpleDateFormat(D.FORMAT_DATETIME_Y4MDHMS));
-        // 设置格式化内容
-        converter.setObjectMapper(objectMapper);
-
-        HttpMessageConverters httpMessageConverters = new HttpMessageConverters(converter);
-
+        HttpMessageConverters httpMessageConverters =
+                new HttpMessageConverters(jacksonMessageConverter);
         return () -> httpMessageConverters;
     }
 

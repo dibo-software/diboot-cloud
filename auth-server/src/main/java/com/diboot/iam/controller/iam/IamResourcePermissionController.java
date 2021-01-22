@@ -3,8 +3,6 @@ package com.diboot.iam.controller.iam;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.diboot.core.exception.BusinessException;
-import com.diboot.core.vo.Status;
 import com.diboot.iam.annotation.BindPermission;
 import com.diboot.iam.annotation.Log;
 import com.diboot.iam.annotation.Operation;
@@ -12,7 +10,7 @@ import com.diboot.cloud.config.Cons;
 import com.diboot.iam.dto.IamResourcePermissionDTO;
 import com.diboot.iam.entity.IamResourcePermission;
 import com.diboot.iam.service.IamResourcePermissionService;
-import com.diboot.cloud.redis.RedisCons;
+import com.diboot.cloud.redis.config.RedisCons;
 import com.diboot.iam.vo.IamResourcePermissionListVO;
 import com.diboot.iam.vo.IamResourcePermissionVO;
 import com.diboot.core.controller.BaseCrudRestController;
@@ -29,7 +27,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 

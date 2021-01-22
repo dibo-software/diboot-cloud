@@ -15,9 +15,10 @@
  */
 package com.diboot.cloud.initializer;
 
+import com.diboot.cloud.redis.service.RedisService;
 import com.diboot.iam.annotation.process.ApiPermissionExtractor;
 import com.diboot.iam.annotation.process.ApiPermissionWrapper;
-import com.diboot.cloud.redis.RedisCons;
+import com.diboot.cloud.redis.config.RedisCons;
 import com.diboot.core.util.V;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +26,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 接口权限缓存初始化执行器
@@ -47,12 +45,12 @@ public class AppModuleInitializer implements ApplicationRunner {
     private String applicationName;
 
     @Autowired
-    private RedisTemplate<String,Object> redisTemplate;
+    private RedisService redisService;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         // 初始化应用模块
-        initAppModules();
+        redisService.addAppModule(applicationName);
 
         // 提取模块全部权限列表并更新缓存
         List<ApiPermissionWrapper> permissionWrapperList = ApiPermissionExtractor.extractAllApiPermissions();
@@ -60,26 +58,7 @@ public class AppModuleInitializer implements ApplicationRunner {
             return;
         }
         log.info("提取 {} 模块的权限注解 {} 条.", applicationName, permissionWrapperList.size());
-        redisTemplate.opsForHash().put(RedisCons.KEY_APP_MODULE_PERMISSIONS_MAP, applicationName, permissionWrapperList);
+        redisService.getRedisTemplate().opsForHash().put(RedisCons.KEY_APP_MODULE_PERMISSIONS_MAP, applicationName, permissionWrapperList);
     }
 
-    /**
-     * 提取服务模块
-     */
-    private void initAppModules(){
-        List<String> modules = (List<String>) redisTemplate.opsForValue().get(RedisCons.KEY_APP_MODULES);
-        // 已添加过
-        if(modules != null && modules.contains(applicationName)){
-            return;
-        }
-        if(modules == null){
-            modules = new ArrayList<>();
-            modules.add(applicationName);
-        }
-        else if(!modules.contains(applicationName)){
-            modules = modules.stream().distinct().collect(Collectors.toList());
-            modules.add(applicationName);
-        }
-        redisTemplate.opsForValue().set(RedisCons.KEY_APP_MODULES, modules);
-    }
 }

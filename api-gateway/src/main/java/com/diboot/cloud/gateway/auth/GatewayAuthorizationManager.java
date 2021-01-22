@@ -15,7 +15,7 @@
  */
 package com.diboot.cloud.gateway.auth;
 
-import com.diboot.cloud.redis.RedisCons;
+import com.diboot.cloud.redis.config.RedisCons;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

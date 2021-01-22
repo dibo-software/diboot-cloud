@@ -15,7 +15,7 @@
  */
 package com.diboot.iam.controller;
 
-import com.diboot.cloud.redis.RedisCons;
+import com.diboot.cloud.redis.config.RedisCons;
 import com.diboot.core.vo.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

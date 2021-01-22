@@ -17,13 +17,12 @@ package com.diboot.iam.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.diboot.core.util.JSON;
 import com.diboot.iam.entity.IamRole;
 import com.diboot.iam.entity.LoginUserDetail;
 import com.diboot.iam.service.IamRoleResourceService;
 import com.diboot.iam.service.IamUserRoleService;
 import com.diboot.iam.service.AuthServerCacheService;
-import com.diboot.cloud.redis.RedisCons;
+import com.diboot.cloud.redis.config.RedisCons;
 import com.diboot.iam.vo.ResourceRoleVO;
 import com.diboot.core.binding.Binder;
 import com.diboot.core.entity.Dictionary;
@@ -153,7 +152,7 @@ public class AuthServerCacheServiceImpl implements AuthServerCacheService {
                     continue;
                 }
                 List<KeyValue> children = convertToKeyValueList(vo.getChildren());
-                redisTemplate.opsForHash().put(RedisCons.KEY_DICTIONARY_MAP, vo.getType(), JSON.stringify(children));
+                redisTemplate.opsForHash().put(RedisCons.KEY_DICTIONARY_MAP, vo.getType(), children);
             }
         }
     }
@@ -166,7 +165,7 @@ public class AuthServerCacheServiceImpl implements AuthServerCacheService {
         Dictionary dictionary = dictionaryService.getSingleEntity(queryWrapper);
         DictionaryVO vo = Binder.convertAndBindRelations(dictionary, DictionaryVO.class);
         List<KeyValue> children = convertToKeyValueList(vo.getChildren());
-        redisTemplate.opsForHash().put(RedisCons.KEY_DICTIONARY_MAP, vo.getType(), JSON.stringify(children));
+        redisTemplate.opsForHash().put(RedisCons.KEY_DICTIONARY_MAP, vo.getType(), children);
         return true;
     }
 
