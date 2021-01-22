@@ -17,6 +17,7 @@
         <module>diboot-common-base</module>
         <module>diboot-common-redis</module>
         <module>diboot-common-api</module>
+        <module>diboot-common-excel</module>
     </modules>
 
 

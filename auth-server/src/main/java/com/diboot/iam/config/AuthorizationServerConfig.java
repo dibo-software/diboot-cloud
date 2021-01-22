@@ -64,7 +64,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private RedisConnectionFactory redisConnectionFactory;
 
-    private String[] resourceIds = {"auth-server", "scheduler", "example-api"};
+    private String[] resourceIds = {"auth-server", "scheduler", "file-server", "example-api"};
 
     private int accessTokenExpiresIn = 300, refreshTokenExpiresIn = 7*24*3600;
 

@@ -1,0 +1,65 @@
+server:
+  port: 8102
+  servlet:
+    context-path: /
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  redis:
+    database: 0
+    port: 6379
+    host: localhost
+    password:
+  datasource:
+    url:  jdbc:mysql://localhost:3306/diboot_cloud_example?characterEncoding=utf8&serverTimezone=GMT%2B8
+    username: diboot
+    password: 123456
+    maximum-pool-size:  5
+    driver-class-name:  com.mysql.cj.jdbc.Driver
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: 'http://localhost:8001/oauth/token_key' # RSA公钥访问地址
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+# logging config
+logging:
+  level:
+    root: debug
+    org:
+      apache: info
+## diboot devtools config
+diboot:
+  component:
+    file:
+      init-sql: true
+
+## 非本地存储，此处存储域名
+files:
+  storage:
+    directory: http://10.0.0.99:8888
+#    directory: /Users/wuy/IdeaProjects/diboot/diboot-cloud/diboot-modules/diboot-file
+
+fdfs:
+  so-timeout: 1501
+  connect-timeout: 601
+  thumb-image:
+    width: 150
+    height: 150
+  tracker-list:
+    - 10.0.0.99:22122
+  pool:
+    #从池中借出的对象的最大数目
+    max-total: 153
+    max-wait-millis: 102
+    jmx-name-base: 1
+    jmx-name-prefix: 1
+    max-total-per-key: 50

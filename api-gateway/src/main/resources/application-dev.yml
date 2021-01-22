@@ -20,6 +20,13 @@ spring:
             - Path=/scheduler/**
           filters:
             - StripPrefix=1
+        # 文件服务模块
+        - id: file-route
+          uri: lb://file-server
+          predicates:
+            - Path=/file-server/**
+          filters:
+            - StripPrefix=1
         # 业务模块服务
         - id: business-api-route
           uri: lb://example-api

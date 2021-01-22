@@ -104,6 +104,7 @@ export default {
       formData.append('file', data.file)
       formData.append('relObjField', this.relObjField)
       formData.append('relObjType', this.relObjType)
+      formData.append('appModule', this.appModule)
       dibootApi.upload(this.action, formData).then((res) => {
         if (res.code === 0) {
           if (this.limitCount === 1) {
@@ -256,8 +257,18 @@ export default {
       type: String,
       default: '上传'
     },
+    /**
+     * value值
+     */
     value: {
       type: String
+    },
+    /**
+     * 模块名
+     */
+    appModule: {
+      type: String,
+      required: true
     }
   }
 }
