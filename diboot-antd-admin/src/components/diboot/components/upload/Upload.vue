@@ -184,7 +184,8 @@ export default {
      * 地址前缀
      */
     prefix: {
-      type: String
+      type: String,
+      default: ''
     },
     /**
      * 请求地址
@@ -261,7 +262,8 @@ export default {
      * value值
      */
     value: {
-      type: String
+      type: String,
+      default: ''
     },
     /**
      * 模块名

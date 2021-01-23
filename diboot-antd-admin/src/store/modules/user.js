@@ -1,9 +1,7 @@
-import Vue from 'vue'
 import { login, getInfo, logout, setLoginResult, clearLoginResult } from '@/api/login'
 import { welcome } from '@/utils/util'
 import { permissionListToPermissions } from '@/utils/permissions'
 import defaultAvatar from '@/assets/logo.png'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
 
 const user = {
   state: {

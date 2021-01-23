@@ -11,7 +11,7 @@ import store from '@/store'
  *
  * @param permissions 数组
  */
-export const hasPermissions = function(permissions = [], vue) {
+export const hasPermissions = function (permissions = [], vue) {
   const roles = store.getters && store.getters.roles
   if (roles.code === 'SYSTEM_ADMIN') {
     return true

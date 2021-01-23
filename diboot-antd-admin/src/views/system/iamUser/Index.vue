@@ -15,21 +15,21 @@
 <script>
 import orgTree from '@/views/orgStructure/org/orgTree'
 import userList from './list'
-import {hasPermissions} from '@/utils/helper/checkPermission'
+import { hasPermissions } from '@/utils/helper/checkPermission'
 
 export default {
   name: 'OrgUserList',
   components: {
     orgTree,
-    userList,
+    userList
   },
   data () {
     return {
-      currentNodeId: '',
+      currentNodeId: ''
     }
   },
   computed: {
-    showTreeNode() {
+    showTreeNode () {
       return this.hasPermissions(['orgTree'], this)
     }
   },
