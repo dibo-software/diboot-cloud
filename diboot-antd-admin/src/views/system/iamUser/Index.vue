@@ -8,7 +8,6 @@
         <user-list :current-node-id="currentNodeId" ref="userList" />
       </a-col>
     </a-row>
-    <user-list v-permission-missing="['orgTree']" :current-node-id="currentNodeId" ref="userList" />
   </a-card>
 </template>
 

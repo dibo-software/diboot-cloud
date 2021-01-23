@@ -106,6 +106,7 @@ export default {
   data () {
     return {
       baseApi: '/auth-server/dictionary',
+      getListFromMixin: false,
       customQueryParam: { parentId: 0 },
       columns: [
         {

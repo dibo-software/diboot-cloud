@@ -18,9 +18,10 @@ package com.diboot.cloud.service;
 import com.diboot.cloud.config.FeignConfig;
 import com.diboot.core.vo.DictionaryVO;
 import com.diboot.core.vo.JsonResult;
-import feign.RequestLine;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 

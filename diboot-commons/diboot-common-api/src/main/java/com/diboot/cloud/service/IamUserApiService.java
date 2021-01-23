@@ -16,13 +16,10 @@
 package com.diboot.cloud.service;
 
 import com.diboot.cloud.config.FeignConfig;
-import com.diboot.iam.entity.IamUser;
 import com.diboot.core.vo.JsonResult;
-import feign.RequestLine;
+import com.diboot.iam.entity.IamUser;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 远程服务调用示例
