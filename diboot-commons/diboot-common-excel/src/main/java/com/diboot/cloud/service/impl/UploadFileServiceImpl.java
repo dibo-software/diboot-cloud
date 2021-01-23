@@ -41,7 +41,7 @@ public class UploadFileServiceImpl implements UploadFileService {
         UploadFileBindRefDTO uploadFileBindRefDTO = new UploadFileBindRefDTO();
         uploadFileBindRefDTO.setFileUuidList(fileUuidList);
         uploadFileBindRefDTO.setRelObjId(relObjId);
-        uploadFileBindRefDTO.setRelObjType(relObjTypeClass.getClass().getSimpleName());
+        uploadFileBindRefDTO.setRelObjType(relObjTypeClass.getSimpleName());
         uploadFileApiService.bindRelObjId(uploadFileBindRefDTO);
     }
 

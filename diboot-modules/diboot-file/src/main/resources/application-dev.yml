@@ -45,8 +45,10 @@ diboot:
 ## 非本地存储，此处存储域名
 files:
   storage:
-    directory: http://10.0.0.99:8888
-#    directory: /Users/wuy/IdeaProjects/diboot/diboot-cloud/diboot-modules/diboot-file
+    #分布式存储
+#    directory: http://10.0.0.99:8888
+    #本地存储
+    directory: /Users/uu/IdeaProjects/diboot/diboot-cloud/diboot-modules/diboot-file
 
 fdfs:
   so-timeout: 1501

@@ -122,7 +122,7 @@ public class UploadFileController extends BaseFileController {
      * @throws Exception
      */
     @PostMapping("/bindRelObjId")
-    public JsonResult bindRelObjId(UploadFileBindRefDTO uploadFileBindRefDTO) throws Exception {
+    public JsonResult bindRelObjId(@RequestBody UploadFileBindRefDTO uploadFileBindRefDTO) throws Exception {
         uploadFileService.bindRelObjId(uploadFileBindRefDTO);
         return JsonResult.OK();
     }
