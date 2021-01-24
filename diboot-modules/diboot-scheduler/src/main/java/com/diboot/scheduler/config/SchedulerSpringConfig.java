@@ -15,6 +15,7 @@
  */
 package com.diboot.scheduler.config;
 
+import com.diboot.core.util.DateConverter;
 import com.diboot.scheduler.starter.SchedulerProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -49,5 +51,15 @@ public class SchedulerSpringConfig implements WebMvcConfigurer {
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(0, jacksonMessageConverter);
+    }
+
+    /**
+     * 默认支持String-Date类型转换
+     *
+     * @param registry
+     */
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new DateConverter());
     }
 }

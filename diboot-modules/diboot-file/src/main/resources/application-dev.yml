@@ -48,7 +48,7 @@ files:
     #分布式存储
 #    directory: http://10.0.0.99:8888
     #本地存储
-    directory: /Users/uu/IdeaProjects/diboot/diboot-cloud/diboot-modules/diboot-file
+    directory: D:/temp
 
 fdfs:
   so-timeout: 1501

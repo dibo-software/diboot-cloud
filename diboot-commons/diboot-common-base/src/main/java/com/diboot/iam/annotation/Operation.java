@@ -47,6 +47,10 @@ public class Operation {
      */
     public static final String CODE_BATCH_DELETE = "batchDelete";
     /**
+     * 操作权限类型 - 批量更新
+     */
+    public static final String CODE_BATCH_UPDATE = "batchUpdate";
+    /**
      * 操作权限类型 - 导入
      */
     public static final String CODE_IMPORT = "import";
@@ -54,6 +58,7 @@ public class Operation {
      * 操作权限类型 - 导出
      */
     public static final String CODE_EXPORT = "export";
+
 
     /**
      * 操作权限描述 - 查看列表
@@ -79,6 +84,10 @@ public class Operation {
      * 操作权限描述 - 批量删除
      */
     public static final String LABEL_BATCH_DELETE = "批量删除";
+    /**
+     * 操作权限描述 - 批量更新
+     */
+    public static final String LABEL_BATCH_UPDATE = "批量更新";
     /**
      * 操作权限描述 - 导入
      */
