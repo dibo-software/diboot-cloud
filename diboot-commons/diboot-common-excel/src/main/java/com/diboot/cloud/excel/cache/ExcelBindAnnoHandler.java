@@ -29,6 +29,7 @@ import com.diboot.core.util.S;
 import com.diboot.core.util.V;
 import com.diboot.core.vo.KeyValue;
 import com.diboot.core.vo.Status;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.annotation.Annotation;
@@ -110,7 +111,18 @@ public class ExcelBindAnnoHandler {
             if(bindDictService == null){
                 throw new BusinessException(Status.FAIL_SERVICE_UNAVAILABLE, "DictionaryService未实现，无法使用ExcelBindDict注解！");
             }
+            // 此处key是 itemValue, value是itemName
             List<KeyValue> list = bindDictService.getKeyValueList(dictType);
+            // 互换操作
+            if (V.isEmpty(list)) {
+                return Collections.emptyMap();
+            }
+            for (KeyValue keyValue : list) {
+                String k = keyValue.getK();
+                Object v = keyValue.getV();
+                keyValue.setK(String.valueOf(v));
+                keyValue.setV(String.valueOf(k));
+            }
             return convertKvListToMap(list);
         }
         else if(annotation instanceof ExcelBindField){
