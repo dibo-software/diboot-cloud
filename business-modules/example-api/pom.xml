@@ -19,6 +19,14 @@
             <artifactId>diboot-common-api</artifactId>
             <version>${diboot-cloud.version}</version>
         </dependency>
+
+        <!-- excel组件 -->
+        <dependency>
+            <groupId>com.diboot.cloud</groupId>
+            <artifactId>diboot-common-excel</artifactId>
+            <version>${diboot-cloud.version}</version>
+        </dependency>
+
         <!-- 加载ORM相关组件 -->
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -30,8 +38,7 @@
         <dependency>
             <groupId>com.diboot</groupId>
             <artifactId>diboot-devtools-spring-boot-starter</artifactId>
-            <version>2.2.0</version>
-            <scope>provided</scope>
+            <version>${diboot.version}</version>
         </dependency>
 
     </dependencies>
