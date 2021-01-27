@@ -23,7 +23,7 @@
         <dependency>
             <groupId>com.diboot</groupId>
             <artifactId>diboot-core</artifactId>
-            <version>${diboot-version}</version>
+            <version>${diboot.version}</version>
         </dependency>
 
         <dependency>
