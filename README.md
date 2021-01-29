@@ -21,6 +21,7 @@
 4. 权限体系支持diboot IAM组件的完整功能（组织机构、岗位、人员、角色、权限等基础管理功能）
 5. 支持本地及FastDFS分布式文件存储，极简扩展接口支持其他存储形式
 6. 支持定时任务服务模块
+7. 前端支持antd（diboot-antd-admin）
 
 ## diboot-cloud 架构图
 ![diboot-cloud 架构图](docs/img/diboot-cloud.png)
@@ -44,5 +45,7 @@
 * **spring-cloud**: Hoxton.SR9
 * **spring-cloud-alibaba**: 2.2.4.RELEASE
 * **diboot-core**: 2.2.0
+
+[-> 详细文档请查阅官网](https://www.diboot.com/guide/diboot-cloud/introduce.html)
 
 > 使用过程中遇到问题，可加群交流。

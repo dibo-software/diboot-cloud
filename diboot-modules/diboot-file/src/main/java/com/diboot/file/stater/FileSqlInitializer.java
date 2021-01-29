@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @Order(930)
-public class FilePluginInitializer implements ApplicationRunner {
+public class FileSqlInitializer implements ApplicationRunner {
 
     @Autowired
     private FileProperties fileProperties;

@@ -31,7 +31,7 @@ import java.util.List;
 @EnableConfigurationProperties(FileProperties.class)
 @ComponentScan(basePackages = {"com.diboot.**"})
 @MapperScan(basePackages = {"com.diboot.**.mapper"})
-public class FileSpringConfig  implements WebMvcConfigurer {
+public class SpringWebConfig implements WebMvcConfigurer {
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;

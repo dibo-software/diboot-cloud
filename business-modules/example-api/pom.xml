@@ -5,7 +5,7 @@
     <parent>
         <artifactId>business-modules</artifactId>
         <groupId>com.diboot.cloud</groupId>
-        <version>2.2.0-SNAPSHOT</version>
+        <version>2.2.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -39,6 +39,8 @@
             <groupId>com.diboot</groupId>
             <artifactId>diboot-devtools-spring-boot-starter</artifactId>
             <version>${diboot.version}</version>
+            <scope>provided</scope><!-- 只在开发过程依赖，打jar包时剔除。-->
+            <!--注：IDEA某些版本下provided无效，需删除此行，打包前手动剔除devtools依赖 -->
         </dependency>
 
     </dependencies>

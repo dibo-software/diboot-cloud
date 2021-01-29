@@ -64,15 +64,31 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private RedisConnectionFactory redisConnectionFactory;
 
-    private String[] resourceIds = {"auth-server", "scheduler", "file-server", "example-api"};
-
     private int accessTokenExpiresIn = 300, refreshTokenExpiresIn = 7*24*3600;
 
+    /**
+     * 资源服务
+     */
+    private String[] resourceIds = {"auth-server", "scheduler", "file-server", "example-api"};
+
     /*
+    * 数据库管理ClientDetailsService
     @Autowired
     @Qualifier("iamClientDetailsService")
-    private ClientDetailsService clientService;*/
+    private ClientDetailsService clientService;
 
+    @Bean("iamClientDetailsService")
+    public ClientDetailsService clientDetailsService(DataSource dataSource, PasswordEncoder passwordEncoder) {
+        JdbcClientDetailsService clientDetailsService = new JdbcClientDetailsService(dataSource);
+        clientDetailsService.setPasswordEncoder(passwordEncoder);
+        return clientDetailsService;
+    }*/
+
+    /**
+     * 内存管理ClientDetailsService
+     * @param clients
+     * @throws Exception
+     */
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         //clients.withClientDetails(clientService);
@@ -90,14 +106,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .scopes("read", "write")
                 .accessTokenValiditySeconds(accessTokenExpiresIn).refreshTokenValiditySeconds(refreshTokenExpiresIn);
     }
-
-    /*
-    @Bean("iamClientDetailsService")
-    public ClientDetailsService clientDetailsService(DataSource dataSource, PasswordEncoder passwordEncoder) {
-        JdbcClientDetailsService clientDetailsService = new JdbcClientDetailsService(dataSource);
-        clientDetailsService.setPasswordEncoder(passwordEncoder);
-        return clientDetailsService;
-    }*/
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {

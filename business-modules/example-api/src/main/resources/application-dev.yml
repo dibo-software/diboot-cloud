@@ -44,8 +44,6 @@ logging:
 
 ## diboot devtools config
 diboot:
-  core:
-    init-sql: false
   devtools:
     codes-author: JerryMa
     codes-copyright:  www.dibo.ltd

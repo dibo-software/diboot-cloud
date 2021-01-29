@@ -41,7 +41,7 @@ import java.util.List;
 @EnableConfigurationProperties({SchedulerProperties.class})
 @ComponentScan(basePackages = {"com.diboot.**"})
 @MapperScan(basePackages = {"com.diboot.**.mapper"})
-public class SchedulerSpringConfig implements WebMvcConfigurer {
+public class SpringWebConfig implements WebMvcConfigurer {
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
