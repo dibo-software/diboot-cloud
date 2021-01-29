@@ -23,8 +23,7 @@
 6. 支持定时任务服务模块
 
 ## diboot-cloud 架构图
-![diboot-cloud 架构图](docs/img/structure-cloud.png)
-
+![diboot-cloud 架构图](docs/img/diboot-cloud.png)
 
 ## diboot-cloud 模块说明
 - **api-gateway**:  接口网关
