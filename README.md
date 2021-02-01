@@ -35,6 +35,7 @@
     - diboot-common-api:    通用接口
     - diboot-common-base:   通用实体类等
     - diboot-common-redis:  通用redis配置
+    - diboot-common-excel:  通用excel解析
 - **diboot-modules**: diboot预置模块
     - diboot-file:  文件服务模块
     - diboot-scheduler: 定时任务服务模块
