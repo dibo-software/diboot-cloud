@@ -1,6 +1,6 @@
 import { login, getInfo, logout, setLoginResult, clearLoginResult } from '@/api/login'
-import { welcome } from '@/utils/util'
 import { permissionListToPermissions } from '@/utils/permissions'
+import { welcome } from '@/utils/util'
 import defaultAvatar from '@/assets/logo.png'
 
 const user = {

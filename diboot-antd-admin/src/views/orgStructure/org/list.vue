@@ -3,7 +3,6 @@
     <div v-action:create class="table-operator" style="text-align: right; margin-bottom: 10px;">
       <a-button v-action:create type="default" icon="plus" @click="$refs.form.open(undefined)">新建部门</a-button>
     </div>
-
     <a-table
       ref="table"
       size="default"

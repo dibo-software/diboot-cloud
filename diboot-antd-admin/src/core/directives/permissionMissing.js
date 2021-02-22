@@ -8,7 +8,7 @@ const permissionMissing = Vue.directive('permissionMissing', {
   inserted: function (el, binding, vnode) {
     const { value } = binding
     const roles = store.getters && store.getters.roles
-    if (roles.code === 'SYSTEM_ADMIN') {
+    if (roles.superAdmin === true) {
       el.parentNode && el.parentNode.removeChild(el) || (el.style.display = 'none')
     }
 

@@ -1,20 +1,16 @@
-import Vue from 'vue'
 import axios from 'axios'
 import store from '@/store'
-import {
-  VueAxios
-} from './axios'
-import notification from 'ant-design-vue/es/notification'
-import {
-  ACCESS_TOKEN, TOKEN_TYPE
-} from '@/store/mutation-types'
-import router from '@/router/index'
+import storage from 'store'
 import qs from 'qs'
+import notification from 'ant-design-vue/es/notification'
+import { VueAxios } from './axios'
+import { ACCESS_TOKEN, TOKEN_TYPE } from '@/store/mutation-types'
 import { refreshToken, clearLoginResult } from '@/api/login'
+import router from '@/router/index'
 import { message } from 'ant-design-vue'
 
 // baseURL
-const BASE_URL = '/api'
+const BASE_URL = process.env.VUE_APP_API_BASE_URL
 // token在Header中的key，需要与后端对diboot.iam.jwt-signkey配置相同
 const JWT_HEADER_KEY = 'Authorization'
 // 刷新token标记
@@ -23,15 +19,18 @@ let isTokenRefreshing = false
 let waitingQueue = []
 
 // 创建 axios 实例
-const service = axios.create({
-  baseURL: BASE_URL, // api base_url
-  timeout: 30000 // 请求超时时间
+const request = axios.create({
+  // API 请求的默认前缀
+  baseURL: BASE_URL,
+  timeout: 6000 // 请求超时时间
 })
 
-const err = (error) => {
+// 异常拦截处理器
+const errorHandler = (error) => {
   if (error.response) {
     const data = error.response.data
-    const token = Vue.ls.get(ACCESS_TOKEN)
+    // 从 localstorage 获取 token
+    const token = storage.get(ACCESS_TOKEN)
     if (error.response.status === 403) {
       notification.error({
         message: 'Forbidden',
@@ -56,7 +55,7 @@ const err = (error) => {
 }
 
 // request interceptor
-service.interceptors.request.use(config => {
+request.interceptors.request.use(config => {
   // 设置请求头的token
   setAccessToken(config)
   // 只针对get方式进行序列化
@@ -66,10 +65,10 @@ service.interceptors.request.use(config => {
     }
   }
   return config
-}, err)
+}, errorHandler)
 
 // response interceptor
-service.interceptors.response.use((response) => {
+request.interceptors.response.use((response) => {
   // 如果返回的自定义状态码为 4001， 则token过期，需要通过refresh_token重新获取token
   if (response.data && response.data.code === 4001) {
     const config = response.config
@@ -88,7 +87,7 @@ service.interceptors.response.use((response) => {
           waitingQueue.forEach(func => func())
           waitingQueue = []
           // 重发当前请求
-          return service(config)
+          return request(config)
         })
         .catch(() => {
           // 清除登录信息
@@ -112,42 +111,23 @@ service.interceptors.response.use((response) => {
         // 将执行函数放入等待队列
         waitingQueue.push(() => {
           setAccessToken(config)
-          resolve(service(config))
+          resolve(request(config))
         })
       })
     }
   }
-
-  if (response.data && response.data.code === 5000) {
-    message.success('登录失败，请重新登录', 2.5)
-    router.push({
-      path: '/login',
-      query: { redirect: router.currentRoute.fullPath }
-    })
-    return Promise.reject(new Error('请重新登录'))
-  }
-
-  // 如果当前请求是下载请求
-  if (response.headers.filename) {
-    return {
-      data: response.data,
-      filename: decodeURI(response.headers.filename),
-      code: parseInt(response.headers['err-code'] || '0'),
-      msg: decodeURI(response.headers['err-msg'] || '')
-    }
-  }
   return response.data
-}, err)
+}, errorHandler)
 
 // 自定义dibootApi请求快捷方式
 const dibootApi = {
   get (url, params) {
-    return service.get(url, {
+    return request.get(url, {
       params
     })
   },
   post (url, data) {
-    return service({
+    return request({
       method: 'POST',
       url,
       data: JSON.stringify(data),
@@ -157,7 +137,7 @@ const dibootApi = {
     })
   },
   put (url, data) {
-    return service({
+    return request({
       method: 'PUT',
       url,
       data: JSON.stringify(data),
@@ -173,7 +153,7 @@ const dibootApi = {
    * @returns {AxiosPromise}
    */
   delete (url, params) {
-    return service({
+    return request({
       url,
       method: 'DELETE',
       params,
@@ -191,7 +171,7 @@ const dibootApi = {
    * @returns {AxiosPromise}
    */
   upload (url, formData) {
-    return service({
+    return request({
       url,
       method: 'POST',
       data: formData
@@ -204,7 +184,7 @@ const dibootApi = {
    * @returns {AxiosPromise}
    */
   download (url, params) {
-    return service({
+    return request({
       url,
       method: 'GET',
       responseType: 'arraybuffer',
@@ -224,7 +204,7 @@ const dibootApi = {
    * @returns {AxiosPromise}
    */
   postDownload (url, data) {
-    return service({
+    return request({
       url,
       method: 'POST',
       responseType: 'arraybuffer',
@@ -239,24 +219,26 @@ const dibootApi = {
   }
 }
 
+const installer = {
+  vm: {},
+  install (Vue) {
+    Vue.use(VueAxios, request)
+  }
+}
+
 function setAccessToken (config) {
-  const accessToken = Vue.ls.get(ACCESS_TOKEN)
-  const tokenType = Vue.ls.get(TOKEN_TYPE)
+  const accessToken = storage.get(ACCESS_TOKEN)
+  const tokenType = storage.get(TOKEN_TYPE)
   if (tokenType && accessToken) {
     config.headers[JWT_HEADER_KEY] = `${tokenType} ${accessToken}` // 让每个请求携带自定义 token 请根据实际情况自行修改
   }
 }
 
-const installer = {
-  vm: {},
-  install (Vue) {
-    Vue.use(VueAxios, service)
-  }
-}
+export default request
 
 export {
   installer as VueAxios,
-  service as axios,
+  request as axios,
   BASE_URL as baseURL,
   dibootApi
 }

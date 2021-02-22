@@ -105,6 +105,7 @@ public class AuthTokenController {
      */
     @DeleteMapping("/token")
     public JsonResult revokeToken(String access_token) {
+        //TODO: 从header中获取token
         boolean success = consumerTokenServices.revokeToken(access_token);
         return JsonResult.OK().msg(success? "注销成功" : "注销失败");
     }
