@@ -15,12 +15,12 @@
  */
 package com.diboot.iam.controller.iam;
 
+import com.diboot.core.vo.JsonResult;
 import com.diboot.iam.entity.LoginUserDetail;
+import com.diboot.iam.handler.AsyncLogWorker;
 import com.diboot.iam.service.IamUserRoleService;
 import com.diboot.iam.util.IamSecurityUtils;
 import com.diboot.iam.vo.IamRoleVO;
-import com.diboot.core.vo.JsonResult;
-import com.diboot.iam.handler.AsyncLogWorker;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,13 +100,11 @@ public class AuthTokenController {
 
     /**
      * 注销token
-     * @param access_token
      * @return
      */
-    @DeleteMapping("/token")
-    public JsonResult revokeToken(String access_token) {
-        //TODO: 从header中获取token
-        boolean success = consumerTokenServices.revokeToken(access_token);
+    @PostMapping("/logout")
+    public JsonResult revokeToken(@RequestParam(name = "token", required = true) String token) {
+        boolean success = consumerTokenServices.revokeToken(token);
         return JsonResult.OK().msg(success? "注销成功" : "注销失败");
     }
 

@@ -6,7 +6,7 @@ import { ACCESS_TOKEN, REFRESH_TOKEN, TOKEN_EXPIRES_TIME, TOKEN_TYPE } from '@/s
 
 const userApi = {
   Login: '/auth-server/oauth/token',
-  Logout: '/auth-server/oauth/token',
+  Logout: '/auth-server/oauth/logout',
   // get my info
   UserInfo: '/auth-server/oauth/userInfo'
 }
@@ -25,7 +25,7 @@ const userApi = {
 export function login (parameter) {
   return request({
     url: userApi.Login,
-    method: 'post',
+    method: 'POST',
     data: qs.stringify(parameter)
   })
 }
@@ -39,7 +39,7 @@ export function refreshToken () {
   }
   return request({
     url: userApi.Login,
-    method: 'post',
+    method: 'POST',
     data: qs.stringify(data),
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -82,7 +82,7 @@ export function clearLoginResult () {
 export function getInfo () {
   return request({
     url: userApi.UserInfo,
-    method: 'get',
+    method: 'GET',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'
     }
@@ -92,9 +92,10 @@ export function getInfo () {
 export function logout (token) {
   return request({
     url: userApi.Logout,
-    method: 'delete',
+    method: 'POST',
+    data: qs.stringify({ token }),
     headers: {
-      'Content-Type': 'application/json;charset=UTF-8'
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
     }
   })
 }
