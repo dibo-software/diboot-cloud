@@ -21,6 +21,7 @@
         <java.version>1.8</java.version>
         <spring-boot.version>2.3.8.RELEASE</spring-boot.version>
         <spring-cloud.version>Hoxton.SR9</spring-cloud.version>
+        <docker.image.prefix>com.diboot</docker.image.prefix>
         <!--
         <spring-boot.version>2.4.1</spring-boot.version>
         <spring-cloud.version>2020.0.0</spring-cloud.version>-->
