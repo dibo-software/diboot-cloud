@@ -62,6 +62,7 @@
     },
     data () {
       return {
+        hasChange: false,
         hasInit: false,
         tinymceId: this.id,
         fullscreen: false,
@@ -80,7 +81,7 @@
     watch: {
       value: {
         handler: function (val) {
-          if (this.hasInit) {
+          if (!this.hasChange && this.hasInit) {
             this.$nextTick(() => {
               window.tinymce.get(this.tinymceId).setContent(val || '')
             })
@@ -148,6 +149,7 @@
             _this.hasInit = true
             editor.on('NodeChange Change KeyUp SetContent', () => {
               if (_this.changeCounter > 0) {
+                _this.hasChange = true
                 _this.$emit('input', editor.getContent())
               }
               _this.changeCounter++
