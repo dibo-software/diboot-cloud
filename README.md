@@ -42,8 +42,8 @@
 - **diboot-antd-admin**: 前端项目(antdv)
  
 ## diboot-cloud 依赖：
-* **spring-boot**: 2.3.8.RELEASE
-* **spring-cloud**: Hoxton.SR9
+* **spring-boot**: 2.3.10.RELEASE
+* **spring-cloud**: Hoxton.SR11
 * **spring-cloud-alibaba**: 2.2.4.RELEASE
 * **diboot-core**: 2.2.0
 

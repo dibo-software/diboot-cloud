@@ -197,7 +197,7 @@ public class DictionaryServiceImpl extends BaseServiceImpl<DictionaryMapper, Dic
         }
         bindingFieldTo(voList)
                 .link(Cons.FIELD_ITEM_NAME, setFieldName)
-                .joinOn(getFieldName, Cons.FIELD_ITEM_VALUE)
+                .joinOn(getFieldName, Cons.COLUMN_ITEM_VALUE)
                 .andEQ(Cons.FIELD_TYPE, type)
                 .andGT(Cons.FieldName.parentId.name(), 0)
                 .bind();
