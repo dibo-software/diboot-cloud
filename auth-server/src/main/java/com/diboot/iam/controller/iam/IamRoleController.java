@@ -12,6 +12,7 @@ import com.diboot.iam.entity.IamRole;
 import com.diboot.iam.service.IamResourcePermissionService;
 import com.diboot.iam.service.IamRoleResourceService;
 import com.diboot.iam.service.IamRoleService;
+import com.diboot.iam.util.IamSecurityUtils;
 import com.diboot.iam.vo.IamResourcePermissionListVO;
 import com.diboot.iam.vo.IamRoleVO;
 import com.diboot.core.controller.BaseCrudRestController;
@@ -166,7 +167,9 @@ public class IamRoleController extends BaseCrudRestController<IamRole> {
     @Override
     protected String beforeUpdate(Object entity) throws Exception {
         IamRoleFormDTO roleFormDTO = (IamRoleFormDTO) entity;
-        if (Cons.ROLE_SYSTEM_ADMIN.equals(roleFormDTO.getCode())){
+        // 非系统管理员角色不可更改系统管理员权限
+        if (Cons.ROLE_SYSTEM_ADMIN.equals(roleFormDTO.getCode())
+                && IamSecurityUtils.checkCurrentUserHasRole(Cons.ROLE_SYSTEM_ADMIN) == false){
             throw new BusinessException(Status.FAIL_OPERATION, "不能更新系统管理员角色");
         }
         return null;
@@ -175,8 +178,10 @@ public class IamRoleController extends BaseCrudRestController<IamRole> {
     @Override
     protected String beforeDelete(Object entity) throws Exception {
         IamRole role = (IamRole)entity;
-        if (Cons.ROLE_SYSTEM_ADMIN.equals(role.getCode())){
-            throw new BusinessException(Status.FAIL_OPERATION, "不能删除系统管理员角色");
+        // 非系统管理员角色不可更改系统管理员权限
+        if (Cons.ROLE_SYSTEM_ADMIN.equals(role.getCode())
+                && IamSecurityUtils.checkCurrentUserHasRole(Cons.ROLE_SYSTEM_ADMIN) == false){
+            throw new BusinessException(Status.FAIL_OPERATION, "不能更新系统管理员角色");
         }
         return null;
     }
