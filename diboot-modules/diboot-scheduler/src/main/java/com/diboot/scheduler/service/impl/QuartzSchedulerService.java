@@ -15,6 +15,7 @@
  */
 package com.diboot.scheduler.service.impl;
 
+import com.diboot.scheduler.annotation.CollectThisJob;
 import com.diboot.scheduler.entity.ScheduleJob;
 import com.diboot.core.exception.BusinessException;
 import com.diboot.core.util.*;
@@ -89,17 +90,33 @@ public class QuartzSchedulerService {
             }
             Map<String, Object> temp = new HashMap<>(8);
             Class targetClass = BeanUtils.getTargetClass(job);
-
-            BindJob annotation = (BindJob) targetClass.getAnnotation(BindJob.class);
-            temp.put("jobCron", annotation.cron());
-            temp.put("jobName", annotation.name());
+            String jobCron = null, jobName = null, paramJson = null;
+            Class<?> paramClass = null;
+            CollectThisJob annotation = (CollectThisJob) targetClass.getAnnotation(CollectThisJob.class);
+            if(annotation != null){
+                jobCron = annotation.cron();
+                jobName = annotation.name();
+                paramJson = annotation.paramJson();
+                paramClass = annotation.paramClass();
+            }
+            else{ // 兼容旧版本BindJob注解
+                BindJob bindJobAnno = (BindJob) targetClass.getAnnotation(BindJob.class);
+                if(bindJobAnno != null){
+                    jobCron = bindJobAnno.cron();
+                    jobName = bindJobAnno.name();
+                    paramJson = bindJobAnno.paramJson();
+                    paramClass = bindJobAnno.paramClass();
+                }
+            }
+            temp.put("jobCron", jobCron);
+            temp.put("jobName", jobName);
             temp.put("jobClass", targetClass);
             String paramJsonExample = "";
-            if (V.notEmpty(annotation.paramJson())) {
-                paramJsonExample = annotation.paramJson();
-            } else if (!Object.class.getTypeName().equals(annotation.paramClass().getTypeName())) {
+            if (V.notEmpty(paramJson)) {
+                paramJsonExample = paramJson;
+            } else if (!Object.class.getTypeName().equals(paramClass.getTypeName())) {
                 try {
-                    paramJsonExample = JSON.stringify(annotation.paramClass().newInstance());
+                    paramJsonExample = JSON.stringify(paramClass.newInstance());
                 } catch (Exception e) {
                     log.error("job任务：{}, Scheduled#paramClass参数任务无效，建议使用Scheduled#paramJson参数替换！", job.getClass());
                 }
