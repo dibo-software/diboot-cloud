@@ -11,7 +11,7 @@
           <div class="header">
             <a href="/">
               <img src="~@/assets/logo.svg" class="logo" alt="logo">
-              <span class="title">Diboot Antd Admin</span>
+              <span class="title">Diboot Cloud</span>
             </a>
           </div>
           <div class="desc">
