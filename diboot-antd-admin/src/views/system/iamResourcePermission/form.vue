@@ -104,10 +104,10 @@
           </template>
         </a-select>
       </a-form-item>
-      <a-form-item label="当前菜单页面接口列表">
+      <a-form-item label="当前菜单首页接口列表">
         <a-tree-select
           v-if="apiTreeList && apiTreeList.length > 0"
-          placeholder="请选取当前菜单页面接口列表"
+          placeholder="请选取当前菜单首页接口列表"
           :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
           :treeData="apiTreeList"
           treeNodeFilterProp="title"
@@ -151,23 +151,35 @@
                 :tab="permission.displayName"
                 :key="index">
                 <a-form-item :required="true" label="按钮/权限编码">
-                  <a-select
-                    v-if="more.resourcePermissionCodeKvList"
-                    showSearch
-                    :filterOption="(input, option) => filterPermissionCodeOption(permission, input, option)"
-                    @change="value => changePermissionName(permission, value)"
-                    placeholder="请选择按钮/权限编码"
-                    v-model="permission.resourceCode"
-                  >
-                    <a-select-option
-                      v-for="(item, i) in more.resourcePermissionCodeKvList"
-                      v-if="!existPermissionCodes.includes(item.v) || permission.resourceCode === item.v"
-                      :key="i"
-                      :value="item.v"
-                    >
-                      {{ item.k }}[{{ item.v }}]
-                    </a-select-option>
-                  </a-select>
+                  <a-row type="flex" align="middle" :gutter="16">
+                    <a-col :span="19">
+                      <a-select
+                        v-if="more.resourcePermissionCodeKvList && isSelect"
+                        showSearch
+                        :filterOption="(input, option) => filterPermissionCodeOption(permission, input, option)"
+                        @change="value => changePermissionName(permission, value)"
+                        placeholder="请选择按钮/权限编码"
+                        v-model="permission.resourceCode"
+                      >
+                        <a-select-option
+                          v-for="(item, i) in more.resourcePermissionCodeKvList"
+                          v-if="!existPermissionCodes.includes(item.v) || permission.resourceCode === item.v"
+                          :key="i"
+                          :value="item.v"
+                        >
+                          {{ item.k }}[{{ item.v }}]
+                        </a-select-option>
+                      </a-select>
+                      <a-input
+                        v-if="!isSelect"
+                        placeholder="请输入按钮/权限名称"
+                        v-model="permission.resourceCode"
+                      />
+                    </a-col>
+                    <a-col :span="5">
+                      <a-button type="primary" icon="swap" size="small" @click="handleSwap(permission, index)">{{isSelect ? '自定义输入' : '从字典选取'}}</a-button>
+                    </a-col>
+                  </a-row>
                 </a-form-item>
                 <a-form-item :required="true" label="按钮/权限名称">
                   <a-input
@@ -214,6 +226,8 @@ import { dibootApi } from '@/utils/request'
 import { treeListFormatter, routersFormatter, treeList2list, apiListFormatter } from '@/utils/treeDataUtil'
 import { mapState } from 'vuex'
 import _ from 'lodash'
+import ARow from 'ant-design-vue/es/grid/Row'
+import ACol from 'ant-design-vue/es/grid/Col'
 
 const NEW_PERMISSION_ITEM = {
   id: undefined,
@@ -225,6 +239,7 @@ const NEW_PERMISSION_ITEM = {
 }
 export default {
   name: 'IamResourcePermissionDrawer',
+  components: { ACol, ARow },
   data () {
     return {
       baseApi: '/auth-server/iam/resourcePermission',
@@ -235,7 +250,8 @@ export default {
       apiSetList: [],
       permissionList: [],
       apiTreeListMap: {},
-      apiTreeList: []
+      apiTreeList: [],
+      isSelect: true
     }
   },
   mixins: [ form ],
@@ -458,6 +474,12 @@ export default {
       } else {
         callback(res.msg.split(':')[1])
       }
+    },
+    handleSwap (permission, index) {
+      this.isSelect = !this.isSelect
+      permission.resourceCode = ''
+      permission.displayName = ''
+      this.$set(this.permissionList, index, permission)
     },
     afterClose () {
       this.apiSetList = []
