@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 /**
- * 基础变量值
+ * 替换模版变量实体
  *
  * @author : uu
  * @version : v1.0

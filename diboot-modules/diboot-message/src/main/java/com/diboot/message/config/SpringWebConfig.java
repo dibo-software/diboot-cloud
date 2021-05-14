@@ -75,7 +75,6 @@ public class SpringWebConfig implements WebMvcConfigurer {
      * @return
      */
     @Bean
-    @ConditionalOnMissingBean
     public TemplateVariableService templateVariableService() {
         return new SystemTemplateVariableServiceImpl();
     }
@@ -86,7 +85,6 @@ public class SpringWebConfig implements WebMvcConfigurer {
      * @return
      */
     @Bean("EMAIL")
-    @ConditionalOnMissingBean
     public ChannelStrategy simpleEmailChannel() {
         return new SimpleEmailChannel();
     }
