@@ -38,6 +38,7 @@
     - diboot-common-excel:  通用excel解析
 - **diboot-modules**: diboot预置模块
     - diboot-file:  文件服务模块
+    - diboot-message: 消息服务模块
     - diboot-scheduler: 定时任务服务模块
 - **diboot-antd-admin**: 前端项目(antdv)
  
