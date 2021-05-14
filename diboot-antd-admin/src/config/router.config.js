@@ -89,6 +89,18 @@ export const asyncRouterMap = [
             meta: { title: '资源权限管理', keepAlive: false, permission: ['IamResourcePermission'] }
           },
           {
+            path: '/system/messageTemplate/list',
+            name: 'messageTemplateList',
+            component: () => import('@/views/system/messageTemplate/list'),
+            meta: { title: '消息模版管理', keepAlive: true, permission: ['MessageTemplate'] }
+          },
+          {
+            path: '/system/message/list',
+            name: 'messageList',
+            component: () => import('@/views/system/message/list'),
+            meta: { title: '消息记录管理', keepAlive: true, permission: ['Message'] }
+          },
+          {
             path: '/system/scheduleJob/list',
             name: 'ScheduleJobIndex',
             component: () => import('@/views/system/scheduleJob/list'),

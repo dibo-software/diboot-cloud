@@ -16,6 +16,7 @@
     <modules>
         <module>diboot-scheduler</module>
         <module>diboot-file</module>
+        <module>diboot-message</module>
     </modules>
 
     <dependencies>

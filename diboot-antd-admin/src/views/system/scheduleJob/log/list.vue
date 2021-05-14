@@ -149,7 +149,7 @@ export default {
      * @returns {Promise<void>}
      */
     async loadJobs () {
-      const res = await this.$http.get('/scheduleJob/allJobs')
+      const res = await this.$http.get('/scheduler/scheduleJob/allJobs')
       if (res.code === 0) {
         this.jobList = res.data || []
       } else {
@@ -170,7 +170,7 @@ export default {
      */
     async handleExecuteOnce (id) {
       try {
-        const res = await this.$http.put(`/scheduleJob/executeOnce/${id}`)
+        const res = await this.$http.put(`/scheduler/scheduleJob/executeOnce/${id}`)
         if (res.code === 0) {
           this.$message.success('发送执行任务成功！')
         } else {

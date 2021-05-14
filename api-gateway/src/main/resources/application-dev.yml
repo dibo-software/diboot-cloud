@@ -27,6 +27,13 @@ spring:
             - Path=/file-server/**
           filters:
             - StripPrefix=1
+        # 消息服务模块
+        - id: message-route
+          uri: lb://message-server
+          predicates:
+            - Path=/message-server/**
+          filters:
+            - StripPrefix=1
         # 业务模块服务
         - id: business-api-route
           uri: lb://example-api

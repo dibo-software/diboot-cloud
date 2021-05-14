@@ -170,7 +170,7 @@ export default {
        * @returns {Promise<void>}
        */
       async loadJobs () {
-        const res = await this.$http.get('/scheduleJob/allJobs')
+        const res = await this.$http.get(`${this.baseApi}/allJobs`)
         if (res.code === 0) {
           this.jobList = res.data || []
         } else {
@@ -185,7 +185,7 @@ export default {
       async handleSwitchChange (value) {
         const status = value.jobStatus === 'A' ? 'I' : 'A'
         try {
-          const res = await this.$http.put(`/scheduleJob/${value.id}/${status}`)
+          const res = await this.$http.put(`${this.baseApi}/${value.id}/${status}`)
           if (res.code === 0) {
             this.$message.success('修改任务状态成功！')
           } else {
@@ -204,7 +204,7 @@ export default {
        */
       async handleExecuteOnce (id) {
         try {
-          const res = await this.$http.put(`/scheduleJob/executeOnce/${id}`)
+          const res = await this.$http.put(`${this.baseApi}/${id}`)
           if (res.code === 0) {
             this.$message.success('发送执行任务成功！')
           } else {

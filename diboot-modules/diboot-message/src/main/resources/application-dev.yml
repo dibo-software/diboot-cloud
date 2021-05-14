@@ -1,0 +1,50 @@
+server:
+  port: 8103
+  servlet:
+    context-path: /
+spring:
+  cloud:
+    nacos:
+      config:
+        file-extension: yaml
+      discovery:
+        server-addr: localhost:8848
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: 'http://localhost:8001/oauth/token_key' # RSA公钥访问地址
+  datasource:
+    url:  jdbc:mysql://localhost:3306/diboot_cloud_example?characterEncoding=utf8&serverTimezone=GMT%2B8
+    username: diboot
+    password: 123456
+    maximum-pool-size:  5
+    driver-class-name:  com.mysql.cj.jdbc.Driver
+  redis:
+    database: 0
+    port: 6379
+    host: localhost
+    password:
+
+
+# logging config
+logging:
+  level:
+    root: debug
+    org:
+      apache: info
+      springframework: info
+    com:
+      alibaba:
+        nacos: info
+
+## diboot devtools config
+diboot:
+  message:
+    init-sql: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
