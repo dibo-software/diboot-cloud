@@ -83,14 +83,20 @@ public class AuthServerSqlInitializer implements ApplicationRunner {
                 "{\"type\":\"ORG_TYPE\", \"itemName\":\"组织类型\", \"description\":\"组织节点类型\", \"editable\":false, \"children\":[{\"itemName\":\"部门\", \"itemValue\":\"DEPT\", \"sortId\":1},{\"itemName\":\"公司\", \"itemValue\":\"COMP\", \"sortId\":2}]}",
                 "{\"type\":\"DATA_PERMISSION_TYPE\", \"itemName\":\"IAM数据权限类型\", \"description\":\"IAM数据权限类型定义\", \"editable\":true, \"children\":[{\"itemName\":\"本人\", \"itemValue\":\"SELF\", \"sortId\":1},{\"itemName\":\"本人及下属\", \"itemValue\":\"SELF_AND_SUB\", \"sortId\":2},{\"itemName\":\"本部门\", \"itemValue\":\"DEPT\", \"sortId\":3},{\"itemName\":\"本部门及下属部门\", \"itemValue\":\"DEPT_AND_SUB\", \"sortId\":4},{\"itemName\":\"全部\", \"itemValue\":\"ALL\", \"sortId\":5}]}",
                 "{\"type\":\"POSITION_GRADE\", \"itemName\":\"职级定义\", \"description\":\"职务级别定义\", \"editable\":true, \"children\":[{\"itemName\":\"初级\", \"itemValue\":\"E1\", \"sortId\":1},{\"itemName\":\"中级\", \"itemValue\":\"E2\", \"sortId\":2},{\"itemName\":\"高级\", \"itemValue\":\"E3\", \"sortId\":3},{\"itemName\":\"专家\", \"itemValue\":\"E4\", \"sortId\":4}]}",
-                "{\"type\":\"MESSAGE_STATUS\", \"itemName\":\"消息状态\", \"description\":\"message消息状态\", \"children\":[{\"itemName\":\"发送中\", \"itemValue\":\"SENDING\", \"sortId\":1},{\"itemName\":\"发送异常\", \"itemValue\":\"EXCEPTION\", \"sortId\":2},{\"itemName\":\"已送达\", \"itemValue\":\"DELIVERY\", \"sortId\":3},{\"itemName\":\"未读\", \"itemValue\":\"UNREAD\", \"sortId\":4},{\"itemName\":\"已读\", \"itemValue\":\"READ\", \"sortId\":5}]}",
-                "{\"type\":\"MESSAGE_CHANNEL\", \"itemName\":\"发送通道\", \"description\":\"message发送通道\", \"children\":[{\"itemName\":\"站内信\", \"itemValue\":\"WEBSOCKET\", \"sortId\":1},{\"itemName\":\"短信\", \"itemValue\":\"TEXT_MESSAGE\", \"sortId\":2},{\"itemName\":\"邮件\", \"itemValue\":\"EMAIL\", \"sortId\":3}]}"
+                "{\"type\":\"MESSAGE_STATUS\", \"itemName\":\"消息状态\", \"description\":\"message消息状态\",\"appModule\":\"message-server\", \"children\":[{\"itemName\":\"发送中\", \"itemValue\":\"SENDING\", \"sortId\":1,\"appModule\":\"message-server\"},{\"itemName\":\"发送异常\", \"itemValue\":\"EXCEPTION\", \"sortId\":2,\"appModule\":\"message-server\"},{\"itemName\":\"已送达\", \"itemValue\":\"DELIVERY\", \"sortId\":3,\"appModule\":\"message-server\"},{\"itemName\":\"未读\", \"itemValue\":\"UNREAD\", \"sortId\":4,\"appModule\":\"message-server\"},{\"itemName\":\"已读\", \"itemValue\":\"READ\", \"sortId\":5,\"appModule\":\"message-server\"}]}",
+                "{\"type\":\"MESSAGE_CHANNEL\", \"itemName\":\"发送通道\", \"description\":\"message发送通道\",\"appModule\":\"message-server\", \"children\":[{\"itemName\":\"站内信\", \"itemValue\":\"WEBSOCKET\", \"sortId\":1,\"appModule\":\"message-server\"},{\"itemName\":\"短信\", \"itemValue\":\"TEXT_MESSAGE\", \"sortId\":2,\"appModule\":\"message-server\"},{\"itemName\":\"邮件\", \"itemValue\":\"EMAIL\", \"sortId\":3,\"appModule\":\"message-server\"}]}"
         };
         // 插入数据字典
         for(String dictJson : DICT_INIT_DATA){
             DictionaryVO dictVo = JSON.toJavaObject(dictJson, DictionaryVO.class);
-            dictVo.setAppModule(applicationName);
-            dictVo.getChildren().forEach(c->{c.setAppModule(applicationName);});
+            if (V.isEmpty(dictVo.getAppModule())) {
+                dictVo.setAppModule(applicationName);
+            }
+            dictVo.getChildren().forEach(c->{
+                if (V.isEmpty(c.getAppModule())) {
+                    c.setAppModule(applicationName);
+                }
+            });
             ContextHelper.getBean(DictionaryService.class).createDictAndChildren(dictVo);
         }
         DICT_INIT_DATA = null;
