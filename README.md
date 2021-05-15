@@ -25,7 +25,7 @@
 7. 前端支持antd（diboot-antd-admin）
 
 ## diboot-cloud 架构图
-![diboot-cloud 架构图](docs/img/diboot-cloud.png)
+![diboot-cloud 架构图](https://www.diboot.com/structure-cloud.png)
 
 ## diboot-cloud 模块说明
 - **api-gateway**:  接口网关
@@ -39,7 +39,7 @@
     - diboot-common-excel:  通用excel解析
 - **diboot-modules**: diboot预置模块
     - diboot-file:  文件服务模块
-    - diboot-message: 消息服务模块
+    - diboot-message: 消息通知服务模块
     - diboot-scheduler: 定时任务服务模块
 - **diboot-antd-admin**: 前端项目(antdv)
  
@@ -47,7 +47,7 @@
 * **spring-boot**: 2.3.10.RELEASE
 * **spring-cloud**: Hoxton.SR11
 * **spring-cloud-alibaba**: 2.2.4.RELEASE
-* **diboot-core**: 2.2.0
+* **diboot-core**: 2.2.1
 
 [-> 详细文档请查阅官网](https://www.diboot.com/guide/diboot-cloud/introduce.html)
 
