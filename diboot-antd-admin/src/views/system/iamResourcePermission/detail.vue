@@ -7,29 +7,11 @@
     :body-style="{ paddingBottom: '80px' }"
   >
     <a-spin :spinning="spinning">
-      <detail-list :col="1">
-        <detail-list-item term="上级菜单">{{ model.parentDisplayName ? model.parentDisplayName : '无' }}</detail-list-item>
-      </detail-list>
-      <detail-list :col="1">
-        <detail-list-item term="菜单名称">{{ model.displayName }}</detail-list-item>
-      </detail-list>
-      <detail-list :col="1">
-        <detail-list-item term="菜单编码">{{ model.resourceCode }}</detail-list-item>
-      </detail-list>
-      <detail-list :col="1">
-        <detail-list-item term="页面资源权限">
-          <template v-if="model.permissionList && model.permissionList.length > 0">
-            <a-tag color="cyan" :key="i" v-for="(permission,i) in model.permissionList">
-              {{ `${permission.displayName}[${permission.resourceCode}]` }}
-            </a-tag>
-          </template>
-          <template v-else>
-            无
-          </template>
-        </detail-list-item>
-      </detail-list>
-      <detail-list :col="1">
-        <detail-list-item term="页面接口列表">
+      <a-descriptions :column="1">
+        <a-descriptions-item label="上级菜单">{{ model.parentDisplayName ? model.parentDisplayName : '无' }}</a-descriptions-item>
+        <a-descriptions-item label="菜单名称">{{ model.displayName }}</a-descriptions-item>
+        <a-descriptions-item label="菜单编码">{{ model.resourceCode }}</a-descriptions-item>
+        <a-descriptions-item label="页面接口列表">
           <template v-if="model.apiSetList && model.apiSetList.length > 0">
             <a-tag color="green" :key="i" v-for="(api,i) in model.apiSetList">
               {{ api }}
@@ -38,8 +20,34 @@
           <template v-else>
             无
           </template>
-        </detail-list-item>
-      </detail-list>
+        </a-descriptions-item>
+        <a-descriptions-item label="页面资源权限">
+          <template v-if="!model.permissionList || model.permissionList.length === 0">
+            无
+          </template>
+        </a-descriptions-item>
+      </a-descriptions>
+      <a-tabs :default-active-key="0" v-if="model.permissionList && model.permissionList.length > 0">
+        <a-tab-pane
+          v-for="(p, i) in model.permissionList"
+          :key="i"
+          :tab="p.displayName">
+          <a-descriptions :column="1">
+            <a-descriptions-item label="名称">{{ p.displayName }}</a-descriptions-item>
+            <a-descriptions-item label="编码">{{ p.resourceCode }}</a-descriptions-item>
+            <a-descriptions-item label="接口列表">
+              <template v-if="p.apiSetList && p.apiSetList.length > 0">
+                <a-tag color="green" :key="j" v-for="(api,j) in p.apiSetList">
+                  {{ api }}
+                </a-tag>
+              </template>
+              <template v-else>
+                无
+              </template>
+            </a-descriptions-item>
+          </a-descriptions>
+        </a-tab-pane>
+      </a-tabs>
     </a-spin>
 
     <div class="drawer-footer">
@@ -50,18 +58,12 @@
 
 <script>
 import detail from '@/components/diboot/mixins/detail'
-import DetailList from '@/components/tools/DetailList'
-const DetailListItem = DetailList.Item
 export default {
   name: 'IamResourcePermissionDetail',
   data () {
     return {
       baseApi: '/auth-server/iam/resourcePermission'
     }
-  },
-  components: {
-    DetailList,
-    DetailListItem
   },
   mixins: [ detail ]
 }

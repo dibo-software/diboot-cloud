@@ -1,0 +1,7 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: message-server
+  main:
+    allow-bean-definition-overriding: true

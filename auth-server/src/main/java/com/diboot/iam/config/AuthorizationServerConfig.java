@@ -69,7 +69,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     /**
      * 资源服务
      */
-    private String[] resourceIds = {"auth-server", "scheduler", "file-server", "example-api"};
+    private String[] resourceIds = {"auth-server", "scheduler", "file-server", "message-server","example-api"};
 
     /*
     * 数据库管理ClientDetailsService

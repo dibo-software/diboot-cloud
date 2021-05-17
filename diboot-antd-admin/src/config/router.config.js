@@ -1,8 +1,12 @@
 // eslint-disable-next-line
-import { UserLayout, BasicLayout, RouteView, BlankLayout, PageView } from '@/layouts'
+import { UserLayout, PageView, BasicLayout, BlankLayout } from '@/layouts'
+
+const RouteView = {
+  name: 'RouteView',
+  render: h => h('router-view')
+}
 
 export const asyncRouterMap = [
-
   {
     path: '/',
     name: 'index',
@@ -64,43 +68,55 @@ export const asyncRouterMap = [
             path: '/system/dictionary/index',
             name: 'DictIndex',
             component: () => import('@/views/system/dictionary/Index'),
-            meta: { title: '数据字典管理', keepAlive: true, permission: ['Dictionary'] }
+            meta: { title: '数据字典管理', keepAlive: false, permission: ['Dictionary'] }
           },
           {
             path: '/system/iamUser/index',
             name: 'IamUserIndex',
             component: () => import('@/views/system/iamUser/Index'),
-            meta: { title: '系统用户管理', keepAlive: true, permission: ['IamUser'] }
+            meta: { title: '系统用户管理', keepAlive: false, permission: ['IamUser'] }
           },
           {
             path: '/system/iamRole/list',
             name: 'IamRoleList',
             component: () => import('@/views/system/iamRole/list'),
-            meta: { title: '角色资源管理', keepAlive: true, permission: ['IamRole'] }
+            meta: { title: '角色资源管理', keepAlive: false, permission: ['IamRole'] }
           },
           {
             path: '/system/iamResourcePermission/list',
             name: 'IamResourcePermission',
             component: () => import('@/views/system/iamResourcePermission/list'),
-            meta: { title: '资源权限管理', keepAlive: true, permission: ['IamResourcePermission'] }
+            meta: { title: '资源权限管理', keepAlive: false, permission: ['IamResourcePermission'] }
+          },
+          {
+            path: '/system/messageTemplate/list',
+            name: 'messageTemplateList',
+            component: () => import('@/views/system/messageTemplate/list'),
+            meta: { title: '消息模版管理', keepAlive: true, permission: ['MessageTemplate'] }
+          },
+          {
+            path: '/system/message/list',
+            name: 'messageList',
+            component: () => import('@/views/system/message/list'),
+            meta: { title: '消息记录管理', keepAlive: true, permission: ['Message'] }
           },
           {
             path: '/system/scheduleJob/list',
             name: 'ScheduleJobIndex',
             component: () => import('@/views/system/scheduleJob/list'),
-            meta: { title: '定时任务管理', keepAlive: true, permission: ['ScheduleJob'] }
+            meta: { title: '定时任务管理', keepAlive: false, permission: ['ScheduleJob'] }
           },
           {
             path: '/system/iamOperationLog/index',
             name: 'IamOperationLogIndex',
             component: () => import('@/views/system/iamOperationLog/Index'),
-            meta: { title: '操作日志查看', keepAlive: true, permission: ['IamOperationLog'] }
+            meta: { title: '操作日志查看', keepAlive: false, permission: ['IamOperationLog'] }
           },
           {
             path: '/system/iamLoginTrace/list',
             name: 'IamLoginTraceList',
             component: () => import('@/views/system/iamLoginTrace/list'),
-            meta: { title: '登录日志查看', keepAlive: true, permission: ['IamLoginTrace'] }
+            meta: { title: '登录日志查看', keepAlive: false, permission: ['IamLoginTrace'] }
           }
         ]
       },
@@ -170,7 +186,9 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '*', redirect: '/404', hidden: true
+    path: '*',
+    redirect: '/404',
+    hidden: true
   }
 ]
 
@@ -192,8 +210,9 @@ export const constantRouterMap = [
       }
     ]
   },
+
   {
     path: '/404',
-    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404')
+    redirect: '/'
   }
 ]

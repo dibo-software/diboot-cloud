@@ -25,6 +25,8 @@ export default {
       more: {},
       // 获取关联数据列表的配置列表
       attachMoreList: [],
+      // 获取关联数据服务基础api（当前微服务在后端的基础路径，一般为当前服务的context-path配置）
+      getMoreSvcBaseApi: '',
       // 是否从mixin中自动获取初始的列表数据
       getListFromMixin: true,
       // 是否使mixin在当前业务的attachMore接口中自动获取关联数据
@@ -211,7 +213,16 @@ export default {
       if (this.getMore === true) {
         res = await dibootApi.get(`${this.baseApi}/attachMore`)
       } else if (this.attachMoreList.length > 0) {
-        res = await dibootApi.post('/auth-server/common/attachMore', this.attachMoreList)
+        let baseUrl = this.getMoreSvcBaseApi
+        if (!baseUrl && this.baseApi) {
+          // 没有设置基础路径，则对baseApi进行解析提取
+          const baseApis = this.baseApi.split('/')
+          baseUrl = baseApis.length > 1 ? `/${baseApis[1]}` : ''
+        }
+        if (!baseUrl) {
+          baseUrl = '/auth-server'
+        }
+        res = await dibootApi.post(`${baseUrl}/common/attachMore`, this.attachMoreList)
       }
       if (res.code === 0) {
         this.more = res.data

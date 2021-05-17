@@ -58,12 +58,7 @@
         <a-col :span="24">
           <a-form-item label="角色授权">
             <a-row>
-              <template v-if="isAdmin">
-                <a-col :span="20">
-                  <a-tag>拥有所有权限</a-tag>
-                </a-col>
-              </template>
-              <template v-else>
+              <template>
                 <a-col :span="20">
                   <a-tree
                     v-if="permissionTreeList.length > 0"

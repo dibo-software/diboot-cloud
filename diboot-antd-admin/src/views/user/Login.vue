@@ -15,7 +15,7 @@
           placeholder="请输入用户名"
           v-decorator="[
             'username',
-            {rules: [{ required: true, message: '请输入用户名' }, { validator: handleUsernameOrEmail }], validateTrigger: 'change'}
+            {rules: [{ required: true, message: '请输入用户名' }, { validator: userNameValidator }], validateTrigger: 'change'}
           ]"
         >
           <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
@@ -36,32 +36,6 @@
           <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
         </a-input>
       </a-form-item>
-
-      <!--      <a-row :gutter="16">-->
-      <!--        <a-col class="gutter-row" :span="16">-->
-      <!--          <a-form-item>-->
-      <!--            <a-input-->
-      <!--              size="large"-->
-      <!--              type="text"-->
-      <!--              placeholder="验证码"-->
-      <!--              v-decorator="[-->
-      <!--                'captcha',-->
-      <!--                {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}-->
-      <!--              ]"-->
-      <!--            >-->
-      <!--              <a-icon slot="prefix" type="key" :style="{ color: 'rgba(0,0,0,.25)' }"/>-->
-      <!--            </a-input>-->
-      <!--          </a-form-item>-->
-      <!--        </a-col>-->
-      <!--        <a-col class="gutter-row" :span="8">-->
-      <!--          <img-->
-      <!--            :src="`${baseURL}/auth/captcha?p=${captchaParam}`"-->
-      <!--            @click="++captchaParam"-->
-      <!--            alt="验证码"-->
-      <!--            style="height: 40px; cursor: pointer;">-->
-      <!--        </a-col>-->
-      <!--      </a-row>-->
-
       <a-form-item style="margin-top:24px">
         <a-button
           size="large"
@@ -73,72 +47,63 @@
         >确定</a-button>
       </a-form-item>
     </a-form>
-
-    <two-step-captcha
-      v-if="requiredTwoStepCaptcha"
-      :visible="stepCaptchaVisible"
-      @success="stepCaptchaSuccess"
-      @cancel="stepCaptchaCancel"
-    ></two-step-captcha>
   </div>
 </template>
 
 <script>
-import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
-import { mapActions } from 'vuex'
-import { timeFix } from '@/utils/util'
-import { baseURL } from '@/utils/request'
+  import { mapActions } from 'vuex'
+  import { timeFix } from '@/utils/util'
+  import { baseURL } from '@/utils/request'
 
-export default {
-  components: {
-    TwoStepCaptcha
-  },
-  data () {
-    return {
-      requiredTwoStepCaptcha: false,
-      stepCaptchaVisible: false,
-      form: this.$form.createForm(this),
-      state: {
-        time: 60,
+  export default {
+    data () {
+      return {
+        customActiveKey: 'tab1',
         loginBtn: false,
         // login type: 0 email, 1 username, 2 telephone
         loginType: 0,
-        smsSendBtn: false
-      },
-      baseURL,
-      captchaParam: 0
-    }
-  },
-  methods: {
-    ...mapActions(['Login', 'Logout', 'GetInfo']),
-    // handler
-    handleUsernameOrEmail (rule, value, callback) {
-      const { state } = this
-      const regex = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/
-      if (regex.test(value)) {
-        state.loginType = 0
-      } else {
-        state.loginType = 1
+        form: this.$form.createForm(this),
+        state: {
+          time: 60,
+          loginBtn: false,
+          // login type: 0 email, 1 username, 2 telephone
+          loginType: 0,
+          smsSendBtn: false
+        },
+        baseURL,
+        captchaParam: 0
       }
-      callback()
     },
-    handleGetInfo () {
-      const { GetInfo } = this
-      GetInfo().then((res) => {
-        console.log(res)
-      })
-    },
-    handleSubmit (e) {
-      e.preventDefault()
-      const {
-        form: { validateFields },
-        state,
-        Login
-      } = this
+    methods: {
+      ...mapActions(['Login', 'Logout', 'GetInfo']),
+      // handler
+      userNameValidator (rule, value, callback) {
+        const { state } = this
+        const regex = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/
+        if (regex.test(value)) {
+          state.loginType = 0
+        } else {
+          state.loginType = 1
+        }
+        callback()
+      },
+      handleGetInfo () {
+        const { GetInfo } = this
+        GetInfo().then((res) => {
+          console.log(res)
+        })
+      },
+      handleSubmit (e) {
+        e.preventDefault()
+        const {
+          form: { validateFields },
+          state,
+          Login
+        } = this
 
-      state.loginBtn = true
+        state.loginBtn = true
 
-      const validateFieldsKey = ['username', 'password', 'captcha']
+        const validateFieldsKey = ['username', 'password', 'captcha']
 
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {

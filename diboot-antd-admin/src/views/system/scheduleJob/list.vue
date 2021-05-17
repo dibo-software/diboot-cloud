@@ -165,58 +165,60 @@ export default {
   },
   methods: {
 
-    /**
-     * 加载job
-     * @returns {Promise<void>}
-     */
-    async loadJobs () {
-      const res = await this.$http.get('/scheduler/scheduleJob/allJobs')
-      if (res.code === 0) {
-        this.jobList = res.data || []
-      } else {
-        this.$message.error('无可执行定时任务！')
-      }
-    },
-    /**
-     * 改变状态
-     * @param value
-     * @returns {Promise<void>}
-     */
-    async handleSwitchChange (value) {
-      const status = value.jobStatus === 'A' ? 'I' : 'A'
-      try {
-        const res = await this.$http.put(`/scheduler/scheduleJob/${value.id}/${status}`)
+      /**
+       * 加载job
+       * @returns {Promise<void>}
+       */
+      async loadJobs () {
+        const res = await this.$http.get(`${this.baseApi}/allJobs`)
         if (res.code === 0) {
-          this.$message.success('修改任务状态成功！')
+          this.jobList = res.data || []
         } else {
-          this.$message.error(res.msg)
+          this.$message.error('无可执行定时任务！')
         }
-      } catch (e) {
-        this.$message.error('修改任务状态失败！')
-      }
-      this.getList()
-    },
-    /**
-     * 执行一次任务
-     * @param id
-     * @returns {Promise<void>}
-     */
-    async handleExecuteOnce (id) {
-      try {
-        const res = await this.$http.put(`/scheduler/scheduleJob/executeOnce/${id}`)
-        if (res.code === 0) {
-          this.$message.success('发送执行任务成功！')
-        } else {
-          this.$message.error(res.msg)
+      },
+      /**
+       * 改变状态
+       * @param value
+       * @returns {Promise<void>}
+       */
+      async handleSwitchChange (value) {
+        const status = value.jobStatus === 'A' ? 'I' : 'A'
+        try {
+          const res = await this.$http.put(`${this.baseApi}/${value.id}/${status}`)
+          if (res.code === 0) {
+            this.$message.success('修改任务状态成功！')
+          } else {
+            this.$message.error(res.msg)
+          }
+        } catch (e) {
+          console.log(e)
+          this.$message.error('修改任务状态失败！')
         }
-      } catch (e) {
-        this.$message.error('发送执行任务失败！')
+        this.getList()
+      },
+      /**
+       * 执行一次任务
+       * @param id
+       * @returns {Promise<void>}
+       */
+      async handleExecuteOnce (id) {
+        try {
+          const res = await this.$http.put(`${this.baseApi}/${id}`)
+          if (res.code === 0) {
+            this.$message.success('发送执行任务成功！')
+          } else {
+            this.$message.error(res.msg)
+          }
+        } catch (e) {
+          console.log(e)
+          this.$message.error('发送执行任务失败！')
+        }
+        this.getList()
       }
-      this.getList()
     }
-  }
 
-}
+  }
 </script>
 <style lang="less" scoped>
 </style>

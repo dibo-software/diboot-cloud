@@ -23,7 +23,7 @@ import java.lang.annotation.*;
 
 /**
  * 定时任务注解
- *
+ * 请调用: ${@link CollectThisJob}
  * @author : uu
  * @version : v1.0
  * @Date 2020/12/1  12:49
@@ -33,6 +33,7 @@ import java.lang.annotation.*;
 @Documented
 @Component
 @Lazy
+@Deprecated
 public @interface BindJob {
 
     /**

@@ -1,6 +1,6 @@
 import { login, getInfo, logout, setLoginResult, clearLoginResult } from '@/api/login'
-import { welcome } from '@/utils/util'
 import { permissionListToPermissions } from '@/utils/permissions'
+import { welcome } from '@/utils/util'
 import defaultAvatar from '@/assets/logo.png'
 
 const user = {
@@ -86,8 +86,8 @@ const user = {
     // 登出
     Logout ({ commit, state }) {
       return new Promise((resolve) => {
-        clearLoginResult()
         logout(state.token).then(() => {
+          clearLoginResult()
           resolve()
         }).catch(() => {
           resolve()
